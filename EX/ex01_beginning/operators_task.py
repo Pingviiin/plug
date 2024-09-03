@@ -8,7 +8,7 @@ print(a + b)
 """ Subtract d from c. Print out the result."""
 c = int(input("Enter the value for c:"))
 d = int(input("Enter the value for d:"))
-print(d - c)
+print(int(d - c))
 
 """ Multiply e by f. Print the result."""
 e = int(input("Enter the value for e:"))

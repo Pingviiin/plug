@@ -73,7 +73,7 @@ x = int(input("Enter the value of x: "))
 y = int(input("Enter the value of y: "))
 u = int(input("Enter the value of u: "))
 t = int(input("Enter the value of t: "))
-print(x * t + u * y, "/", y * t)
+print(x * t + y * u, "/", y * t)
 
 """
 Calculate and print how many hours are needed per week with given ECTS and amount of weeks, if each ECTS is 26 hours.
@@ -101,6 +101,7 @@ weeks = 0
 output
 -1
 """
+
 ects = int(input("Enter the amount of ECTS: ")) # 1 ects = 26h
 weeks = int(input("Enter the number of weeks: "))
 hours = ects * 26

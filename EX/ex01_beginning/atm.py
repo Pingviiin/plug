@@ -13,7 +13,7 @@ We use four banknotes to cover it. The banknotes are 20€, 50€, 1€ and 1€
 amount = int(input("Enter a sum: "))
 banknotes = 0
 
-for x in [100, 50, 20, 10, 1]:
+for x in [100, 50, 20, 10, 5, 1]:
     banknotes += amount // x
     amount = amount % x
 

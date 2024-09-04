@@ -102,7 +102,7 @@ output
 -1
 """
 
-ects = int(input("Enter the amount of ECTS: ")) # 1 ects = 26h
+ects = int(input("Enter the amount of ECTS: "))
 weeks = int(input("Enter the number of weeks: "))
 hours = ects * 26
 if hours > 168 * weeks:

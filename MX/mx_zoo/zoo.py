@@ -18,6 +18,7 @@ def parse_animal(animal_str: str) -> list:
     :param animal_str: The input string containing animal data.
     :return: A list containing structured animal data.
     """
+
     pass
 
 
@@ -81,7 +82,7 @@ def total_noise_level(animal_data: list) -> float:
     :param animal_data: A list containing details about multiple animals.
     :return: The total noise level of all animals in the list.
     """
-    pass
+    return animal_data[3][0] + animal_data[3][1] / 2 * 0.01
 
 
 def zoo_parade_length(animal_data: list) -> float:

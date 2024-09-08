@@ -14,11 +14,11 @@ def secret_letter(letter: str) -> bool:
     :return: validation
     """
     # Find the sum of uppercase and lowercase respectively letters in the given string
-    uppercase_letter_sum = len(list(filter(lambda x: x.isupper() , letter)))
-    lowercase_letter_sum = len(list(filter(lambda x: x.islower() , letter)))
+    uppercase_letter_sum = len(list(filter(lambda x: x.isupper(), letter)))
+    lowercase_letter_sum = len(list(filter(lambda x: x.islower(), letter)))
 
     # Find the sum of digits in the given string
-    digits = list(filter(lambda x: x.isdigit() , letter))
+    digits = list(filter(lambda x: x.isdigit(), letter))
     digits_sum = sum(map(int, digits))
 
     # Match all the conditions given

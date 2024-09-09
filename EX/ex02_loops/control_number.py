@@ -38,7 +38,7 @@ def control_number(encrypted_string: str) -> bool:
             break
         elif i.isdigit():
             string_number += i
-        elif i.isdigit() == False:
+        elif not i.isdigit():
             break
 
     # Flip it like a burger
@@ -52,7 +52,6 @@ def control_number(encrypted_string: str) -> bool:
 
 
 if __name__ == '__main__':
-    print(control_number("asdoijODFafiaf#???___!!asidADOFJ...&paskpo#!?!387")) # True
     print(control_number("mE0W5"))  # True
     print(control_number("SomeControlNR?20"))  # False
     print(control_number("False?Nr9"))  # False

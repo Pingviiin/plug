@@ -18,7 +18,6 @@ def control_number(encrypted_string: str) -> bool:
     :param encrypted_string: encrypted string
     :return: validation
     """
-
     encrypted_string_lower = len(list(filter(lambda x: x.islower(), encrypted_string)))
     encrypted_string_upper = len(list(filter(lambda x: x.isupper(), encrypted_string)))
 
@@ -39,9 +38,9 @@ def control_number(encrypted_string: str) -> bool:
             break
         elif i.isdigit():
             string_number += i
-        elif i.isdigit() != True:
+        elif i.isdigit() == False:
             break
-    
+
     # Flip it like a burger
     string_number = string_number[::-1]
 
@@ -50,7 +49,8 @@ def control_number(encrypted_string: str) -> bool:
         return True
     else:
         return False
-    
+
+
 if __name__ == '__main__':
     print(control_number("asdoijODFafiaf#???___!!asidADOFJ...&paskpo#!?!387")) # True
     print(control_number("mE0W5"))  # True
@@ -59,4 +59,3 @@ if __name__ == '__main__':
     print(control_number("#Hello?!?26"))  # True
     print(control_number("3423982340000000.....///....0"))  # True
     print(control_number("#Shift6"))  # False
-    

@@ -38,6 +38,8 @@ def control_number(encrypted_string: str) -> bool:
     for i in encrypted_string[::-1]:
         if i.isdigit():
             string_number += i
+        elif len(list(filter(lambda x: x.isdigit(), string_number))) >= len(list(str(control_number))):
+            break
         elif i.isdigit() != True:
             break
     

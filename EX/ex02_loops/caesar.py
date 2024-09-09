@@ -44,6 +44,7 @@ def encode(message: str, shift: int) -> str:
 
     return ciphered_message
 
+
 if __name__ == '__main__':
     print(encode("o roqk zaxzrky", 40))  # -> i like turtles
     print(encode("o roqk zaxzrky", 20))  # -> i like turtles

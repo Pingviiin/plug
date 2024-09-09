@@ -24,14 +24,27 @@ def encode(message: str, shift: int) -> str:
     :param shift: shift for encoding
     :return: encoded message
     """
+    ciphered_message = ""
+    alphabet = "abcdefghijklmnopqrstuvwxyz"
+    for letter in message:
+        if letter.isalpha():
+            letter_location = (alphabet.find(letter))
+            if letter_location + shift >= len(alphabet):
+                loop_letter = len(alphabet) - (letter_location + shift)
+                letter_location = abs(loop_letter)
+                letter = alphabet[letter_location]
+            else:
+                letter = alphabet[letter_location + shift]
 
-    for i in range(0, len(message)):
-        cipher += message[i + 3::]
+        ciphered_message += letter
+
+    return ciphered_message
+
 
 
 if __name__ == '__main__':
-    print(encode("i like turtles", 6))  # -> o roqk zaxzrky
     print(encode("o roqk zaxzrky", 20))  # -> i like turtles
+    print(encode("i like turtles", 6))  # -> o roqk zaxzrky
     print(encode("example", 1))  # -> fybnqmf
     print(encode("don't change", 0))  # -> don't change
     print(encode('the quick brown fox jumps over the lazy dog.', 7))  # -> aol xbpjr iyvdu mve qbtwz vcly aol shgf kvn.

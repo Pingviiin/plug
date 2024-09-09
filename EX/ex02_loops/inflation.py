@@ -36,6 +36,7 @@ def inflation(n: int, goal: int) -> int:
             n *= 7
     return n
 
+
 if __name__ == '__main__':
     print(inflation(10, 11))  # 40
     print(inflation(2, 1000))  # 1440

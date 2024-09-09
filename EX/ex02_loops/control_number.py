@@ -33,13 +33,14 @@ def control_number(encrypted_string: str) -> bool:
     control_number = 0
     control_number = (encrypted_string_lower * 1) + (encrypted_string_upper * 2) + (encrypted_string_symbols * 5)
     
+
     # Find the number at the end of the string
     string_number = ""
     for i in encrypted_string[::-1]:
-        if i.isdigit():
-            string_number += i
-        elif len(list(filter(lambda x: x.isdigit(), string_number))) >= len(list(str(control_number))):
+        if len(string_number) >= len(str(control_number)):
             break
+        elif i.isdigit():
+            string_number += i
         elif i.isdigit() != True:
             break
     
@@ -54,9 +55,11 @@ def control_number(encrypted_string: str) -> bool:
     
 
 if __name__ == '__main__':
+    print(control_number("asdoijODFafiaf#???___!!asidADOFJ...&paskpo#!?!387")) # True
     print(control_number("mE0W5"))  # True
     print(control_number("SomeControlNR?20"))  # False
     print(control_number("False?Nr9"))  # False
     print(control_number("#Hello?!?26"))  # True
     print(control_number("3423982340000000.....///....0"))  # True
     print(control_number("#Shift6"))  # False
+    

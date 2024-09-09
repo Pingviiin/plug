@@ -22,7 +22,6 @@ def control_number(encrypted_string: str) -> bool:
     encrypted_string_lower = len(list(filter(lambda x: x.islower(), encrypted_string)))
     encrypted_string_upper = len(list(filter(lambda x: x.isupper(), encrypted_string)))
 
-
     encrypted_string_symbols = 0
     symbols = ["?", "!", "@", "#"]
 
@@ -32,7 +31,6 @@ def control_number(encrypted_string: str) -> bool:
 
     control_number = 0
     control_number = (encrypted_string_lower * 1) + (encrypted_string_upper * 2) + (encrypted_string_symbols * 5)
-    
 
     # Find the number at the end of the string
     string_number = ""
@@ -53,7 +51,6 @@ def control_number(encrypted_string: str) -> bool:
     else:
         return False
     
-
 if __name__ == '__main__':
     print(control_number("asdoijODFafiaf#???___!!asidADOFJ...&paskpo#!?!387")) # True
     print(control_number("mE0W5"))  # True

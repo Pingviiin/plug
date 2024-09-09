@@ -18,6 +18,37 @@ def control_number(encrypted_string: str) -> bool:
     :param encrypted_string: encrypted string
     :return: validation
     """
+    control_number = 0
+    
+    encrypted_string_lower = len(list(filter(lambda x: x.islower(), encrypted_string)))
+    encrypted_string_upper = len(list(filter(lambda x: x.isupper(), encrypted_string)))
+    
+    encrypted_string_symbols = 0
+    symbols = ["?", "!", "@", "#"]
+    for i in symbols:
+        if i.find(encrypted_string) != -1:
+            encrypted_string_symbols =+ 1
+
+    control_number = (encrypted_string_lower * 1) + (encrypted_string_upper * 2) + (encrypted_string_symbols * 5)
+
+    
+    for i in encrypted_string:
+        if encrypted_string[-1].isdigit():
+            string_number = "".join(i)
+        else:
+            pass
+    
+    #print("lower:", encrypted_string_lower)
+    #print("upper:", encrypted_string_upper)
+    #print("symbols:", encrypted_string_symbols)
+    #print(string_number)
+    print(control_number)
+    """
+    if string_number == control_number:
+        return True
+    else:
+        return False
+    """
 
 if __name__ == '__main__':
     print(control_number("mE0W5"))  # True

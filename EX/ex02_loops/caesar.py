@@ -26,7 +26,7 @@ def encode(message: str, shift: int) -> str:
     """
     ciphered_message = ""
     alphabet = "abcdefghijklmnopqrstuvwxyz"
-    
+
     if shift > 26:
         shift = shift % 26
 
@@ -43,8 +43,6 @@ def encode(message: str, shift: int) -> str:
         ciphered_message += letter
 
     return ciphered_message
-
-
 
 if __name__ == '__main__':
     print(encode("o roqk zaxzrky", 40))  # -> i like turtles

@@ -167,7 +167,12 @@ def is_birthday_in_password(password: str, birthdate: str) -> bool:
     :param birthdate: Birthday of the account owner, format is dd.mm.yyyy
     :return: True if the birthday is present in the password, False otherwise
     """
-    
+    numbers = birthdate.split(".")
+    day = numbers[0]
+    month = numbers[1]
+    year = numbers[2]
+
+    return day in password or month in password or year in password or year[-2] in password or year[::-1] in password
 
 
 def is_password_valid(new_password: str, old_password: str, name: str, birthdate: str) -> bool:
@@ -185,7 +190,14 @@ def is_password_valid(new_password: str, old_password: str, name: str, birthdate
     :param birthdate: The user's birthdate
     :return: True if the password is valid, False otherwise.
     """
-    pass
+    return is_correct_length(new_password) and\
+          includes_uppercase(new_password) and\
+              includes_lowercase(new_password) and\
+                  includes_number(new_password) and\
+                      includes_special(new_password) and\
+                           not is_name_in_password(new_password, name) and\
+                              not is_birthday_in_password(new_password, birthdate) and\
+                                  is_different_from_old_password(old_password, new_password)
 
 
 if __name__ == '__main__':

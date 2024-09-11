@@ -89,16 +89,36 @@ def is_different_from_old_password(old_pass: str, new_pass: str) -> bool:
     :param new_pass: The new password
     :return: True if the new password is different enough, False otherwise
     """
-    matching_value = 0
-
-    for i in range(0, len(old_pass)):
-        if old_pass[i] == new_pass[i]:
-            matching_value += 1
+    #  Convert the string into a letter frequency dictionary.
+    new_pass_characters = {}
+    for i in new_pass:
+        if i in new_pass_characters:
+            new_pass_characters[i] += 1
         else:
-            matching_value -= 1
+            new_pass_characters[i] = 1
 
-    return len(old_pass) / matching_value < 0.5
+    old_pass_characters = {}
+    for i in old_pass:
+        if i in old_pass_characters:
+            old_pass_characters[i] += 1
+        else:
+            old_pass_characters[i] = 1
 
+    #  Check if the old password and the new password have the same character in the dict.
+    #  If they do, return the amount of matching characters. At the end calculate the percentage of matching characters.
+    match_value = 0
+
+    for i in old_pass_characters:
+        if i in new_pass_characters.keys() and i in old_pass_characters.keys():
+            if new_pass_characters.get(i) == old_pass_characters.get(i):
+                match_value += new_pass_characters.get(i)
+            elif new_pass_characters.get(i) < old_pass_characters.get(i):
+                match_value += new_pass_characters.get(i)
+            else:
+                match_value += old_pass_characters.get(i)
+        
+    return match_value / len(new_pass) < 0.5
+            
 def is_name_in_password(password: str, name: str) -> bool:
     """
     Check if the password contains the name of the account owner.
@@ -113,17 +133,17 @@ def is_name_in_password(password: str, name: str) -> bool:
     :param name: The full name of the account owner
     :return: True if the name is present in the password, False otherwise
     """
-    name_list = name.split(" ")
-    name_list += name.split("-")
-    #name_list = list(map(lambda x: x.lower(), name_list))
+
+    name_list = name.replace("-", " ").split(" ")
+    name_list = list(map(lambda x: x.lower(), name_list))
     
-    for i in range(0, len(password)):
-        if name_list[i].lower() in password.lower():
+    for i in range(0, len(name_list)):
+        if name_list[i] in password.lower():
             return True
-        elif name_list[i][::-1].lower() in password.lower():
+        elif name_list[i][::-1] in password.lower():
             return True
-        else:
-            return False
+    else:
+        return False
 
 
 def is_birthday_in_password(password: str, birthdate: str) -> bool:
@@ -147,7 +167,7 @@ def is_birthday_in_password(password: str, birthdate: str) -> bool:
     :param birthdate: Birthday of the account owner, format is dd.mm.yyyy
     :return: True if the birthday is present in the password, False otherwise
     """
-    pass
+    
 
 
 def is_password_valid(new_password: str, old_password: str, name: str, birthdate: str) -> bool:

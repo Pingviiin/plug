@@ -18,8 +18,7 @@ def parse_animal(animal_str: str) -> list:
     :param animal_str: The input string containing animal data.
     :return: A list containing structured animal data.
     """
-
-    pass
+    return list(animal_str.split(","))
 
 
 def list_species_and_scientific_names(animal_data: list) -> list:
@@ -50,7 +49,8 @@ def animals_starting_with(animal_data: list, letter: str) -> list:
     :param letter: The starting letter to filter animals by.
     :return: An alphabetically sorted list of common names of animals that start with the given letter.
     """
-    pass
+    """for i in animal_data:
+        if letter == animal_data[1][0]:"""
 
 
 def find_how_many_pumpkins_are_needed_to_feed_animals(animal_data: list) -> int:
@@ -82,7 +82,7 @@ def total_noise_level(animal_data: list) -> float:
     :param animal_data: A list containing details about multiple animals.
     :return: The total noise level of all animals in the list.
     """
-    return animal_data[3][0] + animal_data[3][1] / 2 * 0.01
+    """return animal_data[3][0] + animal_data[3][1] / 2 * 0.01"""
 
 
 def zoo_parade_length(animal_data: list) -> float:

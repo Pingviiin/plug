@@ -22,10 +22,7 @@ def secret_letter(letter: str) -> bool:
     digits_sum = sum(map(int, digits))
 
     # Match all the conditions given
-    if uppercase_letter_sum > lowercase_letter_sum and digits_sum <= uppercase_letter_sum and digits_sum >= lowercase_letter_sum:
-        return True
-    else:
-        return False
+    return uppercase_letter_sum > lowercase_letter_sum and digits_sum <= uppercase_letter_sum and digits_sum >= lowercase_letter_sum
 
 
 if __name__ == '__main__':

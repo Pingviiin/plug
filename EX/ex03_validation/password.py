@@ -119,7 +119,7 @@ def is_different_from_old_password(old_pass: str, new_pass: str) -> bool:
     
     if match_value == len(new_pass):
         return False
-    return match_value / len(new_pass) < 0.5
+    return match_value / len(new_pass) <= 0.5
             
 def is_name_in_password(password: str, name: str) -> bool:
     """

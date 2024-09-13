@@ -1,5 +1,5 @@
 """Email validation."""
-
+"""
 # Write your functions here
 def has_at_symbol(email: str):
     for i in email:
@@ -45,3 +45,4 @@ if __name__ == '__main__':
     print(create_email_address("jaani.org", "lennakuurma"))  # -> lennakuurma@jaani.org
     print(create_email_address("koobas.com",
                                "karu&pojad"))  # -> Cannot create a valid email address using the given parameters!
+"""

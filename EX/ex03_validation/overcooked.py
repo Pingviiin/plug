@@ -1,4 +1,5 @@
-old_pass = "eva1970" # == "0791ave"
+"""
+old_pass = "eva1970"  # == "0791ave"
 new_pass = "0791ave"
 matching_value = 0
 
@@ -13,6 +14,7 @@ if matching_value == 0:
     print(True)
 else:
     print(len(old_pass) / matching_value < 0.5)
+
 
 def is_name_in_password(password: str, name: str) -> bool:
     #  Convert the string into a letter frequency dictionary.
@@ -42,14 +44,12 @@ def is_name_in_password(password: str, name: str) -> bool:
                 match_value += new_pass_characters.get(i)
             else:
                 match_value += old_pass_characters.get(i)
-    
+
     if match_value == len(new_pass):
         return False
     return match_value / len(new_pass) <= 0.5
 
-
-
-    # Ma siiralt loodan, et selle jaoks ei ole mingit funktsiooni juba sisse ehitatud
+    #  Ma siiralt loodan, et selle jaoks ei ole mingit funktsiooni juba sisse ehitatud
     splice_length = math.ceil(len(new_pass) / 2)
 
     spliced_new_pass = []
@@ -59,7 +59,6 @@ def is_name_in_password(password: str, name: str) -> bool:
     spliced_reversed_new_pass = []
     for i in range(0, len(reversed_new_pass), splice_length):
         spliced_reversed_new_pass += [reversed_new_pass[i:i+splice_length]]
-
 
     match_value = 0
     for i in range(0, len(new_pass) // splice_length):
@@ -71,3 +70,4 @@ def is_name_in_password(password: str, name: str) -> bool:
             return False
     else:
         return True
+"""

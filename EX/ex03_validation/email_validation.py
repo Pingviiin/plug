@@ -59,7 +59,7 @@ if __name__ == '__main__':
     print(find_domain("karla@karu@yahoo.com"))  # -> yahoo.com
 
     print("\nCheck if the domain is correct:")
-    print(is_valid_domain("username.with.dots@domain.d"))  # -> True
+    print(is_valid_domain("ohlala@france.bise"))  # -> True
     print(is_valid_domain("pihkva.pihvid@ttu.ee"))  # -> True
     print(is_valid_domain("metsatoll@&gmail.com"))  # -> False
     print(is_valid_domain("ewewewew@i.u.i.u.ewww"))  # -> False

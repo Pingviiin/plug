@@ -24,7 +24,7 @@ def is_valid_domain(email: str) -> bool:
         return False
     if not 3 <= domain.find(".") <= 10:
         return False
-    if 2 >= domain[::-1].find(".") or domain[::-1].find(".") >= 5:
+    if 2 <= domain[::-1].find(".") <= 5:
         return False
     else:
         return True

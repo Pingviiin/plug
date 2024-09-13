@@ -1,4 +1,6 @@
 """
+See on väga kaua ahjus küpsenud.
+
 old_pass = "eva1970"  # == "0791ave"
 new_pass = "0791ave"
 matching_value = 0

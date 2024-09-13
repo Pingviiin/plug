@@ -93,12 +93,14 @@ def is_different_from_old_password(old_pass: str, new_pass: str) -> bool:
     old_pass = old_pass.lower()
     reversed_new_pass = new_pass[::-1]
 
-    splice_length = math.ceil(len(old_pass) / 2)
-    
+    splice_length = math.ceil(len(new_pass) / 2)
 
-    for i in range(0, splice_length):
+    for i in range(0, len(new_pass)):
         spliced_new_pass = new_pass[i:i + splice_length:]
         spliced_reversed_new_pass = reversed_new_pass[i:i + splice_length:]
+
+        if len(spliced_new_pass) < splice_length:
+            return True
 
         if spliced_new_pass in old_pass:
             return False
@@ -223,6 +225,7 @@ if __name__ == '__main__':
     print(includes_number("ÖJOWE%&/"))  # -> False
 
     print("\nNew password is different from the old one validation:")
+    print(is_different_from_old_password('abcdef', 'xyzabc')) # -> False
     print(is_different_from_old_password("õunamoos", "maasikamoos"))  # -> True
     print(is_different_from_old_password("olevsulev67", "ämblikmees18"))  # -> True
     print(is_different_from_old_password("seinav2rv", "seinakapp"))  # -> False

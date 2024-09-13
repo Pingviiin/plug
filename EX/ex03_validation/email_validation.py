@@ -33,27 +33,24 @@ def is_valid_email_address(email: str) -> bool:
     return has_at_symbol(email) and is_valid_username(email) and is_valid_domain(email)
 
 def create_email_address(domain: str, username: str) -> str:
-    if is_valid_domain(domain) and is_valid_username(username):
-        email = username + "@" + domain
-    else:
-        return "Cannot create a valid email address using the given parameters!"
+    email = username + "@" + domain
     if is_valid_email_address(email):
         return email
     else:
         return "Cannot create a valid email address using the given parameters!"
 
-
 if __name__ == '__main__':
     print("Email has the @ symbol:")
     print(has_at_symbol("joonas.kivi@gmail.com"))  # -> True
     print(has_at_symbol("joonas.kivigmail.com"))  # -> False
-
+    
     print("\nUsername has no special symbols:")
     print(is_valid_username("martalumi@taltech.ee"))  # -> True
     print(is_valid_username("marta.lumi@taltech.ee"))  # -> True
     print(is_valid_username("marta lumi@taltech.ee"))  # -> False
     print(is_valid_username("marta&lumi@taltech.ee"))  # -> False
     print(is_valid_username("marta@lumi@taltech.ee"))  # -> False
+    print(is_valid_username("karu&pojad@koobas.com"))  # -> False
 
     print("\nFind the email domain name:")
     print(find_domain("karla.karu@saku.ee"))  # -> saku.ee
@@ -74,5 +71,5 @@ if __name__ == '__main__':
     print("\nCreate your own email address:")
     print(create_email_address("hot.ee", "vana.ema"))  # -> vana.ema@hot.ee
     print(create_email_address("jaani.org", "lennakuurma"))  # -> lennakuurma@jaani.org
-    print(create_email_address("koobas.com",
-                               "karu&pojad"))  # -> Cannot create a valid email address using the given parameters!
+    print(create_email_address("koobas.com", "karu&pojad"))  # -> Cannot create a valid email address using the given parameters!
+    print(create_email_address("username.with.dots", "domain.dots"))

@@ -93,9 +93,9 @@ def is_different_from_old_password(old_pass: str, new_pass: str) -> bool:
     old_pass = old_pass.lower()
     reversed_new_pass = new_pass[::-1]
 
-    splice_length = math.ceil(len(new_pass) / 2)
+    splice_length = math.ceil(len(old_pass) / 2)
     
-    
+
     for i in range(0, splice_length):
         spliced_new_pass = new_pass[i:i + splice_length:]
         spliced_reversed_new_pass = reversed_new_pass[i:i + splice_length:]
@@ -230,6 +230,7 @@ if __name__ == '__main__':
     print(is_different_from_old_password("eva1970", "0791ave"))  # -> False
     print(is_different_from_old_password("pastapl||ats", "viltpliiats")) # -> True
     print(is_different_from_old_password('abxyab', 'abcxy')) # -> True
+    print(is_different_from_old_password("saunauks", "esiuks")) # -> False
 
     print("\nPassword has your name:")
     print(is_name_in_password("ddccwemelani", "Melani Mets"))  # -> True

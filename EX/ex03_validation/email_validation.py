@@ -22,7 +22,7 @@ def is_valid_domain(email: str) -> bool:
         return False
     if not domain.replace(".", "").isalpha():
         return False
-    if not 2 < domain.find(".") < 9:
+    if not 2 <= domain.find(".") <= 9:
         return False
     if domain[::-1].find(".") > 5:
         return False
@@ -59,10 +59,12 @@ if __name__ == '__main__':
     print(find_domain("karla@karu@yahoo.com"))  # -> yahoo.com
 
     print("\nCheck if the domain is correct:")
+    print(is_valid_domain("wgfwgvowrb@okjwpdmrid.ee"))  # -> False
     print(is_valid_domain("pihkva.pihvid@ttu.ee"))  # -> True
     print(is_valid_domain("metsatoll@&gmail.com"))  # -> False
     print(is_valid_domain("ewewewew@i.u.i.u.ewww"))  # -> False
     print(is_valid_domain("pannkook@m.oos"))  # -> False
+    
 
     print("\nIs the email valid:")
     print(is_valid_email_address("DARJA.darja@gmail.com"))  # -> True

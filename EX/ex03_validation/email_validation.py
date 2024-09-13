@@ -5,7 +5,6 @@ def has_at_symbol(email: str) -> bool:
     return "@" in email
 
 def is_valid_username(email: str) -> bool:
-    
     email = email.rsplit("@", 1)
     return email[0].isalnum() or "." in email[0]
 
@@ -26,14 +25,19 @@ def is_valid_domain(email: str) -> bool:
         return False
     if domain[::-1].find(".") > 5:
         return False
-    return True
+    else:
+        return True
 
 def is_valid_email_address(email: str) -> bool:
     return has_at_symbol(email) and is_valid_username(email) and is_valid_domain(email)
 
 def create_email_address(domain: str, username: str) -> str:
     if is_valid_domain(domain) and is_valid_username(username):
-        return username + "@" + domain
+        email = username + "@" + domain
+    else:
+        return "Cannot create a valid email address using the given parameters!"
+    if is_valid_email_address(email):
+        return email
     else:
         return "Cannot create a valid email address using the given parameters!"
 

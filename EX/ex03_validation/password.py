@@ -93,30 +93,19 @@ def is_different_from_old_password(old_pass: str, new_pass: str) -> bool:
     old_pass = old_pass.lower()
     reversed_new_pass = new_pass[::-1]
 
-
-    # Ma siiralt loodan, et selle jaoks ei ole mingit funktsiooni juba sisse ehitatud
     splice_length = math.ceil(len(new_pass) / 2)
+    
+    
+    for i in range(0, splice_length):
+        spliced_new_pass = new_pass[i:i + splice_length:]
+        spliced_reversed_new_pass = reversed_new_pass[i:i + splice_length:]
 
-    spliced_new_pass = []
-    for i in range(0, len(new_pass), splice_length):
-        spliced_new_pass += [new_pass[i:i+splice_length]]
-
-    spliced_reversed_new_pass = []
-    for i in range(0, len(reversed_new_pass), splice_length):
-        spliced_reversed_new_pass += [reversed_new_pass[i:i+splice_length]]
-
-
-    match_value = 0
-    for i in range(0, len(new_pass) // splice_length):
-        if spliced_new_pass[i] in old_pass:
-            match_value += 1
-        elif spliced_reversed_new_pass[i] in old_pass:
-            match_value += 1
-        if match_value >= (len(new_pass) / splice_length) / 2:
+        if spliced_new_pass in old_pass:
+            return False
+        elif spliced_reversed_new_pass in old_pass:
             return False
     else:
         return True
-            
 
             
 def is_name_in_password(password: str, name: str) -> bool:

@@ -41,14 +41,10 @@ def control_number(encrypted_string: str) -> bool:
         elif not i.isdigit():
             break
 
-    # Flip it like a burger
     string_number = string_number[::-1]
 
     # Check if the number at the end of the string is the same as the control number
-    if int(string_number) == control_number:
-        return True
-    else:
-        return False
+    return int(string_number) == control_number
 
 
 if __name__ == '__main__':

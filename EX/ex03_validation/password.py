@@ -89,8 +89,22 @@ def is_different_from_old_password(old_pass: str, new_pass: str) -> bool:
     :param new_pass: The new password
     :return: True if the new password is different enough, False otherwise
     """
+    new_pass = list(new_pass.lower())
+    old_pass = list(old_pass.lower())
+    reversed_new_pass = new_pass[::-1]
+    match_value = 0
+    check_amount = 0
     for i in range(0, len(new_pass)):
-        for x in range (0, 2):
+        check_amount += 1
+        print(new_pass[i])
+        print(old_pass[i])
+        if new_pass[i] == old_pass[i]:
+            match_value += 1
+        
+        elif reversed_new_pass[i] == old_pass[i]:
+            match_value += 1
+
+    return match_value / check_amount <= 0.5
             
 
             
@@ -108,18 +122,7 @@ def is_name_in_password(password: str, name: str) -> bool:
     :param name: The full name of the account owner
     :return: True if the name is present in the password, False otherwise
     """
-
-    name_list = name.replace("-", " ").split(" ")
-    name_list = list(map(lambda x: x.lower(), name_list))
-    
-    for i in range(0, len(name_list)):
-        if name_list[i] in password.lower():
-            return True
-        elif name_list[i][::-1] in password.lower():
-            return True
-    else:
-        return False
-
+    pass
 
 def is_birthday_in_password(password: str, birthdate: str) -> bool:
     """

@@ -93,8 +93,9 @@ def is_different_from_old_password(old_pass: str, new_pass: str) -> bool:
     old_pass = old_pass.lower()
     reversed_new_pass = new_pass[::-1]
 
+
     # Ma siiralt loodan, et selle jaoks ei ole mingit funktsiooni juba sisse ehitatud
-    splice_length = 2
+    splice_length = len(new_pass) // 2
 
     spliced_new_pass = []
     for i in range(0, len(new_pass), splice_length):
@@ -104,8 +105,8 @@ def is_different_from_old_password(old_pass: str, new_pass: str) -> bool:
     for i in range(0, len(reversed_new_pass), splice_length):
         spliced_reversed_new_pass += [reversed_new_pass[i:i+splice_length]]
 
-    match_value = 0
 
+    match_value = 0
     for i in range(0, len(new_pass) // splice_length):
         if spliced_new_pass[i] in old_pass:
             match_value += 1
@@ -137,7 +138,7 @@ def is_name_in_password(password: str, name: str) -> bool:
 
     name = [i.lower() for i in name]
     password = password.lower()
-    
+
     reversed_name = [i[::-1] for i in name][::-1]
     """
     Pikem versioon just in case
@@ -180,7 +181,7 @@ def is_birthday_in_password(password: str, birthdate: str) -> bool:
     month = numbers[1]
     year = numbers[2]
 
-    return day in password or month in password or year in password or year[-2] in password or year[::-1] in password
+    return day in password or month in password or year in password or year[-2:] in password or year[::-1] in password
 
 
 def is_password_valid(new_password: str, old_password: str, name: str, birthdate: str) -> bool:
@@ -238,6 +239,7 @@ if __name__ == '__main__':
     print(is_different_from_old_password("seinav2rv", "seinakapp"))  # -> False
     print(is_different_from_old_password("merineitsi99", "mereneitsi11"))  # -> False
     print(is_different_from_old_password("eva1970", "0791ave"))  # -> False
+    print(is_different_from_old_password("pastapl||ats", "viltpliiats")) # -> True
 
     print("\nPassword has your name:")
     print(is_name_in_password("ddccwemelani", "Melani Mets"))  # -> True

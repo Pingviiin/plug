@@ -1,15 +1,41 @@
 """Email validation."""
-"""
-# Write your functions here
-def has_at_symbol(email: str):
-    for i in email:
-        if i == "@":
-            return True
-    else:
-        return False
 
-def is_valid_username(email: str):
+# Write your functions here
+def has_at_symbol(email: str) -> bool:
+    return "@" in email
+
+def is_valid_username(email: str) -> bool:
     
+    email = email.rsplit("@", 1)
+    return email[0].isalnum() or "." in email[0]
+
+def find_domain(email: str) -> str:
+    email = email.rsplit("@", 1)
+    return email[-1::]
+
+def is_valid_domain(email: str) -> bool:
+    domain = find_domain(email)
+    domain = "".join(domain)
+    dot = domain.find(".")
+
+    if domain.count(".") > 1:
+        return False
+    if not domain.replace(".", "").isalpha():
+        return False
+    if not 2 < dot < 9:
+        return False
+    if domain[::-1].find(".") > 5:
+        return False
+    return True
+
+def is_valid_email_address(email: str) -> bool:
+    return has_at_symbol(email) and is_valid_username(email) and is_valid_domain(email)
+
+def create_email_address(domain: str, username: str) -> str:
+    if is_valid_domain(domain) and is_valid_username(username):
+        return username + "@" + domain
+    else:
+        return "Cannot create a valid email address using the given parameters!"
 
 
 if __name__ == '__main__':
@@ -45,4 +71,3 @@ if __name__ == '__main__':
     print(create_email_address("jaani.org", "lennakuurma"))  # -> lennakuurma@jaani.org
     print(create_email_address("koobas.com",
                                "karu&pojad"))  # -> Cannot create a valid email address using the given parameters!
-"""

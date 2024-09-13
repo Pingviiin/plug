@@ -17,13 +17,12 @@ def find_domain(email: str) -> str:
 
 def is_valid_domain(email: str) -> bool:
     domain = find_domain(email)
-    dot = domain.find(".")
 
-    if domain.count(".") > 1:
+    if domain.count(".") != 1:
         return False
     if not domain.replace(".", "").isalpha():
         return False
-    if not 2 < dot < 9:
+    if not 2 < domain.find(".") < 9:
         return False
     if domain[::-1].find(".") > 5:
         return False

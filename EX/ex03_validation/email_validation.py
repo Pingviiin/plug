@@ -5,16 +5,18 @@ def has_at_symbol(email: str) -> bool:
     return "@" in email
 
 def is_valid_username(email: str) -> bool:
+    if email.count("@") > 1:
+        return False
     email = email.rsplit("@", 1)
-    return email[0].isalnum() or "." in email[0]
+    return email[0].replace(".","").isalnum() and email[0].count(".") <= 1
 
 def find_domain(email: str) -> str:
     email = email.rsplit("@", 1)
-    return email[-1::]
+    domain = "".join(email[-1])
+    return domain
 
 def is_valid_domain(email: str) -> bool:
     domain = find_domain(email)
-    domain = "".join(domain)
     dot = domain.find(".")
 
     if domain.count(".") > 1:

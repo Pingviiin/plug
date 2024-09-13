@@ -1,6 +1,7 @@
 """Password validation."""
 import math
 
+
 def is_correct_length(password: str) -> bool:
     """
     Check if the password's length is within the valid range.
@@ -109,7 +110,7 @@ def is_different_from_old_password(old_pass: str, new_pass: str) -> bool:
     else:
         return True
 
-            
+
 def is_name_in_password(password: str, name: str) -> bool:
     """
     Check if the password contains the name of the account owner.
@@ -145,6 +146,7 @@ def is_name_in_password(password: str, name: str) -> bool:
             return True
     else:
         return False
+
 
 def is_birthday_in_password(password: str, birthdate: str) -> bool:
     """
@@ -191,13 +193,13 @@ def is_password_valid(new_password: str, old_password: str, name: str, birthdate
     :return: True if the password is valid, False otherwise.
     """
     return is_correct_length(new_password) and\
-          includes_uppercase(new_password) and\
-              includes_lowercase(new_password) and\
-                  includes_number(new_password) and\
-                      includes_special(new_password) and\
-                           not is_name_in_password(new_password, name) and\
-                              not is_birthday_in_password(new_password, birthdate) and\
-                                  is_different_from_old_password(old_password, new_password)
+    includes_uppercase(new_password) and\
+    includes_lowercase(new_password) and\
+    includes_number(new_password) and\
+    includes_special(new_password) and\
+    not is_name_in_password(new_password, name) and\
+    not is_birthday_in_password(new_password, birthdate) and\
+    is_different_from_old_password(old_password, new_password)
 
 
 if __name__ == '__main__':
@@ -225,15 +227,15 @@ if __name__ == '__main__':
     print(includes_number("ÖJOWE%&/"))  # -> False
 
     print("\nNew password is different from the old one validation:")
-    print(is_different_from_old_password('abcdef', 'xyzabc')) # -> False
+    print(is_different_from_old_password('abcdef', 'xyzabc'))  # -> False
     print(is_different_from_old_password("õunamoos", "maasikamoos"))  # -> True
     print(is_different_from_old_password("olevsulev67", "ämblikmees18"))  # -> True
     print(is_different_from_old_password("seinav2rv", "seinakapp"))  # -> False
     print(is_different_from_old_password("merineitsi99", "mereneitsi11"))  # -> False
     print(is_different_from_old_password("eva1970", "0791ave"))  # -> False
-    print(is_different_from_old_password("pastapl||ats", "viltpliiats")) # -> True
-    print(is_different_from_old_password('abxyab', 'abcxy')) # -> True
-    print(is_different_from_old_password("saunauks", "esiuks")) # -> False
+    print(is_different_from_old_password("pastapl||ats", "viltpliiats"))  # -> True
+    print(is_different_from_old_password('abxyab', 'abcxy'))  # -> True
+    print(is_different_from_old_password("saunauks", "esiuks"))  # -> False
 
     print("\nPassword has your name:")
     print(is_name_in_password("ddccwemelani", "Melani Mets"))  # -> True

@@ -89,22 +89,32 @@ def is_different_from_old_password(old_pass: str, new_pass: str) -> bool:
     :param new_pass: The new password
     :return: True if the new password is different enough, False otherwise
     """
-    new_pass = list(new_pass.lower())
-    old_pass = list(old_pass.lower())
+    new_pass = new_pass.lower()
+    old_pass = old_pass.lower()
     reversed_new_pass = new_pass[::-1]
-    match_value = 0
-    check_amount = 0
-    for i in range(0, len(new_pass)):
-        check_amount += 1
-        print(new_pass[i])
-        print(old_pass[i])
-        if new_pass[i] == old_pass[i]:
-            match_value += 1
-        
-        elif reversed_new_pass[i] == old_pass[i]:
-            match_value += 1
 
-    return match_value / check_amount <= 0.5
+    # Ma siiralt loodan, et selle jaoks ei ole mingit funktsiooni juba sisse ehitatud
+    splice_length = 2
+
+    spliced_new_pass = []
+    for i in range(0, len(new_pass), splice_length):
+        spliced_new_pass += [new_pass[i:i+splice_length]]
+
+    spliced_reversed_new_pass = []
+    for i in range(0, len(reversed_new_pass), splice_length):
+        spliced_reversed_new_pass += [reversed_new_pass[i:i+splice_length]]
+
+    match_value = 0
+
+    for i in range(0, len(new_pass) // splice_length):
+        if spliced_new_pass[i] in old_pass:
+            match_value += 1
+        elif spliced_reversed_new_pass[i] in old_pass:
+            match_value += 1
+        if match_value >= (len(new_pass) // splice_length) / 2:
+            return False
+    else:
+        return True
             
 
             
@@ -122,7 +132,27 @@ def is_name_in_password(password: str, name: str) -> bool:
     :param name: The full name of the account owner
     :return: True if the name is present in the password, False otherwise
     """
-    pass
+    name = name.replace("-", " ")
+    name = name.split(" ")
+
+    name = [i.lower() for i in name]
+    password = password.lower()
+    
+    reversed_name = [i[::-1] for i in name][::-1]
+    """
+    Pikem versioon just in case
+    reversed_name = []
+    for i in name:
+        reversed_name.append(i[::-1])
+    """
+
+    for i in range(0, len(name)):
+        if name[i] in password:
+            return True
+        elif reversed_name[i] in password:
+            return True
+    else:
+        return False
 
 def is_birthday_in_password(password: str, birthdate: str) -> bool:
     """

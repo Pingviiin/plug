@@ -2,20 +2,27 @@
 
 # Write your functions here
 def has_at_symbol(email: str) -> bool:
+    """Check if the email has an @."""
     return "@" in email
 
+
 def is_valid_username(email: str) -> bool:
+    """Check if the email has a valid username."""
     if email.count("@") > 1:
         return False
     email = email.rsplit("@", 1)
     return email[0].replace(".","").isalnum()
 
+
 def find_domain(email: str) -> str:
+    """Find the domain from the email."""
     email = email.rsplit("@", 1)
     domain = "".join(email[-1])
     return domain
 
+
 def is_valid_domain(email: str) -> bool:
+    """Check if the domain is valid."""
     domain = find_domain(email)
 
     if domain.count(".") != 1:
@@ -29,15 +36,20 @@ def is_valid_domain(email: str) -> bool:
     else:
         return True
 
+
 def is_valid_email_address(email: str) -> bool:
+    """Check if the email address is valid."""
     return has_at_symbol(email) and is_valid_username(email) and is_valid_domain(email)
 
+
 def create_email_address(domain: str, username: str) -> str:
+    """Create an email address using the conditions from before."""
     email = username + "@" + domain
     if is_valid_email_address(email):
         return email
     else:
         return "Cannot create a valid email address using the given parameters!"
+
 
 if __name__ == '__main__':
     print("Email has the @ symbol:")
@@ -65,7 +77,6 @@ if __name__ == '__main__':
     print(is_valid_domain("ewewewew@i.u.i.u.ewww"))  # -> False
     print(is_valid_domain("pannkook@m.oos"))  # -> False
     
-
     print("\nIs the email valid:")
     print(is_valid_email_address("DARJA.darja@gmail.com"))  # -> True
     print(is_valid_email_address("DARJA=darjamail.com"))  # -> False

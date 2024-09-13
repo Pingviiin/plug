@@ -1,5 +1,5 @@
 """Password validation."""
-
+import math
 
 def is_correct_length(password: str) -> bool:
     """
@@ -95,7 +95,7 @@ def is_different_from_old_password(old_pass: str, new_pass: str) -> bool:
 
 
     # Ma siiralt loodan, et selle jaoks ei ole mingit funktsiooni juba sisse ehitatud
-    splice_length = len(new_pass) // 2
+    splice_length = math.ceil(len(new_pass) / 2)
 
     spliced_new_pass = []
     for i in range(0, len(new_pass), splice_length):
@@ -112,7 +112,7 @@ def is_different_from_old_password(old_pass: str, new_pass: str) -> bool:
             match_value += 1
         elif spliced_reversed_new_pass[i] in old_pass:
             match_value += 1
-        if match_value >= (len(new_pass) // splice_length) / 2:
+        if match_value >= (len(new_pass) / splice_length) / 2:
             return False
     else:
         return True
@@ -240,6 +240,7 @@ if __name__ == '__main__':
     print(is_different_from_old_password("merineitsi99", "mereneitsi11"))  # -> False
     print(is_different_from_old_password("eva1970", "0791ave"))  # -> False
     print(is_different_from_old_password("pastapl||ats", "viltpliiats")) # -> True
+    print(is_different_from_old_password('abxyab', 'abcxy')) # -> True
 
     print("\nPassword has your name:")
     print(is_name_in_password("ddccwemelani", "Melani Mets"))  # -> True

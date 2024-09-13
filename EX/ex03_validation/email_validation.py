@@ -8,7 +8,7 @@ def is_valid_username(email: str) -> bool:
     if email.count("@") > 1:
         return False
     email = email.rsplit("@", 1)
-    return email[0].replace(".","").isalnum() and email[0].count(".") <= 1
+    return email[0].replace(".","").isalnum()
 
 def find_domain(email: str) -> str:
     email = email.rsplit("@", 1)

@@ -8,6 +8,9 @@ def list_of_phones(all_phones: str) -> list:
     The input string contains of phone brands and models, separated by comma.
     Both the brand and the model do not contain spaces (both are one word).
     """
+    if len(all_phones) == 0:
+        return []
+
     return all_phones.split(",")
 
 
@@ -43,6 +46,9 @@ def phone_models(all_phones: str) -> list:
     phones = list_of_phones(all_phones)
     brands = phone_brands(all_phones)
     models = []
+    
+    if len(all_phones) == 0:
+        return []
     
     for i in phones:
         i = i.split(" ")
@@ -133,3 +139,4 @@ if __name__ == '__main__':
     # []
     print(search_by_model("IPhone X,IPhone 12 Pro,IPhone 14 pro Max", "pro"))
     # ['IPhone 12 Pro', 'IPhone 14 pro Max']
+    print(search_by_model(['Google Pixel 2021', 'Google Pixel 2022', 'Random a b c d e f g h i j k l m n o p q r s t u v w x y z'], ))

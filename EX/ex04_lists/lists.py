@@ -93,21 +93,17 @@ def search_by_model(all_phones: str, model: str) -> list:
     The search is case-insensitive.
     """
     phones = list_of_phones(all_phones)
-    models = [x.lower() for x in phone_models(all_phones)]
-    brands = [x.lower() for x in phone_brands(all_phones)]
+    brands = phone_brands(all_phones)
     results = []
 
-    if len(model.split(" ")) > 1:
-        return []
-    if model.lower() in brands:
+    if model in brands:
         return []
 
-    for i in phones:
-        i = i.split(" ")
-        for x in i:
-            if model.lower().count(x.lower()) > 0:
-                results.append(" ".join(i))
-                break
+    for x in phones:
+        i = x.lower().split(" ")
+
+        if model.lower() in i:
+            results.append(x)
 
     return results
 
@@ -140,5 +136,3 @@ if __name__ == '__main__':
     # []
     print(search_by_model("IPhone X,IPhone 12 Pro,IPhone 14 pro Max", "pro"))
     # ['IPhone 12 Pro', 'IPhone 14 pro Max']
-    print(search_by_model(['Google Pixel 2021', 'Google Pixel 2022',
-          'Random a b c d e f g h i j k l m n o p q r s t u v w x y z'], ))

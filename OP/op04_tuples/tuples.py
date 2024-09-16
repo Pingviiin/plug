@@ -137,6 +137,8 @@ def phone_list_as_string(phone_list: list) -> str:
     """
     string = ""
 
+    if phone_list == []:
+        return ""
     for list1 in phone_list:
         for model in list1[1]:
             string += f"{list1[0]} {model},"

@@ -94,6 +94,7 @@ def add_phone_quantity(phone_info: tuple, update: tuple) -> tuple:
     if phone_info[0] != update[0]:
         return ()
 
+    inventory = []
     for i in phone_info[1]:
 
         if i == update[1]:
@@ -121,7 +122,9 @@ def highest_quantity_brand(phones: list[tuple]) -> str:
         summa = sum(phones[i][2])
         result = (name, summa)
         result_list.append(result)
-        
+    
+    if result_list == []:
+        return ""
     return max(result_list, key= lambda x: x[1])[0]
 
 

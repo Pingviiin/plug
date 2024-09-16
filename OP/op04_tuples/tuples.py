@@ -1,5 +1,6 @@
 """Phone inventory vol 2."""
 
+
 def add_phone_quantity(phone_info: tuple, update: tuple) -> tuple:
     """
     Update tuple, if updated data brand and model exist.
@@ -32,17 +33,16 @@ def highest_quantity_brand(phones: list[tuple]) -> str:
     name = ""
     summa = 0
     result_list = []
-    
-    
+
     for i in range(0, len(phones)):
         name = phones[i][0]
         summa = sum(phones[i][2])
         result = (name, summa)
         result_list.append(result)
-    
+
     if result_list == []:
         return ""
-    return max(result_list, key= lambda x: x[1])[0]
+    return max(result_list, key=lambda x: x[1])[0]
 
 
 def phone_list_as_string(phone_list: list) -> str:
@@ -59,12 +59,13 @@ def phone_list_as_string(phone_list: list) -> str:
     for list1 in phone_list:
         for model in list1[1]:
             string += f"{list1[0]} {model},"
-            
+
     return string.rstrip(",")
+
 
 if __name__ == '__main__':
     print(add_phone_quantity(("Apple", ["iPhone 11", "iPhone 12"], (500, 300)),
-                              ("Apple", "iPhone 11", 1)))
+                             ("Apple", "iPhone 11", 1)))
     # ("Apple", ["iPhone 11", "iPhone 12"], (501, 300))
 
     print(add_phone_quantity(
@@ -83,10 +84,10 @@ if __name__ == '__main__':
                                   ("Google", ["Pixel 4", "Pixel 5"], (70, 30))]))
     # Apple
 
-    print(phone_list_as_string([['IPhone', ['11', "12"]], ['Google', ['Pixel']]]))
+    print(phone_list_as_string(
+        [['IPhone', ['11', "12"]], ['Google', ['Pixel']]]))
     # IPhone 11, IPhone 12, Google Pixel
     print(phone_list_as_string([['IPhone', ['11']], ['Google', ['Pixel']]]))
     # IPhone 11,Google Pixel
     print(phone_list_as_string([['HTC', ['one']]]))
     # HTC one
-    

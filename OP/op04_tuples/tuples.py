@@ -4,7 +4,7 @@
 def add_phone_quantity(phone_info: tuple, update: tuple) -> tuple:
     """
     Update tuple, if updated data brand and model exist.
-    
+
     Given a tuple containing a phone brand, its models, and quantities,
     and an update tuple, return the updated data or empty tuple if brand and/or model doesn't exist.
     """

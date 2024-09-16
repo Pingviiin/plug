@@ -1,4 +1,87 @@
 """Phone inventory vol 2."""
+def list_of_phones(all_phones: str) -> list:
+    """
+    Return list of phones.
+
+    The input string contains of phone brands and models, separated by comma.
+    Both the brand and the model do not contain spaces (both are one word).
+    """
+    if len(all_phones) == 0:
+        return []
+
+    return all_phones.split(",")
+
+
+def phone_brands(all_phones: str) -> list:
+    """
+    Return list of unique phone brands.
+
+    The order of the elements should be the same as in the input string (first appearance).
+    """
+    phones = list_of_phones(all_phones)
+    brands = []
+
+    if len(all_phones) == 0:
+        return []
+
+    for i in phones:
+        i = i.split(" ")
+
+        if i[0] in brands:
+            continue
+
+        brands.append(i[0])
+
+    return brands
+
+
+def phone_models(all_phones: str) -> list:
+    """
+    Return list of unique phone models.
+
+    The order of the elements should be the same as in the input string (first appearance).
+    """
+    phones = list_of_phones(all_phones)
+    brands = phone_brands(all_phones)
+    models = []
+
+    if len(all_phones) == 0:
+        return []
+
+    for i in phones:
+        i = i.split(" ")
+
+        for e in brands:
+            if i[0] == e:
+                i.pop(0)
+
+        i = " ".join(i)
+        if i in models:
+            continue
+
+        models.append(i)
+
+    return models
+
+
+def search_by_brand(all_phones: str, brand: str) -> list:
+    """
+    Search for phones by brand.
+
+    The search is case-insensitive.
+    """
+    phones = list_of_phones(all_phones)
+    results = []
+
+    for i in phones:
+        i = i.split(" ")
+
+        for x in i:
+            if brand.lower().count(x.lower()) > 0:
+                results.append(" ".join(i))
+                break
+
+    return results
 
 
 def add_phone_quantity(phone_info: tuple, update: tuple) -> tuple:
@@ -49,16 +132,17 @@ def phone_list_as_string(phone_list: list) -> str:
     The input list is in the same format as the result of phone_brand_and_models function.
     The order of the elements in the string is the same as in the list.
     """
-    a = []
-    for i in phone_list:
-        for x in i:
-            i += x 
-    
-    return a
+    string = ""
+
+    for list1 in phone_list:
+        for model in list1[1]:
+            string += f"{list1[0]} {model},"
+            
+    return string.rstrip(",")
 
 if __name__ == '__main__':
     print(add_phone_quantity(("Apple", ["iPhone 11", "iPhone 12"], (500, 300)),
-                             ("Apple", "iPhone 11", 1)))
+                              ("Apple", "iPhone 11", 1)))
     # ("Apple", ["iPhone 11", "iPhone 12"], (501, 300))
 
     print(add_phone_quantity(
@@ -78,7 +162,7 @@ if __name__ == '__main__':
     # Apple
 
     print(phone_list_as_string([['IPhone', ['11', "12"]], ['Google', ['Pixel']]]))
-    # IPhone 11,Google Pixel
+    # IPhone 11, IPhone 12, Google Pixel
     print(phone_list_as_string([['IPhone', ['11']], ['Google', ['Pixel']]]))
     # IPhone 11,Google Pixel
     print(phone_list_as_string([['HTC', ['one']]]))

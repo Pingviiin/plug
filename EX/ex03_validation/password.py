@@ -105,7 +105,7 @@ def is_different_from_old_password(old_pass: str, new_pass: str) -> bool:
         if spliced_new_pass in old_pass:
             return False
         elif spliced_reversed_new_pass in old_pass:
-            return False
+            return False 
     else:
         return True
 

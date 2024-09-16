@@ -77,8 +77,8 @@ def search_by_brand(all_phones: str, brand: str) -> list:
 
     for i in phones:
         i = i.split(" ")
-        for x in i:
 
+        for x in i:
             if brand.lower().count(x.lower()) > 0:
                 results.append(" ".join(i))
                 break

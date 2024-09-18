@@ -91,7 +91,7 @@ def generate_employee_schedules(employees: list, working_hours: list) -> list:
     :param working_hours: list of working hours for each day
     :return: list of employee schedules
     """
-    return [[employee, hour] for employee in employees for hour in working_hours]
+    return [[employee] + (random.choices(working_hours, weights=None, cum_weights=None, k=5)) for employee in employees]
 
 
 # Exercise 6: Spa Product Inventory

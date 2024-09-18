@@ -63,7 +63,7 @@ def phone_list_as_string(phone_list: list) -> str:
 
 
 if __name__ == '__main__':
-    print(add_phone_quantity(("Apple", ["iPhone 11", "iPhone 12"], (500, 300)),
+    print(add_phone_quantity(("Apple", [], (500, 300)),
                              ("Apple", "iPhone 11", 1)))
     # ("Apple", ["iPhone 11", "iPhone 12"], (501, 300))
 

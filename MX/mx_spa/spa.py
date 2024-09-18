@@ -37,6 +37,8 @@ def create_appointment_slots(hours: list, duration: int, date: str) -> list:
     return [f"{date} {hour}:00 - {(hour + duration) % 24}:00" for hour in hours]
 
 # Exercise 3: Discounted Spa Packages
+
+
 def generate_package_names(adjectives: list) -> list:
     """
     Generate spa package names using given adjectives.
@@ -209,23 +211,27 @@ if __name__ == '__main__':
     duration = 2
     date = "2023-09-20"
     slots = create_appointment_slots(hours, duration, date)
-    print(slots)  # ['2023-09-20 10:00 - 12:00', '2023-09-20 11:00 - 13:00', '2023-09-20 12:00 - 14:00',
+    # ['2023-09-20 10:00 - 12:00', '2023-09-20 11:00 - 13:00', '2023-09-20 12:00 - 14:00',
+    print(slots)
     # '2023-09-20 14:00 - 16:00', '2023-09-20 15:00 - 17:00', '2023-09-20 16:00 - 18:00']
 
     print("\nExercise 3: Discounted Spa Packages")
     adjectives = ["Relaxing", "Pampering", "Ultimate", "Luxury", "Tranquil"]
     packages = generate_package_names(adjectives)
-    print(packages)  # ['Relaxing Spa Package', 'Pampering Spa Package', 'Ultimate Spa Package',
+    # ['Relaxing Spa Package', 'Pampering Spa Package', 'Ultimate Spa Package',
+    print(packages)
     # 'Luxury Spa Package', 'Tranquil Spa Package']
 
     print("\nExercise 4: Customer Feedback")
-    feedback_data = [["Good", 4], ["Poor", 2], ["Excellent", 5], ["Bad", 1], ["Average", 3]]
+    feedback_data = [["Good", 4], ["Poor", 2], [
+        "Excellent", 5], ["Bad", 1], ["Average", 3]]
     positive_feedback = filter_positive_feedback(feedback_data)
     print(positive_feedback)  # ['Good', 'Excellent', 'Average']
 
     print("\nExercise 5: Spa Employee Schedules")
     employees = ["Therapist A", "Therapist B", "Receptionist"]
-    working_hours = ["10:00 AM - 2:00 PM", "2:00 PM - 6:00 PM", "10:00 AM - 6:00 PM"]
+    working_hours = ["10:00 AM - 2:00 PM",
+                     "2:00 PM - 6:00 PM", "10:00 AM - 6:00 PM"]
     schedules = generate_employee_schedules(employees, working_hours)
     for schedule in schedules:
         print(schedule)

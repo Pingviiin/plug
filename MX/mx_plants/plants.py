@@ -18,7 +18,7 @@ def create_care_reminders(plants: list, care_info: dict) -> dict:
     :param care_info: dictionary with plant care information
     :return: dictionary with plants as keys and care reminders as values
     """
-    pass
+    return {plant: "Don't forget to " + care_info.get(plant) for plant in plants}
 
 
 # Exercise 2: Identify Low-Cost Garden Plants
@@ -35,7 +35,7 @@ def identify_low_cost_plants(plant_prices: dict, max_price: float) -> dict:
     :param max_price: maximum price threshold
     :return: dictionary of low-cost garden plants
     """
-    pass
+    return {plant: max_price - plant_prices[plant] for plant in plant_prices if plant_prices[plant] < max_price}
 
 
 # Exercise 3: Calculate Garden Watering Schedule
@@ -53,7 +53,7 @@ def calculate_watering_schedule(plants: list, watering_frequency: int) -> dict:
     :param watering_frequency: frequency of watering in days
     :return: dictionary with plants as keys and watering days as values
     """
-    pass
+    return {plant: round(len(plant) * watering_frequency / (1 + plants.index(plant)), 2) for plant in plants}
 
 
 # Exercise 4: Calculate Total Garden Plant Costs
@@ -69,7 +69,7 @@ def calculate_total_plant_costs(plant_prices: dict, plant_inventory: dict) -> di
     :param plant_inventory: dictionary with amount of plants
     :return: dictionary with plants as keys and total cost as values
     """
-    pass
+    return {plant: plant_prices[plant] * plant_inventory[plant] for plant in plant_prices}
 
 
 # Exercise 5: Calculate Garden Space Requirements
@@ -87,7 +87,7 @@ def calculate_space_requirements(space_per_plant: dict, space_threshold: float) 
     :param space_threshold: minimum space requirement threshold used to categorize plants
     :return: dictionary with plants as keys and "High Space" or "Low Space" as values
     """
-    pass
+    return {plant: "High Space" if space_per_plant[plant] > space_threshold else "Low Space" for plant in space_per_plant}
 
 
 # Exercise 6: Group Plants by Growth Type
@@ -101,10 +101,17 @@ def group_plants_by_growth_type(growth_type: dict) -> dict:
     :param growth_type: dictionary with plants as keys and growth type as values
     :return: dictionary with growth types as keys and a list of plants with that growth type as values
     """
-    pass
-
+    perennial = []
+    annual = []
+    output = {growth_type[plant]: perennial.append(
+        plant) if growth_type[plant] == "Perennial" else annual.append(plant) for plant in growth_type}
+    output.update({"Perennial": perennial})
+    output.update({"Annual": annual})
+    return output
 
 # Exercise 7: Generate Garden Layout
+
+
 def generate_garden_layout(rows: int, columns: int, plant_varieties: list, exclusion_list: list) -> dict:
     """
     Generate a garden layout with rows and columns, assigning random plant varieties to each location.
@@ -122,7 +129,7 @@ def generate_garden_layout(rows: int, columns: int, plant_varieties: list, exclu
     :param exclusion_list: locations to be skipped
     :return: dictionary representing the garden layout
     """
-    pass
+    return {(row, column): random.choice(plant_varieties) for row in range(1, rows + 1) for column in range(1, columns + 1) if (row, column) not in exclusion_list}
 
 
 # Exercise 8: Calculate Sunlight Requirements
@@ -140,7 +147,7 @@ def calculate_sunlight_requirements(plant_types: dict, sunlight_needs: dict, wea
     :param sunlight_needs: dictionary with plants as keys and sunlight needs in hours per day as values
     :return: dictionary with plants as keys and sunlight requirements as values
     """
-    pass
+    return {plant: round(sunlight_needs[plant] * 1.2, 2) if plant_types[plant] == "Sun-Loving" and weather_condition == "sunny" else round(sunlight_needs[plant] * 0.8, 2) if plant_types[plant] == "Sun-Loving" and weather_condition != "sunny" else "" for plant in plant_types if plant_types[plant] == "Sun-Loving"}
 
 
 # Exercise 9: Count Plant Types
@@ -153,7 +160,7 @@ def count_plant_types(plants: list) -> dict:
     :param plants: list of plant names
     :return: dictionary with plant types as keys and their counts as values
     """
-    pass
+    return {plant: plants.count(plant) for plant in plants}
 
 
 # Exercise 10: Determine Garden Plant Health
@@ -183,7 +190,7 @@ def determine_plant_health(plants: list, watering_frequency: dict, sunlight_hour
      affected by pest infestation
     :return: dict, where keys are plants and values are their health status
     """
-    pass
+    return {plant: "Healthy" if calculate_health_score(plant, watering_frequency[plant], sunlight_hours[plant], pest_infestation[plant]) > 8 else "Needs Attention" if calculate_health_score(plant, watering_frequency[plant], sunlight_hours[plant], pest_infestation[plant]) > 5 else "Unhealthy" for plant in plants}
 
 
 def calculate_health_score(plant: str, watering_frequency: int, sunlight_hours: float, pest_infestation: bool) -> float:
@@ -207,7 +214,7 @@ def calculate_health_score(plant: str, watering_frequency: int, sunlight_hours: 
     :param pest_infestation: bool, indicates whether the plant is affected by pest infestation
     :return: float, health score of the plant
     """
-    pass
+    return (len(plant)) + (max(0, int((7 - watering_frequency) / 2))) + (min(2, int(sunlight_hours / 4))) + (-3 if pest_infestation is True else 0)
 
 
 def check_answer(expected, actual):
@@ -250,7 +257,8 @@ if __name__ == '__main__':
 
     # Exercise 2: Identify Low-Cost Garden Plants
     max_price = 5
-    plant_prices = {"Rose": 5, "Tulip": 3, "Lily": 4, "Daisy": 2, "Sunflower": 6, "Orchid": 8}
+    plant_prices = {"Rose": 5, "Tulip": 3, "Lily": 4,
+                    "Daisy": 2, "Sunflower": 6, "Orchid": 8}
     low_cost_plants = identify_low_cost_plants(plant_prices, max_price)
     expected_answer = {'Tulip': 2, 'Lily': 1, 'Daisy': 3}
     print("\nExercise 2: Identify Low-Cost Garden Plants")
@@ -259,22 +267,28 @@ if __name__ == '__main__':
 
     # Exercise 3: Calculate Garden Watering Schedule
     watering_schedule = calculate_watering_schedule(plants, 2)
-    expected_answer = {'Rose': 8.0, 'Tulip': 5.0, 'Lily': 2.67, 'Daisy': 2.5, 'Sunflower': 3.6, 'Orchid': 2.0}
+    expected_answer = {'Rose': 8.0, 'Tulip': 5.0, 'Lily': 2.67,
+                       'Daisy': 2.5, 'Sunflower': 3.6, 'Orchid': 2.0}
     print("\nExercise 3: Calculate Garden Watering Schedule")
     print(watering_schedule)
     check_answer(expected_answer, watering_schedule)
 
     # Exercise 4: Calculate Total Garden Plant Costs
-    plant_prices = {"Rose": 5, "Tulip": 3, "Lily": 4, "Daisy": 2, "Sunflower": 6, "Orchid": 8}
-    plant_inventory = {"Rose": 10, "Tulip": 20, "Lily": 15, "Daisy": 25, "Sunflower": 30, "Orchid": 5}
-    total_plant_costs = calculate_total_plant_costs(plant_prices, plant_inventory)
-    expected_answer = {'Rose': 50, 'Tulip': 60, 'Lily': 60, 'Daisy': 50, 'Sunflower': 180, 'Orchid': 40}
+    plant_prices = {"Rose": 5, "Tulip": 3, "Lily": 4,
+                    "Daisy": 2, "Sunflower": 6, "Orchid": 8}
+    plant_inventory = {"Rose": 10, "Tulip": 20, "Lily": 15,
+                       "Daisy": 25, "Sunflower": 30, "Orchid": 5}
+    total_plant_costs = calculate_total_plant_costs(
+        plant_prices, plant_inventory)
+    expected_answer = {'Rose': 50, 'Tulip': 60, 'Lily': 60,
+                       'Daisy': 50, 'Sunflower': 180, 'Orchid': 40}
     print("\nExercise 4: Calculate Total Garden Plant Costs")
     print(total_plant_costs)
     check_answer(expected_answer, total_plant_costs)
 
     # Exercise 5: Calculate Garden Space Requirements
-    space_per_plant = {"Rose": 2, "Tulip": 1, "Lily": 4, "Daisy": 3, "Sunflower": 4, "Orchid": 10}
+    space_per_plant = {"Rose": 2, "Tulip": 1, "Lily": 4,
+                       "Daisy": 3, "Sunflower": 4, "Orchid": 10}
     space_requirements = calculate_space_requirements(space_per_plant, 3)
     expected_answer = {'Rose': 'Low Space', 'Tulip': 'Low Space', 'Lily': 'High Space', 'Daisy': 'Low Space',
                        'Sunflower': 'High Space', 'Orchid': 'High Space'}
@@ -292,7 +306,8 @@ if __name__ == '__main__':
         "Orchid": "Perennial",
     }
     grouped_plants = group_plants_by_growth_type(growth_type)
-    expected_answer = {'Perennial': ['Rose', 'Lily', 'Orchid'], 'Annual': ['Tulip', 'Daisy', 'Sunflower']}
+    expected_answer = {'Perennial': ['Rose', 'Lily', 'Orchid'], 'Annual': [
+        'Tulip', 'Daisy', 'Sunflower']}
     print("\nExercise 6: Group Plants by Growth Type")
     print(grouped_plants)
     check_answer(expected_answer, grouped_plants)
@@ -309,9 +324,11 @@ if __name__ == '__main__':
     # Exercise 8: Calculate Sunlight Requirements
     plant_types = {"Rose": "Sun-Loving", "Tulip": "Sun-Loving", "Lily": "Shade-Loving", "Daisy": "Mixed",
                    "Sunflower": "Sun-Loving"}
-    sunlight_needs = {"Rose": 6, "Tulip": 4, "Lily": 5, "Daisy": 3, "Sunflower": 6, "Orchid": 5}
+    sunlight_needs = {"Rose": 6, "Tulip": 4, "Lily": 5,
+                      "Daisy": 3, "Sunflower": 6, "Orchid": 5}
     weather_condition = 'sunny'
-    sunlight_requirements = calculate_sunlight_requirements(plant_types, sunlight_needs, weather_condition)
+    sunlight_requirements = calculate_sunlight_requirements(
+        plant_types, sunlight_needs, weather_condition)
     expected_answer = {'Rose': 7.2, 'Tulip': 4.8, 'Sunflower': 7.2}
     print("\nExercise 8: Calculate Sunlight Requirements")
     print(sunlight_requirements)
@@ -321,22 +338,27 @@ if __name__ == '__main__':
     plants2 = ["Rose", "Tulip", "Lily", "Daisy", "Sunflower", "Orchid", "Daisy", "Sunflower", "Orchid",
                "Tulip", "Lily", "Daisy", "Sunflower", "Daisy", "Sunflower", "Orchid", "Orchid", "Orchid"]
     plant_types_count = count_plant_types(plants2)
-    expected_answer = {'Tulip': 2, 'Lily': 2, 'Daisy': 4, 'Sunflower': 4, 'Rose': 1, 'Orchid': 5}
+    expected_answer = {'Tulip': 2, 'Lily': 2, 'Daisy': 4,
+                       'Sunflower': 4, 'Rose': 1, 'Orchid': 5}
     print("\nExercise 9: Count Plant Types")
     print(plant_types_count)
     check_answer(expected_answer, plant_types_count)
 
     # Exercise 10: Determine Garden Plant Health
-    watering_frequency = {"Rose": 3, "Tulip": 2, "Lily": 4, "Daisy": 3, "Sunflower": 2, "Orchid": 1}
-    sunlight_hours = {"Rose": 6, "Tulip": 4, "Lily": 7, "Daisy": 5, "Sunflower": 6, "Orchid": 8}
-    pest_infestation = {"Rose": False, "Tulip": True, "Lily": False, "Daisy": True, "Sunflower": False, "Orchid": False}
-    plant_health = determine_plant_health(plants, watering_frequency, sunlight_hours, pest_infestation)
+    watering_frequency = {"Rose": 3, "Tulip": 2,
+                          "Lily": 4, "Daisy": 3, "Sunflower": 2, "Orchid": 1}
+    sunlight_hours = {"Rose": 6, "Tulip": 4, "Lily": 7,
+                      "Daisy": 5, "Sunflower": 6, "Orchid": 8}
+    pest_infestation = {"Rose": False, "Tulip": True, "Lily": False,
+                        "Daisy": True, "Sunflower": False, "Orchid": False}
+    plant_health = determine_plant_health(
+        plants, watering_frequency, sunlight_hours, pest_infestation)
     expected_answer = {'Rose': 'Needs Attention', 'Tulip': 'Unhealthy', 'Lily': 'Needs Attention', 'Daisy': 'Unhealthy',
                        'Sunflower': 'Healthy', 'Orchid': 'Healthy'}
     print("\nExercise 10: Determine Garden Plant Health")
     print(plant_health)
     check_answer(expected_answer, plant_health)
-    
+
     # Calculate Health Score
     print("\nCalculate Health Score")
     print(calculate_health_score("Rose", 3, 6, False))

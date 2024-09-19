@@ -142,7 +142,7 @@ def calculate_sunlight_requirements(plant_types: dict, sunlight_needs: dict, wea
     :param sunlight_needs: dictionary with plants as keys and sunlight needs in hours per day as values
     :return: dictionary with plants as keys and sunlight requirements as values
     """
-    return {plant: round(sunlight_needs[plant] * 1.2, 2) if plant_types[plant] == "Sun-Loving" and weather_condition == "sunny" else round(sunlight_needs[plant] * 0.8, 2) if plant_types[plant] == "Sun-Loving" and weather_condition != "sunny" else "" for plant in plant_types if plant_types[plant] == "Sun-Loving" and plant_types[plant] in plant_types.values()}
+    return {plant: round(sunlight_needs[plant] * 1.2, 2) if weather_condition == "sunny" else round(sunlight_needs[plant] * 0.8, 2) for plant in plant_types if plant_types[plant] == "Sun-Loving"}
 
 
 # Exercise 9: Count Plant Types

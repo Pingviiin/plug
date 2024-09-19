@@ -101,7 +101,6 @@ def group_plants_by_growth_type(growth_type: dict) -> dict:
     :param growth_type: dictionary with plants as keys and growth type as values
     :return: dictionary with growth types as keys and a list of plants with that growth type as values
     """
-
     return {growth_type[plant]: [a for a in growth_type if growth_type[a] == growth_type[plant]] for plant in growth_type}
 
 # Exercise 7: Generate Garden Layout

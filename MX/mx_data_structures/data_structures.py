@@ -209,7 +209,7 @@ def unique_primes(numbers) -> set:
     """
     Identify unique prime numbers from a list.
 
-    Number is prime if it is greater than 1 and has no divisors other than 1 and itself. Unique means that there is only 
+    Number is prime if it is greater than 1 and has no divisors other than 1 and itself. Unique means that there is only
     one occurrence of the prime number in the result even if it occurs multiple times in the input.
 
     :param numbers: A list of integers.
@@ -232,7 +232,7 @@ def unique_word_lengths(text):
     """
     Return unique word lengths from the given text.
 
-    The text contains only letters and spaces. Words are separated by spaces. The word length is unique if there 
+    The text contains only letters and spaces. Words are separated by spaces. The word length is unique if there
     is only one word of that length.
 
     :param: text (str): The input string to analyze.
@@ -288,8 +288,7 @@ if __name__ == "__main__":
     created_dict = create_dict_from_tuples_and_lists(
         [(1, 2), (3, 4)], [[5, 6], [7, 8]])
     print("create_dict_from_tuples_and_lists:", created_dict)
-    print("Answer is correct:", created_dict ==
-          {(1, 2): [5, 6], (3, 4): [7, 8]})
+    print("Answer is correct:", created_dict == {(1, 2): [5, 6], (3, 4): [7, 8]})
 
     # extract_information_from_string
     extracted_info = extract_information_from_string(

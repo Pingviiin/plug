@@ -101,13 +101,7 @@ def group_plants_by_growth_type(growth_type: dict) -> dict:
     :param growth_type: dictionary with plants as keys and growth type as values
     :return: dictionary with growth types as keys and a list of plants with that growth type as values
     """
-    perennial = []
-    annual = []
-    output = {growth_type[plant]: perennial.append(
-        plant) if growth_type[plant] == "Perennial" else annual.append(plant) for plant in growth_type}
-    output.update({"Perennial": perennial})
-    output.update({"Annual": annual})
-    return output
+    return {growth_type[plant]: [a for a in growth_type if growth_type[a] == growth_type[plant]] for plant in growth_type}
 
 # Exercise 7: Generate Garden Layout
 
@@ -147,7 +141,7 @@ def calculate_sunlight_requirements(plant_types: dict, sunlight_needs: dict, wea
     :param sunlight_needs: dictionary with plants as keys and sunlight needs in hours per day as values
     :return: dictionary with plants as keys and sunlight requirements as values
     """
-    return {plant: round(sunlight_needs[plant] * 1.2, 2) if plant_types[plant] == "Sun-Loving" and weather_condition == "sunny" else round(sunlight_needs[plant] * 0.8, 2) if plant_types[plant] == "Sun-Loving" and weather_condition != "sunny" else "" for plant in plant_types if plant_types[plant] == "Sun-Loving"}
+    return {plant: round(sunlight_needs[plant] * 1.2, 2) if weather_condition == "sunny" else round(sunlight_needs[plant] * 0.8, 2) for plant in plant_types if plant_types[plant] == "Sun-Loving" and plant in sunlight_needs}
 
 
 # Exercise 9: Count Plant Types

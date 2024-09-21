@@ -1,3 +1,6 @@
+import functools
+
+
 """A small exercise in zookeeping."""
 
 
@@ -34,7 +37,7 @@ def list_species_and_scientific_names(animal_data: list) -> list:
     :param animal_data: List of structured animal data.
     :return: List of tuples, where each tuple is structured as (common_name, scientific_name).
     """
-    pass
+    return list(map(lambda x: (animal_data[animal_data.index(x)][0], animal_data[animal_data.index(x)][1]), animal_data))
 
 
 def animals_starting_with(animal_data: list, letter: str) -> list:
@@ -49,8 +52,8 @@ def animals_starting_with(animal_data: list, letter: str) -> list:
     :param letter: The starting letter to filter animals by.
     :return: An alphabetically sorted list of common names of animals that start with the given letter.
     """
-    """for i in animal_data:
-        if letter == animal_data[1][0]:"""
+    #  Ma praegu saan enamvähem aru kuidas see töötab. Kui tulevikus keegi tahab minult selle tööpõhimõtet relvaähvardusega välja, ma ausalt ei mäleta.
+    return list(map(lambda x: animal_data[animal_data.index(x)][0] ,(filter(lambda x: letter == animal_data[animal_data.index(x)][0][0], animal_data))))
 
 
 def find_how_many_pumpkins_are_needed_to_feed_animals(animal_data: list) -> int:
@@ -68,6 +71,7 @@ def find_how_many_pumpkins_are_needed_to_feed_animals(animal_data: list) -> int:
     :param animal_data: List of structured animal data.
     :return: Total number of pumpkins needed, rounded up to the nearest whole number.
     """
+    #2 * 90 * (0.06 * (min_weight + max_weight / 2)) / 3
     pass
 
 
@@ -83,6 +87,7 @@ def total_noise_level(animal_data: list) -> float:
     :return: The total noise level of all animals in the list.
     """
     """return animal_data[3][0] + animal_data[3][1] / 2 * 0.01"""
+    pass
 
 
 def zoo_parade_length(animal_data: list) -> float:

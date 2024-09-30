@@ -1,10 +1,11 @@
+"""
 def add_country_code(number: str) -> str:
     if number[0] == "+":
         return number
     
     else:
         return "+372 " + number
-
+"""
 
 def is_valid(number: str) -> str:
     for n in number:

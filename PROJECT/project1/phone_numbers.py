@@ -7,16 +7,16 @@ def add_country_code(number: str) -> str:
 def is_valid(number: str) -> str:
     if number.startswith("+"):
 
-        if number[1].isdigit():
+            if number[1].isdigit():
 
-            if number[1:7].count(" ") == 1:
+                if number[1:7].count(" ") == 1:
 
-                num_without_cc = number.split(" ")[1]
-                if len(num_without_cc) >= 7:
+                    num_without_cc = number.split(" ")[1]
+                    if len(num_without_cc) >= 7:
 
-                    number_wo_space = number.replace(" ", "")
-                    if number_wo_space[1:].isdigit():
-                        return True
+                        number_wo_space = number.replace(" ", "")
+                        if number_wo_space[1:].isdigit():
+                            return True
     return False
 
 
@@ -35,11 +35,14 @@ def remove_unnecessary_chars(number: str) -> str:
     number = filter(lambda x: x.isdigit(), number)
     number = "".join(number)
 
+    if len(cc) > 5:
+        return cc + number
     if cc == "":
         return number
     if number == "":
         return cc
     return f"+{cc} {number}"
+
 """
 print(remove_unnecessary_chars("+372 *1234567a")) # => "+372 1234567"
 print(remove_unnecessary_chars("+++37ooo2 1234+AAA567")) # => "+372 1234567"

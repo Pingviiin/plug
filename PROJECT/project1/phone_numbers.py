@@ -7,14 +7,16 @@ def add_country_code(number: str) -> str:
 def is_valid(number: str) -> str:
     if number.startswith("+"):
 
-        if number[1:7].count(" ") == 1:
+        if number[1].isdigit():
 
-            num_without_cc = number.split(" ")[1]
-            if len(num_without_cc) >= 7:
+            if number[1:7].count(" ") == 1:
 
-                number_wo_space = number.replace(" ", "")
-                if number_wo_space[1:].isdigit():
-                    return True
+                num_without_cc = number.split(" ")[1]
+                if len(num_without_cc) >= 7:
+
+                    number_wo_space = number.replace(" ", "")
+                    if number_wo_space[1:].isdigit():
+                        return True
     return False
 
 

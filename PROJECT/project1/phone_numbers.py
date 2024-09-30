@@ -1,12 +1,26 @@
 def add_country_code(number: str) -> str:
     if number[0] == "+":
         return number
+    
     else:
         return "+372 " + number
 
 
 def is_valid(number: str) -> str:
-    pass
+    for n in number:
+        if n.isdigit or n == " " or n == "+":
+            continue
+        else:
+            return False
+    
+    if number[0] == "+":
+        space_index = number.find(" ")
+        
+        if 0 < space_index < 5:
+            
+            if len(number[space_index + 1:]) >= 7:
+                return True
+    return False
 
 
 def remove_unnecessary_chars(number: str) -> str:
@@ -28,7 +42,7 @@ def correct_numbers(numbers: list[str]) -> list[str]:
 def get_names_of_contacts_with_correct_numbers(names: list[str], numbers: list[str]) -> list[str]:
     pass
 
-#  Check add_country_code
+#  Check add_country_code 1 2 3 25
 print("add_country_code")
 
 print(add_country_code("1234567")) # => "+372 1234567"

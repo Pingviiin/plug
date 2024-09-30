@@ -1,5 +1,11 @@
 
 def add_country_code(number: str) -> str:
+    for n in number:
+        if n.isdigit or n == " " or n == "+":
+            continue
+        else:
+            return
+    
     if number.startswith("+"):
         return number
     else:

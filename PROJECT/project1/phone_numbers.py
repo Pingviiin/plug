@@ -1,23 +1,16 @@
 
 def add_country_code(number: str) -> str:
-    for n in number:
-        if n.isdigit or n == " " or n == "+":
-            continue
-        else:
-            return
-    
     if number.startswith("+"):
         return number
     else:
         return "+372 " + number
 
 def is_valid(number: str) -> str:
-    """
     if number.startswith("+"):
 
         if number[1].isdigit():
 
-            if number[1:5].count(" ") == 1:
+            if number[1:6].count(" ") == 1:
 
                 num_without_cc = number.split(" ")[1]
                 if len(num_without_cc) >= 7:
@@ -26,9 +19,6 @@ def is_valid(number: str) -> str:
                     if number_wo_space[1:].isdigit():
                         return True
     return False
-    """
-    pass
-
 
 
 def remove_unnecessary_chars(number: str) -> str:

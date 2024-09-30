@@ -15,14 +15,34 @@ def is_valid(number: str) -> str:
                 num_without_cc = number.split(" ")[1]
                 if len(num_without_cc) >= 7:
 
-                    number_wo_space = number.replace(" ", "")
-                    if number_wo_space[1:].isdigit():
+                    num_without_space = number.replace(" ", "")
+                    if num_without_space[1:].isdigit():
                         return True
     return False
 
 
 def remove_unnecessary_chars(number: str) -> str:
-    pass
+    number = number.split(" ", 1)
+    cc = number[0]
+
+    if len(number) > 1:
+        number = number[1]
+
+    cc = list(cc)
+    cc = filter(lambda x: x.isdigit(), cc)
+    cc = "".join(cc)
+    
+    number = list(number)
+    number = filter(lambda x: x.isdigit(), number)
+    number = "".join(number)
+
+    if len(cc) > 5:
+        return cc + number
+    if cc == "":
+        return number
+    if number == "":
+        return cc
+    return f"+{cc} {number}"
 
 
 def get_last_numbers(numbers: list[str], n: int) -> list[str]:
@@ -47,7 +67,7 @@ print(add_country_code("1234567")) # => "+372 1234567"
 print(add_country_code("+372 1234567")) # => "+372 1234567"
 
 
-# Check is_valid 5 6 7 8 9 25
+# Check is_valid 4 5 6 7 8 9 10 25
 print("is_valid")
 
 print(is_valid("+372 1234567")) # => True

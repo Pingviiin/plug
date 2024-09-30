@@ -1,41 +1,28 @@
 
 def add_country_code(number: str) -> str:
-    """if number[0] == "+":
+    if number.startswith("+"):
         return number
-    
     else:
-        return "+372 " + number"""
-    pass
+        return "+372 " + number
 
 def is_valid(number: str) -> str:
+    """
     if number.startswith("+"):
 
-            if number[1].isdigit():
+        if number[1].isdigit():
 
-                if number[1:5].count(" ") == 1:
+            if number[1:5].count(" ") == 1:
 
-                    num_without_cc = number.split(" ")[1]
-                    if len(num_without_cc) >= 7:
+                num_without_cc = number.split(" ")[1]
+                if len(num_without_cc) >= 7:
 
-                        number_wo_space = number.replace(" ", "")
-                        if number_wo_space[1:].isdigit():
-                            return True
-    return False    
-    
-    """for n in number:
-        if n.isdigit or n == " " or n == "+":
-            continue
-        else:
-            return False
-    
-    if number[0] == "+":
-        space_index = number.find(" ")
-        
-        if 0 < space_index < 5:
-            
-            if len(number[space_index + 1:]) >= 7:
-                return True
-    return False"""
+                    number_wo_space = number.replace(" ", "")
+                    if number_wo_space[1:].isdigit():
+                        return True
+    return False
+    """
+    pass
+
 
 
 def remove_unnecessary_chars(number: str) -> str:
@@ -64,7 +51,7 @@ print(add_country_code("1234567")) # => "+372 1234567"
 print(add_country_code("+372 1234567")) # => "+372 1234567"
 
 
-# Check is_valid 6 7 9 25
+# Check is_valid 5 6 7 8 9 25
 print("is_valid")
 
 print(is_valid("+372 1234567")) # => True

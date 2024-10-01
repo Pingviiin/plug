@@ -30,8 +30,7 @@ def is_valid(number: str) -> str:
 def remove_unnecessary_chars(number: str) -> str:
     num = number.rsplit(" ", 1)
     
-    if len(cc) > 1:
-        cc = num[0]
+    cc = num[0]
     if len(num) > 1:
         num = num[1]
 

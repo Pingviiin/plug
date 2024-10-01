@@ -30,9 +30,8 @@ def is_valid(number: str) -> str:
 def remove_unnecessary_chars(number: str) -> str:
     num = number.rsplit(" ", 1)
     cc = num[0]
+    num = num[1]
 
-    if len(num) > 1:
-        num = num[1]
 
     cc = list(cc)
     cc = filter(lambda x: x.isdigit(), cc)
@@ -41,6 +40,7 @@ def remove_unnecessary_chars(number: str) -> str:
     num = list(num)
     num = filter(lambda x: x.isdigit(), num)
     num = "".join(num)
+
 
     if num == "":
         return cc
@@ -85,7 +85,7 @@ print(is_valid("+372 123456")) # => False
 print(is_valid("+372A12345*7")) # => False
 
 
-#  Check remove_unnecessary_chars
+#  Check remove_unnecessary_chars 12 13 15 16
 print("remove_unnecessary_chars")
 
 print(remove_unnecessary_chars("+372 *1234567a")) # => "+372 1234567"

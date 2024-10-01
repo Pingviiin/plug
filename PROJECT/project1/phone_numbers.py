@@ -26,16 +26,38 @@ def is_valid(number: str) -> str:
 
 def remove_unnecessary_chars(number: str) -> str:
     output = ""
-    for i in range(len(number)):
-        if number[i].isdigit():
-            output += number[i]
-        if number[i] == "+":
-            if number[i + 1].isdigit() and any(n.isdigit() for n in number[number.index(" "):]):
-                output += number[i]
-        if number[i] == " ":
-            if any(n.isdigit() for n in number[number.index(" ")::-1]) and any(n.isdigit() for n in number[number.index(" "):]):
-                output += number[i]
-    return output
+    cc_exists = False
+    num_exists = False
+
+    for i, char in enumerate(number):
+        
+        if char == "+":
+            if any(digit.isdigit() for digit in number[i + 1:number.index(" ")]) and not cc_exists:
+                cc_exists = True
+                   
+        elif char.isdigit():
+            output += char
+            
+            
+    if number.count(" ") != 0:
+        if any(digit.isdigit() for digit in number[number.rindex(" "):]):
+            num_exists = True
+            
+    if cc_exists and num_exists:
+        # okei see loop on revolutionary, me loeme mitu numbrit on maakoodis ja paneme kirja
+        digit_count = 0
+        for i in number[number.index("+"):number.index(" ")]:
+            if i.isdigit():
+                digit_count += 1
+                
+        output = list(output)
+        output.insert(digit_count, " ")
+        output = "".join(output)
+        
+        return f"+{output}"
+    
+    
+    return output 
 
 
 

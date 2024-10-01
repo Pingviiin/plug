@@ -4,6 +4,7 @@ def add_country_code(number: str) -> str:
     else:
         return "+372 " + number
 
+
 def is_valid(number: str) -> str:
     if number.startswith("+"):
 
@@ -24,13 +25,15 @@ def remove_unnecessary_chars(number: str) -> str:
     number = number.split(" ", 1)
     cc = number[0]
 
+    if len(cc) > 4:
+        cc = ""
     if len(number) > 1:
         number = number[1]
 
     cc = list(cc)
     cc = filter(lambda x: x.isdigit(), cc)
     cc = "".join(cc)
-    
+
     number = list(number)
     number = filter(lambda x: x.isdigit(), number)
     number = "".join(number)
@@ -40,6 +43,9 @@ def remove_unnecessary_chars(number: str) -> str:
     if number == "":
         return cc
     return f"+{cc} {number}"
+
+
+print(remove_unnecessary_chars('+112345 67890'))
 """
 print(remove_unnecessary_chars("+372 *1234567a")) # => "+372 1234567"
 print(remove_unnecessary_chars("+++37ooo2 1234+AAA567")) # => "+372 1234567"
@@ -49,6 +55,7 @@ print(remove_unnecessary_chars("+abc   ++ ")) # => ""
 print(remove_unnecessary_chars("+372 adbbcc%$")) # => "372"
 """
 
+
 def get_last_numbers(numbers: list[str], n: int) -> list[str]:
     if n > len(numbers):
         return numbers
@@ -56,23 +63,25 @@ def get_last_numbers(numbers: list[str], n: int) -> list[str]:
         return []
     return numbers[-n::]
 
+
 """
 print(get_last_numbers(["+372 1234567", "1234567", "+1 234567890"], 2)) # => ["1234567", "+1 234567890"]
 print(get_last_numbers(["+372 1234567"], 3)) # => ["+372 1234567"]
 print(get_last_numbers(["+372 1234567", "1234567", "+1 234567890"], 0)) # => []
 """
 
+
 def get_first_correct_number(names: list[str], numbers: list[str], name: str) -> str | None:
     for i in range(len(names)):
         if name.lower() == names[i].lower():
             if is_valid(numbers[i]):
                 return numbers[i]
-                    
 
 
 """print(get_first_correct_number(["Alice Smith", "Bob Brown", "Carol White"], ["+372 1234567", "555-1234", "+1 234567890"], "Alice Smith")) #=> "+372 1234567"
 print(get_first_correct_number(["alice Smith", "Alice Smith", "ALICE Smith", "Alice Smith"], ["555-1234", "+372 123456", "+1 234567890", "+44 1234567"], "Alice Smith"))# => "+1 234567890"
 print(get_first_correct_number(["Alice Smith", "Alice Smith", "Alice Smith", "Alice Smith"], ["555-1234", "+372 123456", "+1 234-567890", "+44 123AA567"], "Alice Smith")) #=> None"""
+
 
 def correct_numbers(numbers: list[str]) -> list[str]:
     output = []
@@ -101,6 +110,7 @@ def get_names_of_contacts_with_correct_numbers(names: list[str], numbers: list[s
         if is_valid(number):
             output += [names[numbers.index(number)].title()]
     return output
+
 
 """
 print(get_names_of_contacts_with_correct_numbers(["ALICE Smith", "Bob Brown", "Carol White"], ["+372 1234567", "555-1234", "+1 234567890"])) # => ["Alice Smith", "Carol White"]

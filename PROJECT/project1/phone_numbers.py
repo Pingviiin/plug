@@ -82,7 +82,11 @@ def correct_numbers(numbers: list[str]) -> list[str]:
 
 
 def get_names_of_contacts_with_correct_numbers(names: list[str], numbers: list[str]) -> list[str]:
-    pass
+    output = []
+    for number in numbers:
+        if is_valid(number):
+            output += [names[numbers.index(number)].title()]
+    return output
 
 # 25 function test
 #  Check add_country_code 1 2 3
@@ -129,7 +133,7 @@ print(get_first_correct_number(["alice Smith", "Alice Smith", "ALICE Smith", "Al
 print(get_first_correct_number(["Alice Smith", "Alice Smith", "Alice Smith", "Alice Smith"], ["555-1234", "+372 123456", "+1 234-567890", "+44 123AA567"], "Alice Smith")) #=> None
 
 
-#  Check correct_numbers
+#  Check correct_numbers 27 31 32
 print("correct_numbers")
 
 print(correct_numbers(["+372 12345", "1234567", "+111 23456789", "456"])) #=> ["+372 1234567", "+111 23456789"]

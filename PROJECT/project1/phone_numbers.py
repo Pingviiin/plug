@@ -1,11 +1,15 @@
 
 def add_country_code(number: str) -> str:
+    """
     if number.startswith("+"):
         return number
     else:
         return "+372 " + number
+    """
+    pass
 
 def is_valid(number: str) -> str:
+    """
     if number.startswith("+"):
 
         if number[1].isdigit():
@@ -19,32 +23,36 @@ def is_valid(number: str) -> str:
                     if num_without_space[1:].isdigit():
                         return True
     return False
+    """
+    pass
 
 
 def remove_unnecessary_chars(number: str) -> str:
-    number = number.split(" ", 1)
-    cc = number[0]
+    num = number.rsplit(" ", 1)
+    cc = num[0]
 
-    if len(number) > 1:
-        number = number[1]
+    if len(num) > 1:
+        num = num[1]
 
     cc = list(cc)
     cc = filter(lambda x: x.isdigit(), cc)
     cc = "".join(cc)
     
-    number = list(number)
-    number = filter(lambda x: x.isdigit(), number)
-    number = "".join(number)
+    num = list(num)
+    num = filter(lambda x: x.isdigit(), num)
+    num = "".join(num)
 
-    if len(cc) > 5:
-        return cc + number
-    if cc == "":
-        return number
-    if number == "":
+    if num == "":
         return cc
-    return f"+{cc} {number}"
-
-
+    
+    if cc == "":
+        return num
+    
+    if number[0] == "+":
+        return f"+{cc} {num}"
+    
+    return cc + num
+    
 def get_last_numbers(numbers: list[str], n: int) -> list[str]:
     pass
 
@@ -85,8 +93,7 @@ print(remove_unnecessary_chars("+++37ooo2 1234+AAA567")) # => "+372 1234567"
 print(remove_unnecessary_chars(" 123+h n456!7")) # => "1234567"
 print(remove_unnecessary_chars("+abc 55fd")) # => "55"
 print(remove_unnecessary_chars("+abc   ++ ")) # => ""
-print(remove_unnecessary_chars("+372 adbbcc%$")) # => "372""
-print(remove_unnecessary_chars("67865797689564536"))
+print(remove_unnecessary_chars("+372 adbbcc%$")) # => "372"
 
 
 #  Check get_last_numbers

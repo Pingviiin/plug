@@ -34,6 +34,8 @@ def remove_unnecessary_chars(number: str) -> str:
     if len(num) > 1:
         num = num[1]
 
+    if len(cc) > 5:
+        return num
 
     cc = list(cc)
     cc = filter(lambda x: x.isdigit(), cc)
@@ -47,9 +49,6 @@ def remove_unnecessary_chars(number: str) -> str:
         return cc
     
     if cc == "":
-        return num
-    
-    if len(cc) > 5:
         return num
     
     if number[0] == "+":

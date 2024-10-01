@@ -44,7 +44,7 @@ def remove_unnecessary_chars(number: str) -> str:
     num = "".join(num)
 
     if num == cc:
-        return cc
+        return num
     
     if num == "":
         return cc
@@ -55,7 +55,7 @@ def remove_unnecessary_chars(number: str) -> str:
     if number[0] == "+":
         return f"+{cc} {num}"
     
-    return num + cc
+    return cc + num
     
 def get_last_numbers(numbers: list[str], n: int) -> list[str]:
     pass

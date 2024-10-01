@@ -28,6 +28,7 @@ def is_valid(number: str) -> str:
 
 
 def remove_unnecessary_chars(number: str) -> str:
+    """
     num = number.rsplit(" ", 1)
     
     cc = num[0]
@@ -57,9 +58,14 @@ def remove_unnecessary_chars(number: str) -> str:
         return f"+{cc} {num}"
     
     return cc + num
+    """
     
 def get_last_numbers(numbers: list[str], n: int) -> list[str]:
-    pass
+    if n > len(numbers):
+        return numbers
+    if n <= 0:
+        return []
+    return numbers[-n::]
 
 
 def get_first_correct_number(names: list[str], numbers: list[str], name: str) -> str | None:

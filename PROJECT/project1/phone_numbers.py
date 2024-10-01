@@ -24,7 +24,22 @@ def is_valid(number: str) -> str:
     
 
 
-def remove_unnecessary_chars(number: str) -> str: 
+def remove_unnecessary_chars(number: str) -> str:
+    output = ""
+    for i in range(len(number)):
+        if number[i].isdigit():
+            output += number[i]
+        if number[i] == "+":
+            if number[i + 1].isdigit() and any(n.isdigit() for n in number[number.index(" "):]):
+                output += number[i]
+        if number[i] == " ":
+            if any(n.isdigit() for n in number[number.index(" ")::-1]) and any(n.isdigit() for n in number[number.index(" "):]):
+                output += number[i]
+    return output
+
+
+
+    """
     num = number.rsplit(" ", 1)
     
     cc = num[0]
@@ -54,6 +69,7 @@ def remove_unnecessary_chars(number: str) -> str:
         return f"+{cc} {num}"
     
     return cc + num
+    """
     
     
 def get_last_numbers(numbers: list[str], n: int) -> list[str]:

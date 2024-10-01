@@ -32,7 +32,7 @@ def remove_unnecessary_chars(number: str) -> str:
     for i, char in enumerate(number):
         
         if char == "+":
-            if any(digit.isdigit() for digit in number[i + 1:number.index(" ")]) and not cc_exists:
+            if any(digit.isdigit() for digit in number[i + 1:number.find(" ")]) and not cc_exists:
                 cc_exists = True
                    
         elif char.isdigit():
@@ -40,13 +40,13 @@ def remove_unnecessary_chars(number: str) -> str:
             
             
     if number.count(" ") != 0:
-        if any(digit.isdigit() for digit in number[number.rindex(" "):]):
+        if any(digit.isdigit() for digit in number[number.rfind(" "):]) and len(number[number.rfind(" "):]) > 6:
             num_exists = True
             
     if cc_exists and num_exists:
         # okei see loop on revolutionary, me loeme mitu numbrit on maakoodis ja paneme kirja
         digit_count = 0
-        for i in number[number.index("+"):number.index(" ")]:
+        for i in number[number.find("+"):number.find(" ")]:
             if i.isdigit():
                 digit_count += 1
                 
@@ -55,8 +55,7 @@ def remove_unnecessary_chars(number: str) -> str:
         output = "".join(output)
         
         return f"+{output}"
-    
-    
+
     return output 
 
 
@@ -145,7 +144,7 @@ print(is_valid("+372 123456")) # => False
 print(is_valid("+372A12345*7")) # => False
 
 
-#  Check remove_unnecessary_chars 12 13 15 16 - 14 on puudu
+#  Check remove_unnecessary_chars 12 13 15 16
 print("remove_unnecessary_chars")
 
 print(remove_unnecessary_chars("+372 *1234567a")) # => "+372 1234567"
@@ -154,6 +153,7 @@ print(remove_unnecessary_chars(" 123+h n456!7")) # => "1234567"
 print(remove_unnecessary_chars("+abc 55fd")) # => "55"
 print(remove_unnecessary_chars("+abc   ++ ")) # => ""
 print(remove_unnecessary_chars("+372 adbbcc%$")) # => "372"
+
 
 
 #  Check get_last_numbers 17 18 19 20

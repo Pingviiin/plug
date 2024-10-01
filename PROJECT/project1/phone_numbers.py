@@ -43,13 +43,13 @@ def remove_unnecessary_chars(number: str) -> str:
     num = filter(lambda x: x.isdigit(), num)
     num = "".join(num)
 
-    if len(cc) > 5:
-        return num
-
     if num == "":
         return cc
     
     if cc == "":
+        return num
+    
+    if len(cc) > 5:
         return num
     
     if number[0] == "+":

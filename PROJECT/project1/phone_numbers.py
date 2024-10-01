@@ -132,7 +132,6 @@ print(remove_unnecessary_chars(" 123+h n456!7")) # => "1234567"
 print(remove_unnecessary_chars("+abc 55fd")) # => "55"
 print(remove_unnecessary_chars("+abc   ++ ")) # => ""
 print(remove_unnecessary_chars("+372 adbbcc%$")) # => "372"
-print(remove_unnecessary_chars("+112345 67890")) # => "11234567890"
 
 
 #  Check get_last_numbers 17 18 19 20

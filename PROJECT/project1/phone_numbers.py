@@ -9,7 +9,6 @@ def add_country_code(number: str) -> str:
     pass
 
 def is_valid(number: str) -> str:
-    """
     if number.startswith("+"):
 
         if number[1].isdigit():
@@ -23,8 +22,7 @@ def is_valid(number: str) -> str:
                     if num_without_space[1:].isdigit():
                         return True
     return False
-    """
-    pass
+    
 
 
 def remove_unnecessary_chars(number: str) -> str:

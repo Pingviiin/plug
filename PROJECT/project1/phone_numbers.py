@@ -1,12 +1,10 @@
 
 def add_country_code(number: str) -> str:
-    """
     if number.startswith("+"):
         return number
     else:
         return "+372 " + number
-    """
-    pass
+    
 
 def is_valid(number: str) -> str:
     if number.startswith("+"):
@@ -25,8 +23,7 @@ def is_valid(number: str) -> str:
     
 
 
-def remove_unnecessary_chars(number: str) -> str:
-    """
+def remove_unnecessary_chars(number: str) -> str: 
     num = number.rsplit(" ", 1)
     
     cc = num[0]
@@ -56,16 +53,15 @@ def remove_unnecessary_chars(number: str) -> str:
         return f"+{cc} {num}"
     
     return cc + num
-    """
+    
     
 def get_last_numbers(numbers: list[str], n: int) -> list[str]:
-    """
     if n > len(numbers):
         return numbers
     if n <= 0:
         return []
     return numbers[-n::]
-    """
+
 
 
 def get_first_correct_number(names: list[str], numbers: list[str], name: str) -> str | None:
@@ -76,20 +72,27 @@ def get_first_correct_number(names: list[str], numbers: list[str], name: str) ->
                     
 
 def correct_numbers(numbers: list[str]) -> list[str]:
-    pass
+    output = []
+    for i in numbers:
+        i = add_country_code(i)
+        i = remove_unnecessary_chars(i)
+        if is_valid(i):
+            output += [i]
+    return output
 
 
 def get_names_of_contacts_with_correct_numbers(names: list[str], numbers: list[str]) -> list[str]:
     pass
 
-#  Check add_country_code 1 2 3 25
+# 25 function test
+#  Check add_country_code 1 2 3
 print("add_country_code")
 
 print(add_country_code("1234567")) # => "+372 1234567"
 print(add_country_code("+372 1234567")) # => "+372 1234567"
 
 
-# Check is_valid 4 5 6 7 8 9 10 25
+# Check is_valid 4 5 6 7 8 9 10
 print("is_valid")
 
 print(is_valid("+372 1234567")) # => True
@@ -99,7 +102,7 @@ print(is_valid("+372 123456")) # => False
 print(is_valid("+372A12345*7")) # => False
 
 
-#  Check remove_unnecessary_chars 12 13 15 16
+#  Check remove_unnecessary_chars 12 13 15 16 - 14 on puudu
 print("remove_unnecessary_chars")
 
 print(remove_unnecessary_chars("+372 *1234567a")) # => "+372 1234567"
@@ -118,7 +121,7 @@ print(get_last_numbers(["+372 1234567"], 3)) # => ["+372 1234567"]
 print(get_last_numbers(["+372 1234567", "1234567", "+1 234567890"], 0)) # => []
 
 
-#  Check get_first_correct_number
+#  Check get_first_correct_number 21 22 23 24 26
 print("get_first_correct_number")
 
 print(get_first_correct_number(["Alice Smith", "Bob Brown", "Carol White"], ["+372 1234567", "555-1234", "+1 234567890"], "Alice Smith")) #=> "+372 1234567"

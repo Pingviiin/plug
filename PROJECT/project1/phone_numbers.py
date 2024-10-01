@@ -61,15 +61,20 @@ def remove_unnecessary_chars(number: str) -> str:
     """
     
 def get_last_numbers(numbers: list[str], n: int) -> list[str]:
+    """
     if n > len(numbers):
         return numbers
     if n <= 0:
         return []
     return numbers[-n::]
+    """
 
 
 def get_first_correct_number(names: list[str], numbers: list[str], name: str) -> str | None:
-    pass
+    for i in range(len(names)):
+        if name.lower() == names[i].lower():
+            if is_valid(numbers[i]):
+                return numbers[i]
                     
 
 def correct_numbers(numbers: list[str]) -> list[str]:
@@ -107,7 +112,7 @@ print(remove_unnecessary_chars("+abc   ++ ")) # => ""
 print(remove_unnecessary_chars("+372 adbbcc%$")) # => "372"
 
 
-#  Check get_last_numbers
+#  Check get_last_numbers 17 18 19 20
 print("get_last_numbers")
 
 print(get_last_numbers(["+372 1234567", "1234567", "+1 234567890"], 2)) # => ["1234567", "+1 234567890"]

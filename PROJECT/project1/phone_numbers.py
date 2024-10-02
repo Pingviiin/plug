@@ -25,42 +25,7 @@ def is_valid(number: str) -> str:
 
 
 def remove_unnecessary_chars(number: str) -> str:
-    output = ""
-    cc_exists = False
-    num_exists = False
 
-    for i, char in enumerate(number):
-        
-        if char == "+":
-            if any(digit.isdigit() for digit in number[i + 1:number.find(" ")]) and not cc_exists:
-                cc_exists = True
-                   
-        elif char.isdigit():
-            output += char
-            
-            
-    if number.count(" ") != 0:
-        if any(digit.isdigit() for digit in number[number.rfind(" "):]) and len(number[number.rfind(" "):]) > 6:
-            num_exists = True
-            
-    if cc_exists and num_exists:
-        # okei see loop on revolutionary, me loeme mitu numbrit on maakoodis ja paneme kirja
-        digit_count = 0
-        for i in number[number.find("+"):number.find(" ")]:
-            if i.isdigit():
-                digit_count += 1
-                
-        output = list(output)
-        output.insert(digit_count, " ")
-        output = "".join(output)
-        
-        return f"+{output}"
-
-    return output 
-
-
-
-    """
     num = number.rsplit(" ", 1)
     
     cc = num[0]
@@ -90,7 +55,7 @@ def remove_unnecessary_chars(number: str) -> str:
         return f"+{cc} {num}"
     
     return cc + num
-    """
+
     
     
 def get_last_numbers(numbers: list[str], n: int) -> list[str]:
@@ -152,7 +117,8 @@ print(remove_unnecessary_chars("+++37ooo2 1234+AAA567")) # => "+372 1234567"
 print(remove_unnecessary_chars(" 123+h n456!7")) # => "1234567"
 print(remove_unnecessary_chars("+abc 55fd")) # => "55"
 print(remove_unnecessary_chars("+abc   ++ ")) # => ""
-print(remove_unnecessary_chars("+372 adbbcc%$")) # => "372"
+print(remove_unnecessary_chars("+372 adb55bcc%$")) # => "372"
+print(remove_unnecessary_chars("+123456789 0")) # => "+123456789 0"
 
 
 

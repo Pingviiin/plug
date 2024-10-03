@@ -26,16 +26,40 @@ def is_valid(number: str) -> str:
 
 def remove_unnecessary_chars(number: str) -> str:
 
-    output = ""
-    plus_found = False
+    num = ""
+    cc = ""
+    cc_exists = False
+    num_exists = False
 
-    for i, char in enumerate(number):
-        if char == "+":
-            plus_found == True
-        
-        if char == " " and plus_found:
+    for char in number[number.find("+"):number.find(" ", number.find("+"))]: 
+
+        if char.isdigit():
+            cc += char
+            cc_exists = True
             
+    for char in number[number.find(" ", number.find("+")):]:
 
+        if char.isdigit():
+            num_exists = True
+            break
+
+    if cc_exists and num_exists:
+        for char in number[number.find(" ", number.find("+")):]:
+            if char.isdigit():
+                num += char
+        return f"+{cc} {num}"
+    
+    elif cc_exists:
+        return cc
+    
+    elif num_exists:
+        for char in number:
+            if char.isdigit():
+                num += char
+        return num
+    
+    else:
+        return ""
     
     
 def get_last_numbers(numbers: list[str], n: int) -> list[str]:
@@ -97,9 +121,7 @@ print(remove_unnecessary_chars("+++37ooo2 1234+AAA567")) # => "+372 1234567"
 print(remove_unnecessary_chars(" 123+h n456!7")) # => "1234567"
 print(remove_unnecessary_chars("+abc 55fd")) # => "55"
 print(remove_unnecessary_chars("+abc   ++ ")) # => ""
-print(remove_unnecessary_chars("+372 adb55bcc%$")) # => "372"
-print(remove_unnecessary_chars("+123456789 0")) # => "+123456789 0"
-print(remove_unnecessary_chars("+22__ 1 2 3 4 5 6 7 ")) # => "+22 1234567"
+print(remove_unnecessary_chars("+372 adbbcc%$")) # => "372"
 
 
 

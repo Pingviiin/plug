@@ -56,7 +56,11 @@ def remove_unnecessary_chars(number: str) -> str:
         else:
             continue
         break
-            
+    
+    for i in number[plus_index::-1]:
+        if i.isdigit():
+            cc_exists = False
+            break
 
     # vaatab kas pärast tühikut on number
     if cc_exists and plus_exists:
@@ -139,14 +143,14 @@ print(is_valid("+372A12345*7")) # => False
 #  Check remove_unnecessary_chars 12 13 14 15 16
 print("remove_unnecessary_chars")
 
-#print(remove_unnecessary_chars("+372 *1234567a")) # => "+372 1234567"
-#print(remove_unnecessary_chars("+++37ooo2 1234+AAA567")) # => "+372 1234567"
-#print(remove_unnecessary_chars(" 123+h n456!7")) # => "1234567"
-#print(remove_unnecessary_chars("+abc 55fd")) # => "55"
-#print(remove_unnecessary_chars("+abc   ++ ")) # => ""
-#print(remove_unnecessary_chars("+372 adbbcc%$")) # => "372"
-#print(remove_unnecessary_chars("+abc 55 5 5fd")) # => "+55 55"
-print(remove_unnecessary_chars("12575 +564564 + 324"))
+print(remove_unnecessary_chars("+372 *1234567a")) # => "+372 1234567"
+print(remove_unnecessary_chars("+++37ooo2 1234+AAA567")) # => "+372 1234567"
+print(remove_unnecessary_chars(" 123+h n456!7")) # => "1234567"
+print(remove_unnecessary_chars("+abc 55fd")) # => "55"
+print(remove_unnecessary_chars("+abc   ++ ")) # => ""
+print(remove_unnecessary_chars("+372 adbbcc%$")) # => "372"
+print(remove_unnecessary_chars("+abc 55 5 5fd")) # => "+55 55"
+print(remove_unnecessary_chars("12575 +564564 + 324"))  # 1257556564324
 
 
 #  Check get_last_numbers 17 18 19 20

@@ -1,5 +1,7 @@
 """
 Phone number checker.
+
+Siia koodi on ohverdatud vähemalt 6 vabatahtlikku last, kelle otsus ei olnud kindlasti mitte mõjutatud väliste faktorite poolt.
 """
 
 
@@ -44,7 +46,7 @@ def is_valid(number: str) -> bool:
 
 
 def remove_unnecessary_chars(number: str) -> str:
-    """Removes everything except for the country code and phone number
+    """Remove everything except for the country code and phone number.
 
     Args:
         number (str): A phone number

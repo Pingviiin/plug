@@ -1,7 +1,17 @@
+"""
+Phone number checker.
+"""
+
 
 def add_country_code(number: str) -> str:
-    """
-    Add country code infront of number.
+    """Add country code infront of phone number.
+    If a phone number already has a country code return it.
+
+    Args:
+        number (str): A phone number
+
+    Returns:
+        str: A phone number with a country code
     """
     if number.startswith("+"):
         return number
@@ -9,7 +19,15 @@ def add_country_code(number: str) -> str:
         return "+372 " + number
 
 
-def is_valid(number: str) -> str:
+def is_valid(number: str) -> bool:
+    """Check if a phone number is correctly formatted.
+
+    Args:
+        number (str): A phone number
+
+    Returns:
+        bool: True if correctly formatted, False if not
+    """
     if number.startswith("+"):
 
         if number[1].isdigit():
@@ -26,10 +44,17 @@ def is_valid(number: str) -> str:
 
 
 def remove_unnecessary_chars(number: str) -> str:
-    """
-    Remove unnecessary characters from string.
+    """Removes everything except for the country code and phone number
+
+    Args:
+        number (str): A phone number
+
+    Returns:
+        str: A filtered phone number with or without a country code.
     """
     output_num = ""
+    fnum_index = -1
+
     # võtame kõik prügi ära
     num = list(filter(lambda x: x.isdigit() or x == " ", number))
     num = "".join(num)
@@ -45,15 +70,16 @@ def remove_unnecessary_chars(number: str) -> str:
         output_num = "".join(list(filter(lambda x: x.isdigit(), output_num)))
 
     # kus küll peitub esimene number?
-    fnum_index = -1
     for i, char in enumerate(number):
         if char.isdigit():
             fnum_index = i - 1
             break
 
+    # kui + pole või on enne esimest numbrit
     if fnum_index < number.find("+") or number.count("+") == 0:
         return cc + output_num
 
+    # kui number või maakood on on puudu siis cancel
     elif len(cc) > 0 and len(output_num) > 0:
         return f"+{cc} {output_num}"
 
@@ -62,6 +88,15 @@ def remove_unnecessary_chars(number: str) -> str:
 
 
 def get_last_numbers(numbers: list[str], n: int) -> list[str]:
+    """Get the n amount of numbers from a list of phone numbers.
+
+    Args:
+        numbers (list[str]): List of phone numbers
+        n (int): Amount of phone numbers
+
+    Returns:
+        list[str]: _description_
+    """
     if n > len(numbers):
         return numbers
     if n <= 0:
@@ -70,6 +105,16 @@ def get_last_numbers(numbers: list[str], n: int) -> list[str]:
 
 
 def get_first_correct_number(names: list[str], numbers: list[str], name: str) -> str | None:
+    """Get the first correct number from a contact list.
+
+    Args:
+        names (list[str]): List of contact names
+        numbers (list[str]): List of phone numbers
+        name (str): Contact name which needs to match a phone number
+
+    Returns:
+        str | None: No contact with such name is found
+    """
     for i in range(len(names)):
         if name.lower() == names[i].lower():
             if is_valid(numbers[i]):
@@ -77,6 +122,14 @@ def get_first_correct_number(names: list[str], numbers: list[str], name: str) ->
 
 
 def correct_numbers(numbers: list[str]) -> list[str]:
+    """Filter correct numbers from a list if possible.
+
+    Args:
+        numbers (list[str]): List of phone numbers.
+
+    Returns:
+        list[str]: List of correctly formatted phone numbers.
+    """
     output = []
     for number in numbers:
         number = remove_unnecessary_chars(number)
@@ -87,6 +140,15 @@ def correct_numbers(numbers: list[str]) -> list[str]:
 
 
 def get_names_of_contacts_with_correct_numbers(names: list[str], numbers: list[str]) -> list[str]:
+    """Check if a contact has a correct phone number.
+
+    Args:
+        names (list[str]): A list of names with random case.
+        numbers (list[str]): A list of random phone numbers.
+
+    Returns:
+        list[str]: A list of names which had correct phone numbers.
+    """
     output = []
     for number in numbers:
         if is_valid(number):

@@ -78,11 +78,11 @@ def get_first_correct_number(names: list[str], numbers: list[str], name: str) ->
 
 def correct_numbers(numbers: list[str]) -> list[str]:
     output = []
-    for i in numbers:
-        i = add_country_code(i)
-        i = remove_unnecessary_chars(i)
-        if is_valid(i):
-            output += [i]
+    for number in numbers:
+        number = remove_unnecessary_chars(number)
+        number = add_country_code(number)
+        if is_valid(number):
+            output += [number]
     return output
 
 

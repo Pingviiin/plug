@@ -42,6 +42,9 @@ def remove_unnecessary_chars(number: str) -> str:
         if char.isdigit():
             num_exists = True
             break
+    
+    if number.find(" ") == -1:
+        num_exists = True
 
     if cc_exists and num_exists:
         for char in number[number.find(" ", number.find("+")):]:
@@ -49,17 +52,16 @@ def remove_unnecessary_chars(number: str) -> str:
                 num += char
         return f"+{cc} {num}"
     
-    elif cc_exists:
+    if cc_exists:
         return cc
     
-    elif num_exists:
+    if num_exists:
         for char in number:
             if char.isdigit():
                 num += char
         return num
     
-    else:
-        return ""
+    return ""
     
     
 def get_last_numbers(numbers: list[str], n: int) -> list[str]:

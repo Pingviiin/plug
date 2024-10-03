@@ -26,42 +26,63 @@ def is_valid(number: str) -> str:
 
 def remove_unnecessary_chars(number: str) -> str:
 
-    num = ""
+    output = ""
     cc = ""
     cc_exists = False
     num_exists = False
-
-    for char in number[number.find("+"):number.find(" ", number.find("+")) + 1]: 
-
-        if char.isdigit():
-            cc += char
-            cc_exists = True
-            
-    for char in number[number.find(" ", number.find("+")):]:
-
-        if char.isdigit():
-            num_exists = True
+    plus_index = 0
+    space_indexs = []
+    
+    "+abc 55 5 5fd"
+    
+    # otsib plusi indexi stringist
+    for i, plus in enumerate(number):
+        if plus == "+":
+            plus_index = i
             break
-    
-    if number.find(" ") == -1:
-        num_exists = True
 
-    if cc_exists and num_exists:
-        for char in number[number.find(" ", number.find("+")):]:
+    # otsib kõik space indexid stringist
+    for i, space in enumerate(number):
+        if space == " ":
+            space_indexs += [i]
+
+    # otsib kas plusi ja tühiku vahel on numberid
+    for si in space_indexs:
+        for i, char in enumerate(number[plus_index + 1:si]):
             if char.isdigit():
-                num += char
-        return f"+{cc} {num}"
-    
+                cc_exists = True
+                space_index = si
+                break
+        else:
+            continue
+        break
+            
+
+    # vaatab kas pärast tühikut on number
     if cc_exists:
-        return cc
+        for char in number[space_index + 1:]:
+            if char.isdigit():
+                num_exists = True
+                break
     
-    if num_exists:
+    # õige number
+    if cc_exists and num_exists:
+        for char in number[plus_index:space_index]:
+            if char.isdigit():
+                cc += char
+
+        for char in number[space_index:]:
+            if char.isdigit():
+                output += char
+                
+        return f"+{cc} {output}"
+    
+    # suvaline number
+    else:
         for char in number:
             if char.isdigit():
-                num += char
-        return num
-    
-    return ""
+                output += char
+        return output
     
     
 def get_last_numbers(numbers: list[str], n: int) -> list[str]:
@@ -124,7 +145,7 @@ print(remove_unnecessary_chars(" 123+h n456!7")) # => "1234567"
 print(remove_unnecessary_chars("+abc 55fd")) # => "55"
 print(remove_unnecessary_chars("+abc   ++ ")) # => ""
 print(remove_unnecessary_chars("+372 adbbcc%$")) # => "372"
-
+print(remove_unnecessary_chars("+abc 55 5 5fd")) # => "+55 55"
 
 
 #  Check get_last_numbers 17 18 19 20

@@ -26,35 +26,15 @@ def is_valid(number: str) -> str:
 
 def remove_unnecessary_chars(number: str) -> str:
 
-    num = number.rsplit(" ", 1)
-    
-    cc = num[0]
-    if len(num) > 1:
-        num = num[1]
+    output = ""
+    plus_found = False
 
-
-    cc = list(cc)
-    cc = filter(lambda x: x.isdigit(), cc)
-    cc = "".join(cc)
-    
-    num = list(num)
-    num = filter(lambda x: x.isdigit(), num)
-    num = "".join(num)
-
-
-    if num == cc:
-        return num
-    
-    if num == "":
-        return cc
-    
-    if cc == "":
-        return num
-    
-    if number[0] == "+":
-        return f"+{cc} {num}"
-    
-    return cc + num
+    for i, char in enumerate(number):
+        if char == "+":
+            plus_found == True
+        
+        if char == " " and plus_found:
+            
 
     
     
@@ -119,6 +99,7 @@ print(remove_unnecessary_chars("+abc 55fd")) # => "55"
 print(remove_unnecessary_chars("+abc   ++ ")) # => ""
 print(remove_unnecessary_chars("+372 adb55bcc%$")) # => "372"
 print(remove_unnecessary_chars("+123456789 0")) # => "+123456789 0"
+print(remove_unnecessary_chars("+22__ 1 2 3 4 5 6 7 ")) # => "+22 1234567"
 
 
 

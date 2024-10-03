@@ -31,7 +31,7 @@ def remove_unnecessary_chars(number: str) -> str:
     cc_exists = False
     num_exists = False
 
-    for char in number[number.find("+"):number.find(" ", number.find("+"))]: 
+    for char in number[number.find("+"):number.find(" ", number.find("+")) + 1]: 
 
         if char.isdigit():
             cc += char

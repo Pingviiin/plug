@@ -34,8 +34,6 @@ def remove_unnecessary_chars(number: str) -> str:
     plus_index = 0
     space_indexs = []
     
-    "+abc 55 5 5fd"
-    
     # otsib plusi indexi stringist
     for i, plus in enumerate(number):
         if plus == "+":
@@ -138,7 +136,7 @@ print(is_valid("+372 123456")) # => False
 print(is_valid("+372A12345*7")) # => False
 
 
-#  Check remove_unnecessary_chars 12 13 15 16
+#  Check remove_unnecessary_chars 12 13 14 15 16
 print("remove_unnecessary_chars")
 
 #print(remove_unnecessary_chars("+372 *1234567a")) # => "+372 1234567"
@@ -148,6 +146,7 @@ print("remove_unnecessary_chars")
 #print(remove_unnecessary_chars("+abc   ++ ")) # => ""
 #print(remove_unnecessary_chars("+372 adbbcc%$")) # => "372"
 #print(remove_unnecessary_chars("+abc 55 5 5fd")) # => "+55 55"
+print(remove_unnecessary_chars("12575 +564564 + 324"))
 
 
 #  Check get_last_numbers 17 18 19 20

@@ -7,7 +7,6 @@ Siia koodi on ohverdatud vähemalt 6 vabatahtlikku last, kelle otsus ei olnud ki
 
 def add_country_code(number: str) -> str:
     """Add country code infront of phone number.
-    If a phone number already has a country code return it.
 
     Args:
         number (str): A phone number

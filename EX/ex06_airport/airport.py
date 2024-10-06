@@ -154,10 +154,15 @@ def destinations_by_airline(schedule: dict, airline_names: dict) -> dict:
     for code in airline_names:
         if not schedule == {} and not airline_names == {}:
             output[airline_names[code]] = set()
+
             for i in schedule:
                 if schedule[i][1][:3] == code:
                     output[airline_names[code]].add(schedule[i][0])
-
+                    
+    for i in output:
+        if output[i] == set():
+            output.pop(i)
+            
     return output
 
 
@@ -182,7 +187,7 @@ if __name__ == '__main__':
     # {'08:00': ('Tallinn', 'OWL1234'), '10:35': ('Helsinki', 'BHM5678'), '09:00': ('Tallinn', 'OWL1235')}
 
     schedule = {'08:00': ('Tallinn', 'OWL1234'), '10:35': (
-        'Helsinki', 'BHM5678'), '09:00': ('Tallinn', 'OWL1235'), '12:00': ('London', 'OWL1235'), '13:00': ('Paris', 'OWL1235')}
+        'Helsinki', 'BHM5678'), '09:00': ('Tallinn', ''), '12:00': ('London', ''), '13:00': ('Paris', 'OWL1235')}
     print(destinations_list(schedule))
     # ['Helsinki', 'Tallinn']
 

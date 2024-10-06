@@ -160,7 +160,7 @@ def destinations_by_airline(schedule: dict, airline_names: dict) -> dict:
                     code_exists = True
                     output[airline_names[code]].add(schedule[i][0])
             else:
-                if code_exists == False:
+                if not code_exists:
                     output.pop(airline_names[code])
 
     return output

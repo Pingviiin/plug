@@ -153,9 +153,9 @@ def destinations_by_airline(schedule: dict, airline_names: dict) -> dict:
     output = {}
     for code in airline_names:
         if not schedule == {} and not airline_names == {}:
-            output[airline_names[code]] = set()
             for i in schedule:
                 if schedule[i][1][:3] == code:
+                    output[airline_names[code]] = set()
                     output[airline_names[code]].add(schedule[i][0])
 
     return output

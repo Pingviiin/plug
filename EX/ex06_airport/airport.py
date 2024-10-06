@@ -158,9 +158,10 @@ def destinations_by_airline(schedule: dict, airline_names: dict) -> dict:
             for i in schedule:
                 if schedule[i][1][:3] == code:
                     output[airline_names[code]].add(schedule[i][0])
-                    
-    for i in output:
-        if output[i] == set():
+
+    filtering = output.copy()
+    for i in filtering:
+        if filtering[i] == set():
             output.pop(i)
             
     return output

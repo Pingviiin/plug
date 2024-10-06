@@ -149,21 +149,20 @@ def destinations_by_airline(schedule: dict, airline_names: dict) -> dict:
     :param airline_names: Dictionary containing mapping of airline codes to airline names.
     :return: Dictionary of airline names to sets of destinations.
     """
-
     output = {}
     for code in airline_names:
+        code_exists = False
         if not schedule == {} and not airline_names == {}:
             output[airline_names[code]] = set()
 
             for i in schedule:
                 if schedule[i][1][:3] == code:
+                    code_exists = True
                     output[airline_names[code]].add(schedule[i][0])
+            else:
+                if code_exists == False:
+                    output.pop(airline_names[code])
 
-    filtering = output.copy()
-    for i in filtering:
-        if filtering[i] == set():
-            output.pop(i)
-            
     return output
 
 
@@ -188,12 +187,12 @@ if __name__ == '__main__':
     # {'08:00': ('Tallinn', 'OWL1234'), '10:35': ('Helsinki', 'BHM5678'), '09:00': ('Tallinn', 'OWL1235')}
 
     schedule = {'08:00': ('Tallinn', 'OWL1234'), '10:35': (
-        'Helsinki', 'BHM5678'), '09:00': ('Tallinn', ''), '12:00': ('London', ''), '13:00': ('Paris', 'OWL1235')}
+        'Helsinki', 'BHM5678'), '09:00': ('Tallinn', 'a'), '12:00': ('London', 'a'), '13:00': ('Paris', 'OWL1235')}
     print(destinations_list(schedule))
     # ['Helsinki', 'Tallinn']
 
     airlines = {"OWL": "Owlbear Airlines",
-                "BHM": "Beholder's Majesty Airlines"}
+                "": "Beholder's Majesty Airlines"}
 
     print(airlines_operating_today(schedule, airlines))
     # {'Owlbear Airlines', "Beholder's Majesty Airlines"}

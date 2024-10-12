@@ -132,17 +132,17 @@ def busiest_hour(schedule: dict[str, tuple[str, str]]) -> list[str]:
              ["08:00", "15:20"]
              If the schedule is empty, returns an empty list.
     """
-    output = []
-    for i, time in enumerate(schedule):
-        if i + 1 < len(schedule):
-            first_flight = list(schedule)[i]
-            second_flight = list(schedule)[i+1]
-            first_minutes = int(first_flight.split(":")[0]) * 60 + int(first_flight.split(":")[1])
-            second_minutes = int(second_flight.split(":")[0]) * 60 + int(second_flight.split(":")[1])
-            if second_minutes - first_minutes < 60:
-                    output += [time]
+    output = {}
+    for start_time in schedule:
+        start_time_min = int(start_time.split(":")[0]) * 60 + int(start_time.split(":")[1])
+        for current_time in schedule:
+            current_time_min = int(current_time.split(":")[0]) * 60 + int(current_time.split(":")[1])
+            if 0 < current_time_min - start_time_min < 60:
+                if start_time in output:
+                    output[start_time] += 1
+                else:
+                    output[start_time] = 1
     return output
-        
 
 def most_popular_destination(schedule: dict[str, tuple[str, str]], passenger_count: dict[str, int]) -> str:
     """

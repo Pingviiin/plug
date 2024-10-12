@@ -132,13 +132,17 @@ def busiest_hour(schedule: dict[str, tuple[str, str]]) -> list[str]:
              ["08:00", "15:20"]
              If the schedule is empty, returns an empty list.
     """
-    """
     output = []
-    flight_minutes = []
-    for i, hour in enumerate(schedule):
-        if hour.split(":"):
+    for i, time in enumerate(schedule):
+        if i + 1 < len(schedule):
+            first_flight = list(schedule)[i]
+            second_flight = list(schedule)[i+1]
+            first_minutes = int(first_flight.split(":")[0]) * 60 + int(first_flight.split(":")[1])
+            second_minutes = int(second_flight.split(":")[0]) * 60 + int(second_flight.split(":")[1])
+            if second_minutes - first_minutes < 60:
+                    output += [time]
     return output
-    """
+        
 
 def most_popular_destination(schedule: dict[str, tuple[str, str]], passenger_count: dict[str, int]) -> str:
     """
@@ -152,9 +156,9 @@ def most_popular_destination(schedule: dict[str, tuple[str, str]], passenger_cou
     :return: A string representing the most popular destination.
     """
     output = {}
-    for time in flight_schedule:
-        flight_dest = flight_schedule[time][0]
-        flight_number = flight_schedule[time][1]
+    for time in schedule:
+        flight_dest = schedule[time][0]
+        flight_number = schedule[time][1]
         flight_count = passenger_count[flight_number]
         if flight_dest in output:
             output[flight_dest] += flight_count
@@ -175,9 +179,9 @@ def least_popular_destination(schedule: dict[str, tuple[str, str]], passenger_co
     :return: A string representing the least popular destination.
     """
     output = {}
-    for time in flight_schedule:
-        flight_dest = flight_schedule[time][0]
-        flight_number = flight_schedule[time][1]
+    for time in schedule:
+        flight_dest = schedule[time][0]
+        flight_number = schedule[time][1]
         flight_count = passenger_count[flight_number]
         if flight_dest in output:
             output[flight_dest] += flight_count

@@ -142,7 +142,7 @@ def busiest_hour(schedule: dict[str, tuple[str, str]]) -> list[str]:
                     output[start_time] += 1
                 else:
                     output[start_time] = 1
-    return output
+    return list(output.keys())
 
 def most_popular_destination(schedule: dict[str, tuple[str, str]], passenger_count: dict[str, int]) -> str:
     """

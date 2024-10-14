@@ -132,7 +132,11 @@ def busiest_hour(schedule: dict[str, tuple[str, str]]) -> list[str]:
              ["08:00", "15:20"]
              If the schedule is empty, returns an empty list.
     """
+    if schedule == {}:
+        return []
     output = {}
+    if len(schedule) == 1:
+        return [list(schedule.keys())[0]]
     for start_time in schedule:
         start_time_min = int(start_time.split(":")[0]) * 60 + int(start_time.split(":")[1])
         for current_time in schedule:
@@ -142,7 +146,8 @@ def busiest_hour(schedule: dict[str, tuple[str, str]]) -> list[str]:
                     output[start_time] += 1
                 else:
                     output[start_time] = 1
-    return list(output.keys())
+    max_value = max(output.values())
+    return [time for time in output if output[time] == max_value]
 
 def most_popular_destination(schedule: dict[str, tuple[str, str]], passenger_count: dict[str, int]) -> str:
     """
@@ -224,11 +229,37 @@ if __name__ == '__main__':
 
     print(connecting_flights(flight_schedule, ("04:00", "Tallinn")))
     # [('06:30', 'Paris'), ('07:29', 'London')]
-
-    print(busiest_hour(flight_schedule))
-    # ['06:15', '06:30', '07:29', '11:30']
-    # 19:35 does not match because 20:35 is not in the same slot
-
+    
+    schedule = {
+    "08:00": ("Paris", "OWL1234"),
+    "08:15": ("London", "BHM5678"),
+    "08:45": ("Berlin", "NIN9012"),
+    "15:20": ("Tallinn", "BHM2134"),
+    "15:45": ("Tokyo", "NIN2342")
+    }
+    print(busiest_hour(schedule))
+    # ["08:00"]
+    
+    schedule = {
+        "08:00": ("Paris", "OWL1234"),
+        "08:15": ("London", "BHM5678"),
+        "08:45": ("Berlin", "NIN9012"),
+        "09:00": ("Helsinki", "OWL2345"),
+        "09:15": ("Oslo", "FLP7654"),
+        "15:20": ("Tallinn", "BHM2134"),
+        "15:45": ("Tokyo", "NIN2342"),
+        "16:15": ("Dublin", "TRE4567"),
+    }
+    print(busiest_hour(schedule))
+    # ["08:00", "08:15", "08:45", "15:20"]
+    
+    schedule = {
+        "08:00": ("Paris", "OWL1234"),
+    }
+    print(busiest_hour(schedule))
+    # ['08:00']
+    
+    
     # flight number: number of passengers
     passenger_counts = {
         "MWL6754": 100,

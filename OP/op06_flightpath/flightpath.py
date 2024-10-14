@@ -105,12 +105,14 @@ def connecting_flights(schedule: dict[str, tuple[str, str]], arrival: tuple[str,
     output = []
     if arrival == {} or schedule == {}:
         return []
+
     for time in schedule:
         incoming_flight_minutes = int(time.split(":")[0]) * 60 + int(time.split(":")[1])
         outgoing_flight_minutes = int(arrival[0].split(":")[0]) * 60 + int(arrival[0].split(":")[1])
 
         if 45 < incoming_flight_minutes - outgoing_flight_minutes < 240 and schedule[time][0] != arrival[1]:
             output += [(time, schedule[time][0])]
+
     return sorted(output)
 
 
@@ -136,11 +138,15 @@ def busiest_hour(schedule: dict[str, tuple[str, str]]) -> list[str]:
     """
     if schedule == {}:
         return []
-    output = {}
+    
     if len(schedule) == 1:
         return [list(schedule.keys())[0]]
+
+    output = {}
+    
     for start_time in schedule:
         start_time_min = int(start_time.split(":")[0]) * 60 + int(start_time.split(":")[1])
+        
         for current_time in schedule:
             current_time_min = int(current_time.split(":")[0]) * 60 + int(current_time.split(":")[1])
             if 0 < current_time_min - start_time_min < 60:
@@ -148,6 +154,7 @@ def busiest_hour(schedule: dict[str, tuple[str, str]]) -> list[str]:
                     output[start_time] += 1
                 else:
                     output[start_time] = 1
+
     max_value = max(output.values())
     return [time for time in output if output[time] == max_value]
 

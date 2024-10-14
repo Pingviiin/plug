@@ -110,7 +110,7 @@ def connecting_flights(schedule: dict[str, tuple[str, str]], arrival: tuple[str,
         incoming_flight_minutes = int(time.split(":")[0]) * 60 + int(time.split(":")[1])
         outgoing_flight_minutes = int(arrival[0].split(":")[0]) * 60 + int(arrival[0].split(":")[1])
 
-        if 45 < incoming_flight_minutes - outgoing_flight_minutes < 240 and schedule[time][0] != arrival[1]:
+        if 45 <= incoming_flight_minutes - outgoing_flight_minutes < 240 and schedule[time][0] != arrival[1]:
             output += [(time, schedule[time][0])]
 
     return sorted(output)

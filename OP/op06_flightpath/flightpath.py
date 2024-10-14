@@ -107,8 +107,10 @@ def connecting_flights(schedule: dict[str, tuple[str, str]], arrival: tuple[str,
         return []
 
     for time in schedule:
-        incoming_flight_minutes = int(time.split(":")[0]) * 60 + int(time.split(":")[1])
-        outgoing_flight_minutes = int(arrival[0].split(":")[0]) * 60 + int(arrival[0].split(":")[1])
+        incoming_flight_minutes = int(time.split(
+            ":")[0]) * 60 + int(time.split(":")[1])
+        outgoing_flight_minutes = int(arrival[0].split(
+            ":")[0]) * 60 + int(arrival[0].split(":")[1])
 
         if 45 <= incoming_flight_minutes - outgoing_flight_minutes < 240 and schedule[time][0] != arrival[1]:
             output += [(time, schedule[time][0])]
@@ -138,17 +140,19 @@ def busiest_hour(schedule: dict[str, tuple[str, str]]) -> list[str]:
     """
     if schedule == {}:
         return []
-    
+
     if len(schedule) == 1:
         return [list(schedule.keys())[0]]
 
     output = {}
-    
+
     for start_time in schedule:
-        start_time_min = int(start_time.split(":")[0]) * 60 + int(start_time.split(":")[1])
-        
+        start_time_min = int(start_time.split(
+            ":")[0]) * 60 + int(start_time.split(":")[1])
+
         for current_time in schedule:
-            current_time_min = int(current_time.split(":")[0]) * 60 + int(current_time.split(":")[1])
+            current_time_min = int(current_time.split(
+                ":")[0]) * 60 + int(current_time.split(":")[1])
             if 0 < current_time_min - start_time_min < 60:
                 if start_time in output:
                     output[start_time] += 1
@@ -157,6 +161,7 @@ def busiest_hour(schedule: dict[str, tuple[str, str]]) -> list[str]:
 
     max_value = max(output.values())
     return [time for time in output if output[time] == max_value]
+
 
 def most_popular_destination(schedule: dict[str, tuple[str, str]], passenger_count: dict[str, int]) -> str:
     """
@@ -178,8 +183,8 @@ def most_popular_destination(schedule: dict[str, tuple[str, str]], passenger_cou
             output[flight_dest] += flight_count
         else:
             output[flight_dest] = flight_count
-    return max(output, key= lambda x: output[x])
-        
+    return max(output, key=lambda x: output[x])
+
 
 def least_popular_destination(schedule: dict[str, tuple[str, str]], passenger_count: dict[str, int]) -> str:
     """
@@ -201,7 +206,7 @@ def least_popular_destination(schedule: dict[str, tuple[str, str]], passenger_co
             output[flight_dest] += flight_count
         else:
             output[flight_dest] = flight_count
-    return min(output, key= lambda x: output[x])
+    return min(output, key=lambda x: output[x])
 
 
 if __name__ == '__main__':
@@ -209,7 +214,8 @@ if __name__ == '__main__':
         "06:15": ("Tallinn", "OWL6754"),
         "11:35": ("Helsinki", "BHM2345")
     }
-    new_flight_schedule = update_delayed_flight(flight_schedule, "OWL6754", "09:00")
+    new_flight_schedule = update_delayed_flight(
+        flight_schedule, "OWL6754", "09:00")
     print(flight_schedule)
     # {'06:15': ('Tallinn', 'OWL6754'), '11:35': ('Helsinki', 'BHM2345')}
     print(new_flight_schedule)
@@ -236,26 +242,26 @@ if __name__ == '__main__':
     print(busiest_time(flight_schedule))
     # ['06', '11']
     schedule = {
-            "10:00": ("London", "TRE1453"),
-            "16:09": ("London2", "TRE1454"),
-            "16:10": ("London3", "TRE1455"),
-            "19:24": ("London4", "TRE1456"),
-            "19:25": ("London5", "TRE1457"),
-            "19:30": ("Berlin", "BHM6789"),
-        }
+        "10:00": ("London", "TRE1453"),
+        "16:09": ("London2", "TRE1454"),
+        "16:10": ("London3", "TRE1455"),
+        "19:24": ("London4", "TRE1456"),
+        "19:25": ("London5", "TRE1457"),
+        "19:30": ("Berlin", "BHM6789"),
+    }
     print(connecting_flights(schedule, ("15:25", "New York")))
     # [('19:24', 'London4')]
-    
+
     schedule = {
-    "08:00": ("Paris", "OWL1234"),
-    "08:15": ("London", "BHM5678"),
-    "08:45": ("Berlin", "NIN9012"),
-    "15:20": ("Tallinn", "BHM2134"),
-    "15:45": ("Tokyo", "NIN2342")
+        "08:00": ("Paris", "OWL1234"),
+        "08:15": ("London", "BHM5678"),
+        "08:45": ("Berlin", "NIN9012"),
+        "15:20": ("Tallinn", "BHM2134"),
+        "15:45": ("Tokyo", "NIN2342")
     }
     print(busiest_hour(schedule))
     # ["08:00"]
-    
+
     schedule = {
         "08:00": ("Paris", "OWL1234"),
         "08:15": ("London", "BHM5678"),
@@ -268,14 +274,13 @@ if __name__ == '__main__':
     }
     print(busiest_hour(schedule))
     # ["08:00", "08:15", "08:45", "15:20"]
-    
+
     schedule = {
         "08:00": ("Paris", "OWL1234"),
     }
     print(busiest_hour(schedule))
     # ['08:00']
-    
-    
+
     # flight number: number of passengers
     passenger_counts = {
         "MWL6754": 100,

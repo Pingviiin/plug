@@ -226,9 +226,16 @@ if __name__ == '__main__':
     }
     print(busiest_time(flight_schedule))
     # ['06', '11']
-
-    print(connecting_flights(flight_schedule, ("04:00", "Tallinn")))
-    # [('06:30', 'Paris'), ('07:29', 'London')]
+    schedule = {
+            "10:00": ("London", "TRE1453"),
+            "16:09": ("London2", "TRE1454"),
+            "16:10": ("London3", "TRE1455"),
+            "19:24": ("London4", "TRE1456"),
+            "19:25": ("London5", "TRE1457"),
+            "19:30": ("Berlin", "BHM6789"),
+        }
+    print(connecting_flights(schedule, ("15:25", "New York")))
+    # [('19:24', 'London4')]
     
     schedule = {
     "08:00": ("Paris", "OWL1234"),

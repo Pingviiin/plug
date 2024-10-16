@@ -20,15 +20,15 @@ def parse(row: str) -> tuple:
     :return: tuple of values found in given string
     """
 
-    pattern = r"([A-Z][a-z]+)?([A-Z][a-z]+)?(\d{11})?(\+\d{3}?\s?\d{7,8})?(\d{2}-\d{2}-\d{4})?(.*)"
+    pattern = r"([A-Z][a-z]+)?([A-Z][a-z]+)?(\d{11})?((\+[\d]{3})?\s?\d{7,8})?(\d{2}-\d{2}-\d{4})?(.*)"
     match_data = re.match(pattern, row)
 
     first_name = match_data.group(1)
     last_name = match_data.group(2)
     id_code = match_data.group(3)
     phone_number = match_data.group(4)
-    date = match_data.group(5)
-    address = match_data.group(6)
+    date = match_data.group(6)
+    address = match_data.group(7)
     if address == "":
         address = None
 
@@ -50,3 +50,5 @@ if __name__ == '__main__':
     print()
     print(parse('39712047623'))
     # (None, None, '39712047623', None, None, None)
+    print()
+    print(parse('HeinoPlekk697120476235688736412-09-2020Tartu mnt 183,Tallinn,16881,Eesti'))

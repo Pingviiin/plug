@@ -48,7 +48,7 @@ def find_sentences(text: str) -> list:
     :param text: given string to find sentences from
     :return: list of sentences found in given string
     """
-    return re.findall(r"\s*([A-Z][^.!?]*[.!?]+)", text)
+    return re.findall(r"\s*([A-ZÜÕÖÄ][^.!?]*[.!?]+)", text)
 
 
 def find_words_from_sentence(sentence: str) -> list:
@@ -100,8 +100,8 @@ def find_years(text: str) -> list:
     :param text: given string to find years from
     :return: list of years (integers) found in given string
     """
-    return re.findall(r"(?<!\d)[\d]{4}(?!\d)", text)
-
+    years = re.findall(r"(?<!\d)[\d]{4}(?!\d)", text)
+    return list(map(int, years))
 
 def find_phone_numbers(text: str) -> dict:
     """
@@ -144,6 +144,9 @@ if __name__ == '__main__':
 
     print(find_sentences('ei ole lause. See on!!! See ka...Ja see... See pole'))
     # ['See on!!!', 'See ka...', 'Ja see...']
+    
+    print(find_sentences('Aga see on kohe kindlasti lause. Üks, kaks, kolm! Ja lauses võib ka nime kasutada, näiteks Ago.'))
+    #['Aga see on kohe kindlasti lause.', 'Ja lauses võib ka nime kasutada, näiteks Ago.'] == ['Aga see on kohe kindlasti lause.', 'Üks, kaks, kolm!', 'Ja lauses võib ka nime kasutada, näiteks Ago.']
 
     print(find_words_from_sentence("Super lause ää, sorry."))
     # ['Super', 'lause', 'ää', 'sorry']

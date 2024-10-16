@@ -5,17 +5,14 @@ import re
 def parse(row: str) -> tuple:
     """
     Parse string row into a tuple.
-    
     The row has a first name, last name, ID code, phone number, date of birth and address.
     Only ID code is mandatory, other values may not be included.
-
     They can be found by the following rules:
     - Both the first name and last name begin with a capital letter and are followed by at least one lowercase letter
     - ID code is an 11-digit number
     - Phone number has the same rules applied as in the first part
     - Date of birth is in the form of dd-MM-YYYY
     - Address is everything else that's left
-
     :param row: given string to find values from
     :return: tuple of values found in given string
     """

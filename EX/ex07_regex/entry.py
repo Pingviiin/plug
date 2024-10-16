@@ -3,8 +3,7 @@ import re
 
 
 def parse(row: str) -> tuple:
-    """
-    Parse string row into a tuple.
+    """Parse string row into a tuple.
 
     The row has a first name, last name, ID code, phone number, date of birth and address.
     Only ID code is mandatory, other values may not be included.

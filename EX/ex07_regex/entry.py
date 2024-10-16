@@ -3,8 +3,9 @@ import re
 
 
 def parse(row: str) -> tuple:
-    """Parse string row into a tuple.
-
+    """
+    Parse string row into a tuple.
+    
     The row has a first name, last name, ID code, phone number, date of birth and address.
     Only ID code is mandatory, other values may not be included.
 
@@ -18,7 +19,6 @@ def parse(row: str) -> tuple:
     :param row: given string to find values from
     :return: tuple of values found in given string
     """
-
     pattern = r"([A-Z][a-z]+)?([A-Z][a-z]+)?(\d{11})?((\+[\d]{3})?\s?\d{7,8})?(\d{2}-\d{2}-\d{4})?(.*)"
     match_data = re.match(pattern, row)
 

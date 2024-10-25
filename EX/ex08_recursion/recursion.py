@@ -266,7 +266,6 @@ def sum_squares(nested_list: list | int) -> int:
     :param nested_list: list of lists of lists of lists of lists ... and ints
     :return: sum of squares
     """
-
     if isinstance(nested_list, int):
         return (nested_list) ** 2
 

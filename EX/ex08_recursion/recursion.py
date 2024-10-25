@@ -99,7 +99,13 @@ def check_palindrome(string: str) -> bool:
     :param string: string argument
     :return: boolean. True if 'string' is a palindrome, False otherwise
     """
-    return string == recursive_reverse(string)
+    if len(string) <= 1:
+        return True
+
+    if string[0] != string[-1]:
+        return False
+
+    return check_palindrome(string[1:-1])
 
 
 def check_for_prime(num: int, i=2) -> bool:

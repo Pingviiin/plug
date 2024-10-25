@@ -14,9 +14,9 @@ def loop_reverse(string: str) -> str:
 def recursive_reverse(string: str) -> str:
     """
     Reverse a string using recursion.
-    
+
     Solution must be recursive!
-    
+
     :param string: input string
     :return: reversed input string
     """
@@ -28,21 +28,22 @@ def recursive_reverse(string: str) -> str:
 def loop_sum(num: int) -> int:
     """
     Calculate the sum of all numbers up to 'num' (including 'num') using a loop.
-    
+
     :param num: the last number to add to the sum.
     :return: sum of integers from 0 up to given number.
     """
     s = 0
     for i in range(num + 1):
-        s += i 
+        s += i
     return s
+
 
 def recursive_sum(num: int) -> int:
     """
     Calculate the sum of all numbers up to 'num' (including 'num') using recursion.
-    
+
     Solution must be recursive!
-    
+
     :param num: the last number to add to the sum.
     :return: sum of integers from 0 up to given number.
     """
@@ -72,9 +73,9 @@ def loop_factorial(num: int) -> int:
 def recursive_factorial(num: int) -> int:
     """
     Calculate the factorial of an integer 'num' using recursion.
-    
+
     Solution must be recursive!
-    
+
     :param num: integer from which the factorial should be calculated.
     :return: factorial of given number
     """
@@ -92,9 +93,9 @@ def check_palindrome(string: str) -> bool:
 
     A palindrome is a word that is spelled exactly the same way when read regularly
     or in reverse. For example, 'radar' is a palindrome.
-    
+
     Solution must be recursive!
-    
+
     :param string: string argument
     :return: boolean. True if 'string' is a palindrome, False otherwise
     """
@@ -106,7 +107,7 @@ def check_for_prime(num: int, i=2) -> bool:
     Check if input number 'num' is a prime number using recursion.
 
     Solution must be recursive!
-    
+
     :param num: integer to be checked
     :param i: used to check if 'num' is a multiple of some integer.
     :return: boolean. True if 'num' is prime, False otherwise
@@ -130,7 +131,7 @@ def replace(input_string: str, char_to_replace: str, new_string: str) -> str:
     If 'input_string' is an emtpy string, return "".
 
     Solution must be recursive!
-    
+
     :param input_string: input string
     :param char_to_replace: character, whose occurences will be replaced
     :param new_string: string of characters that will replace all occurences of 'char_to_replace'
@@ -140,7 +141,7 @@ def replace(input_string: str, char_to_replace: str, new_string: str) -> str:
         return "Length of char_to_replace must be one character!"
     if input_string == "":
         return ""
-    
+
     if char_to_replace == input_string[0]:
         return new_string + replace(input_string[1:], char_to_replace, new_string)
     else:
@@ -154,15 +155,15 @@ def fibonacci(num: int, fib_list=None) -> list | None:
     If 'num' is less than zero, return None.
     If 'num' is less than two return a list of the initial two Fibonacci numbers.
     Harder version: in case 'num' is 0, return []; in case 'num' is 1, return [0]
-    
+
     Solution must be recursive!
-    
+
     fibonacci(-1) => None
     fibonacci(0) => [0, 1]   ([] is also accepted)
     fibonacci(1) => [0, 1]   ([0] is also accepted)
     fibonacci(2) => [0, 1]
     fibonacci(9) => [0, 1, 1, 2, 3, 5, 8, 13, 21]
-    
+
     :param num: integer. The length of the list of Fibonacci numbers to return
     :param fib_list: used to pass the currently computed list on numbers
     :return: list of the first 'num' Fibonacci numbers
@@ -182,7 +183,7 @@ def fibonacci(num: int, fib_list=None) -> list | None:
 
     next_fib = fib_list[-1] + fib_list[-2]
     fib_list.append(next_fib)
-    
+
     return fibonacci(num, fib_list)
 
 
@@ -200,17 +201,20 @@ def x_sum_loop(nums: list, x: int) -> int:
     """
     if x == 0:
         return 0
-    
-    output = []
+
+    output = 0
+
     if x > 0:
-        for i in range(1, len(nums), x):
-            output += [nums[i]]
-    
+        for i in range(x - 1, len(nums), x):
+            output += nums[i]
+
     if x < 0:
-        for i in range(len(nums) - abs(x), 0, x):
-            output += [nums[i]]
-    return sum(output)
-    
+        nums = nums[::-1]
+        x = abs(x)
+        for i in range(x - 1, len(nums), x):
+            output += nums[i]
+
+    return output
 
 
 def x_sum_recursion(nums: list, x: int) -> int:
@@ -220,14 +224,28 @@ def x_sum_recursion(nums: list, x: int) -> int:
     In this task "indexing" starts from 1, so if 'x' = 2 and 'nums' = [2, 3, 4, -9], the output should be -6 (3 + -9).
     'X' can also be negative, in that case indexing starts from the end of 'nums', see examples below.
     If 'x' is 0, the sum should be 0 as well.
-    
+
     Solution must be recursive!
 
     :param nums: list of integers
     :param x: number indicating every which num to add to sum
     :return: sum of every x'th number in the list
     """
-    pass
+    if x == 0:
+        return 0
+
+    if nums == []:
+        return 0
+
+    if x > 0:
+        if len(nums) < x:
+            return 0
+        return nums[x - 1] + x_sum_recursion(nums[x:], x)
+
+    if x < 0:
+        if len(nums) < -x:
+            return 0
+        return nums[x] + x_sum_recursion(nums[:x], x)
 
 
 def sum_squares(nested_list: list | int) -> int:
@@ -236,13 +254,20 @@ def sum_squares(nested_list: list | int) -> int:
 
     'nested_list' may contain additional lists.
     (Hint use the type() or isinstance() function)
-    
+
     Solution must be recursive!
 
     :param nested_list: list of lists of lists of lists of lists ... and ints
     :return: sum of squares
     """
-    pass
+
+    if isinstance(nested_list, int):
+        return (nested_list) ** 2
+
+    if not nested_list:
+        return 0
+
+    return sum_squares(nested_list[0]) + sum_squares(nested_list[1:])
 
 
 if __name__ == '__main__':
@@ -304,13 +329,19 @@ if __name__ == '__main__':
     print(f"expected: True, got: {check_for_prime(199)}")
 
     print("\nreplace:")
-    print(f"expected: \"Length of char_to_replace must be one character!\", got: \"{replace('', '', '')}\"")
+    print(
+        f"expected: \"Length of char_to_replace must be one character!\", got: \"{replace('', '', '')}\"")
     print(f"expected: \"\", got: \"{replace('', '6', '9')}\"")
-    print(f"expected: \"hello world!\", got: \"{replace('hello ', ' ', ' world!')}\"")
-    print(f"expected: \"aabitsamEEs\", got: \"{replace('aabitsamees', 'e', 'E')}\"")
-    print(f"expected: \"ramgmdOMSTRimgmg123\", got: \"{replace('randOMSTRing123', 'n', 'mgm')}\"")
-    print(f"expected: \"Length of char_to_replace must be one character!\", got: \"{replace('WhatStringIsThis???', '', 'ii')}\"")
-    print(f"expected: \"Length of char_to_replace must be one character!\", got: \"{replace('WhatStringIsThis???', 'in', 'i')}\"")
+    print(
+        f"expected: \"hello world!\", got: \"{replace('hello ', ' ', ' world!')}\"")
+    print(
+        f"expected: \"aabitsamEEs\", got: \"{replace('aabitsamees', 'e', 'E')}\"")
+    print(
+        f"expected: \"ramgmdOMSTRimgmg123\", got: \"{replace('randOMSTRing123', 'n', 'mgm')}\"")
+    print(
+        f"expected: \"Length of char_to_replace must be one character!\", got: \"{replace('WhatStringIsThis???', '', 'ii')}\"")
+    print(
+        f"expected: \"Length of char_to_replace must be one character!\", got: \"{replace('WhatStringIsThis???', 'in', 'i')}\"")
 
     print("\nfibonacci:")
     print(f"expected: None, got: {fibonacci(-1)}")
@@ -319,10 +350,10 @@ if __name__ == '__main__':
     print(f"expected: [0, 1, 1, 2, 3, 5, 8, 13, 21], got: {fibonacci(9)}")
 
     print("\nx sum loop:")
+    print(f"expected: 158, got: {x_sum_loop([43, 90, 115, 500], -2)}")
     print(f"expected: 0, got: {x_sum_loop([], 3)}")
     print(f"expected: 11, got: {x_sum_loop([2, 5, 6, 0, 15, 5], 3)}")
     print(f"expected: 0, got: {x_sum_loop([0, 5, 6, -5, -9, 3], 1)}")
-    print(f"expected: 158, got: {x_sum_loop([43, 90, 115, 500], -2)}")
     print(f"expected: 0, got: {x_sum_loop([1, 2], -9)}")
     print(f"expected: 0, got: {x_sum_loop([2, 3, 6], 5)}")
     print(f"expected: 15, got: {x_sum_loop([6, 5, 3, 2, 9, 8, 6, 5, 4], 3)}")
@@ -334,7 +365,8 @@ if __name__ == '__main__':
     print(f"expected: 158, got: {x_sum_recursion([43, 90, 115, 500], -2)}")
     print(f"expected: 0, got: {x_sum_recursion([1, 2], -9)}")
     print(f"expected: 0, got: {x_sum_recursion([2, 3, 6], 5)}")
-    print(f"expected: 15, got: {x_sum_recursion([6, 5, 3, 2, 9, 8, 6, 5, 4], 3)}")
+    print(
+        f"expected: 15, got: {x_sum_recursion([6, 5, 3, 2, 9, 8, 6, 5, 4], 3)}")
 
     print("\nsum squares:")
     print(f"expected: 14, got: {sum_squares([1, 2, 3])}")

@@ -27,11 +27,11 @@ def replace_vowels_in_file(input_file: str, output_file: str):
     with open(input_file, 'r', newline="") as ifile:
         s = ifile.read()
         output = ""
-        for l in s:
-            if l in "AEIOUaeiou":
+        for letter in s:
+            if letter in "AEIOUaeiou":
                 output += "*"
             else:
-                output += l
+                output += letter
 
     with open(output_file, 'w', newline="") as ofile:
         ofile.write(output)

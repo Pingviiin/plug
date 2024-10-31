@@ -35,11 +35,11 @@ def create_table_string(text: str) -> str:
     """
     
     "pikima_kategooria_nimi + üks_tühik + eraldaja + üks_tühik + kategooria_logi_andmed"
-    time = format_time(get_times(text))
-    user = get_usernames(text)
-    error = get_errors(text)
-    ipv4 = get_addresses(text)
-    endpoint = get_endpoints(text)
+    time = sorted(format_time(get_times(text)))
+    user = sorted(get_usernames(text))
+    error = sorted(get_errors(text))
+    ipv4 = sorted(get_addresses(text))
+    endpoint = sorted(get_endpoints(text))
     return f"{time}\n{user}\n{error}\n{ipv4}\n{endpoint}"
 
 
@@ -123,7 +123,7 @@ def get_addresses(text: str) -> list[str]:
 
 def get_endpoints(text: str) -> list[str]:
     """Get endpoints from text. No need to sort here."""
-    pattern = r"/([\w&/=?-_%]+)"
+    pattern = r"/[\w&/=?-_%]+"
     return re.findall(pattern, text)
 
 

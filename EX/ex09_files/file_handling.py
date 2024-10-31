@@ -25,16 +25,16 @@ def replace_vowels_in_file(input_file: str, output_file: str):
     This function finds all vowels (AEIOUaeiou) in the input text and replaces them with an asterisk (*).
     """
     with open(input_file, 'r', newline="") as ifile:
-        reader = csv.reader(ifile)
-        rows = []
-
-        for row in reader:
-            new_row = [''.join('*' if i in "AEIOUaeiou" else i for i in cell) for cell in row]
-            rows += [new_row]
+        s = ifile.read()
+        output = ""
+        for l in s:
+            if l in "AEIOUaeiou":
+                output += "*"
+            else:
+                output += l
 
     with open(output_file, 'w', newline="") as ofile:
-        writer = csv.writer(ofile)
-        writer.writerows(rows)
+        ofile.write(output)
 
 
 def reverse_rows_in_csv_file(input_file: str, output_file: str):
@@ -63,8 +63,6 @@ def swap_header_and_row_in_csv_file(header: list, row: list):
     """
     if len(row) > len(header):
         header += [""] * (len(row) - len(header))
-    elif len(header) > len(row):
-        row += [""] * (len(header) - len(row))
 
     with open("swapped_file.csv", "w", newline="") as ofile:
         writer = csv.writer(ofile)

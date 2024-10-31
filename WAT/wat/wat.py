@@ -1,4 +1,4 @@
-def function_a(x):
+def function_a(x: int) -> int:
     pass
 def function_b(x):
     pass

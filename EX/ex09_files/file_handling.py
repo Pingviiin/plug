@@ -12,7 +12,7 @@ def mesh_two_list_to_csv_file(list1: list, list2: list, filename: str):
     | 1.2 | 2.2 |
     | 1.3 | 2.3 |
     """
-    with open(filename, "w") as file:
+    with open(filename, "w", newline="") as file:
         writer = csv.writer(file)
         for i in range(len(list1)):
             writer.writerow([list1[i], list2[i]])
@@ -24,16 +24,15 @@ def replace_vowels_in_file(input_file: str, output_file: str):
 
     This function finds all vowels (AEIOUaeiou) in the input text and replaces them with an asterisk (*).
     """
-    with open(input_file, 'r') as ifile:
+    with open(input_file, 'r', newline="") as ifile:
         reader = csv.reader(ifile)
         rows = []
 
         for row in reader:
-            new_row = [
-                ''.join('*' if i in "AEIOUaeiou" else i for i in cell) for cell in row]
+            new_row = [''.join('*' if i in "AEIOUaeiou" else i for i in cell) for cell in row]
             rows += [new_row]
 
-    with open(output_file, 'w') as ofile:
+    with open(output_file, 'w', newline="") as ofile:
         writer = csv.writer(ofile)
         writer.writerows(rows)
 
@@ -45,11 +44,11 @@ def reverse_rows_in_csv_file(input_file: str, output_file: str):
     This function reads the content of an input CSV file and writes it to an
     output CSV file with the rows in reverse order.
     """
-    with open(input_file, "r") as ifile:
+    with open(input_file, "r", newline="") as ifile:
         reader = list(csv.reader(ifile))
         reversed_rows = reader[::-1]
 
-    with open(output_file, "w") as ofile:
+    with open(output_file, "w", newline="") as ofile:
         writer = csv.writer(ofile)
         writer.writerows(reversed_rows)
 
@@ -64,10 +63,10 @@ def swap_header_and_row_in_csv_file(header: list, row: list):
     """
     if len(row) > len(header):
         header += [""] * (len(row) - len(header))
-    if len(header) > len(row):
+    elif len(header) > len(row):
         row += [""] * (len(header) - len(row))
 
-    with open("swapped_file.csv", "w") as ofile:
+    with open("swapped_file.csv", "w", newline="") as ofile:
         writer = csv.writer(ofile)
         writer.writerow(row)
         writer.writerow(header)

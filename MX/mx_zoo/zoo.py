@@ -21,7 +21,10 @@ def parse_animal(animal_str: str) -> list:
     :param animal_str: The input string containing animal data.
     :return: A list containing structured animal data.
     """
-    return list(animal_str.split(","))
+    parsed = list(animal_str.split(","))
+    parsed[3] = parsed[3].split("-")
+    parsed[4] = parsed[4].split("-")
+    return parsed
 
 
 def list_species_and_scientific_names(animal_data: list) -> list:
@@ -72,7 +75,12 @@ def find_how_many_pumpkins_are_needed_to_feed_animals(animal_data: list) -> int:
     :return: Total number of pumpkins needed, rounded up to the nearest whole number.
     """
     #2 * 90 * (0.06 * (min_weight + max_weight / 2)) / 3
-    pass
+    output = 0
+    for data in animal_data:
+        min_weight = float(data[3][0])
+        max_weight = float(data[3][1])
+        output += 2 * (0.06 * ((min_weight + max_weight) / 2)) / 3
+    return round(output * 90)
 
 
 def total_noise_level(animal_data: list) -> float:
@@ -86,8 +94,10 @@ def total_noise_level(animal_data: list) -> float:
     :param animal_data: A list containing details about multiple animals.
     :return: The total noise level of all animals in the list.
     """
-    """return animal_data[3][0] + animal_data[3][1] / 2 * 0.01"""
-    pass
+    output = 0
+    for data in animal_data:
+        output += ((float(data[3][0]) + float(data[3][1])) / 2) * 0.01
+    return output
 
 
 def zoo_parade_length(animal_data: list) -> float:
@@ -101,7 +111,10 @@ def zoo_parade_length(animal_data: list) -> float:
     :param animal_data: A list containing details about multiple animals.
     :return: The total parade length of all animals in the list.
     """
-    pass
+    output = 0
+    for data in animal_data:
+        output += (float(data[4][0]) + float(data[4][1])) / 2
+    return output
 
 
 def animal_olympics_winner(animal_data: list) -> str:
@@ -116,7 +129,14 @@ def animal_olympics_winner(animal_data: list) -> str:
     :param animal_data: A list containing details about multiple animals.
     :return: The species name of the winning animal.
     """
-    pass
+
+    """weights = {}
+    for data in animal_data:
+        weights[data[0]] = round(((float(data[3][0]) + float(data[3][1])) / 2), 4)
+    a = min(weights.values())
+    return weights[min(weights.values())]"""
+    return ""
+    
 
 
 def total_feather_count(animal_data: list) -> float:
@@ -131,7 +151,10 @@ def total_feather_count(animal_data: list) -> float:
     :param animal_data: A list containing details about multiple animals.
     :return: The total feather count of all animals in the list.
     """
-    pass
+    output = 0
+    for data in animal_data:
+        output += ((float(data[3][0]) + float(data[3][1])) / 2) * 1000
+    return output
 
 
 def zoo_weight_on_other_planet(animal_data: list) -> float:
@@ -146,7 +169,7 @@ def zoo_weight_on_other_planet(animal_data: list) -> float:
     :param animal_data: A list containing details about multiple animals.
     :return: The total weight of the zoo on the other planet.
     """
-    pass
+    
 
 
 def sort_alphabetically_by_scientific_name(animal_data: list) -> list:

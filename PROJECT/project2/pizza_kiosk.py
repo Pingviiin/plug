@@ -79,7 +79,7 @@ def format_orders(nr_order: list) -> dict:
 
 
 def calculate_income(prices: str) -> float:
-    prices = re.findall(r'(\d{2}\.\d{2})', prices)
+    prices = re.findall(r'(\b\d{2}\.\d{2}\b)', prices)
 
     def price_total(prices, total):
         if not prices:
@@ -109,7 +109,20 @@ def count_ingredients(menu: dict, order: list) -> dict | None:
                 output[ingredient] = 1
             else:
                 output[ingredient] += 1
-    return dict(sorted(output.items(), key=lambda i: i[1], reverse=True))
+    return output
+
+
+def match_pizzas_with_prices(pizzas: list, prices: list) -> list:
+    pizzas = fix_names(pizzas)
+    unique_pizzas = []
+    output = []
+
+    [unique_pizzas.append(i) for i in pizzas if i not in unique_pizzas]
+
+    for i, pizza in enumerate(unique_pizzas):
+        output += [(pizza, prices[i])]
+
+    return output
 
 
 print(is_correct_name("banana"))
@@ -127,3 +140,4 @@ print(calculate_income("15.03*05.99|)=01.20&.$50.37"))
 print(calculate_income(""))
 print(switch_keys_and_values({"kanapitsa": [1, 5, 3, 4], "juustupitsa": [1, 2], "pepperoni": [1, 5, 3]}))
 print(count_ingredients({"margarita": ["juust", "tomat", "kaste"], "pepperoni": ["juust", "kaste", "pepperoni"]}, ["margarita", "margarita", "pepperoni"]))
+print(match_pizzas_with_prices(["pepperoni", "margarita", "ch7eese", "cheese", "margarita"], [3.99, 4.99, 3.99]))

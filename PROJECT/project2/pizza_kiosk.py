@@ -62,14 +62,14 @@ def pizza_at_index(pizzas: list, pizza: str) -> str:
     Returns:
         str: Name of pizza, which is at the index
     """
-    index = pizzas.count(pizza) - 1
+    count = 0
 
-    if index == 0:
-        return ""
+    for p in pizzas:
+        if p == pizza:
+            count += 1
 
-    if index < len(pizzas):
-        return pizzas[index]
-    
+    if count < len(pizzas):
+        return pizzas[count]
     else:
         return ""
 

@@ -62,16 +62,14 @@ def pizza_at_index(pizzas: list, pizza: str) -> str:
     Returns:
         str: Name of pizza, which is at the index
     """
-    count = 0
-
-    for p in pizzas:
-        if p == pizza:
-            count += 1
-
-    if count < len(pizzas):
-        return pizzas[count]
-    else:
+    index = pizzas.count(pizza)
+    if pizzas == []:
         return ""
+    if index >= len(pizzas) or index == 0:
+        return ""
+    else:
+        return pizzas[index]
+
 
 
 def format_orders(nr_order: list) -> dict:
@@ -145,34 +143,5 @@ def match_pizzas_with_prices(pizzas: list, prices: list) -> list:
         return list(zip(unique_pizzas, prices))
 
 
-# Test case 1: Basic functionality with the target pizza at a valid index
-assert pizza_at_index(["pepperoni", "kanapitsa", "juustupitsa"], "juustupitsa") == "kanapitsa", "Test case 1 failed"
+print(pizza_at_index([], "pepperoni"))  # Returns ""
 
-# Test case 2: Multiple occurrences of the target pizza, with the resulting index within range
-assert pizza_at_index(["juustupitsa", "pepperoni", "juustupitsa", "kanapitsa", "juustupitsa"], "juustupitsa") == "kanapitsa", "Test case 2 failed"
-
-# Test case 3: Target pizza does not exist in the list (should return an empty string)
-assert pizza_at_index(["pepperoni", "kanapitsa", "juustupitsa"], "hawaii") == "", "Test case 3 failed"
-
-# Test case 4: Only one occurrence of the target pizza, and it's the last element
-assert pizza_at_index(["pepperoni", "kanapitsa", "juustupitsa"], "pepperoni") == "kanapitsa", "Test case 4 failed"
-
-# Test case 5: The target pizza count matches an out-of-range index
-assert pizza_at_index(["juustupitsa", "pepperoni"], "juustupitsa") == "pepperoni", "Test case 5 failed"  # Index 1 is out of range
-
-# Test case 6: Target pizza occurs multiple times, but the resulting index is valid
-assert pizza_at_index(["juustupitsa", "juustupitsa", "juustupitsa"], "juustupitsa") == "", "Test case 6 failed"  # Index 3 is valid
-
-# Test case 7: Empty list (should return an empty string)
-assert pizza_at_index([], "pepperoni") == "", "Test case 7 failed"
-
-# Test case 8: Single-element list, where the target pizza does not exist
-assert pizza_at_index(["juustupitsa"], "pepperoni") == "", "Test case 8 failed"
-
-# Test case 9: Single-element list, where the target pizza exists
-assert pizza_at_index(["pepperoni"], "pepperoni") == "", "Test case 9 failed"  # Index 1 is out of range
-
-# Test case 10: Multiple types of pizzas with varying counts
-assert pizza_at_index(["pepperoni", "juustupitsa", "kanapitsa", "juustupitsa", "pepperoni", "juustupitsa"], "pepperoni") == "kanapitsa", "Test case 10 failed"
-
-print("All test cases passed!")

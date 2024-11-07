@@ -104,8 +104,8 @@ def switch_keys_and_values(pizza_orders: dict) -> dict:
 def count_ingredients(menu: dict, order: list) -> dict | None:
     output = {}
     for pizza in order:
-        if pizza not in list(menu.keys()):
-            continue
+        if pizza not in menu:
+            return {}
         for ingredient in menu[pizza]:
             if ingredient not in output:
                 output[ingredient] = 1
@@ -115,16 +115,20 @@ def count_ingredients(menu: dict, order: list) -> dict | None:
 
 
 def match_pizzas_with_prices(pizzas: list, prices: list) -> list:
-    pizzas = fix_names(pizzas)
     unique_pizzas = []
-    output = []
-
-    [unique_pizzas.append(i) for i in pizzas if i not in unique_pizzas]
-
-    for i, pizza in enumerate(unique_pizzas):
-        output += [(pizza, prices[i])]
-
-    return output
+    duplicates = set()
+    pattern = re.compile(r"^[a-z]+$")
+    
+    for pizza in pizzas:
+        if pattern.match(pizza) and pizza not in duplicates:
+            unique_pizzas.append(pizza)
+            duplicates.add(pizza)
+    
+    if len(prices) != len(unique_pizzas):
+        return []
+    
+    else:
+        return list(zip(unique_pizzas, prices))
 
 
 print(is_correct_name("banana"))
@@ -156,6 +160,11 @@ assert count_ingredients(
     ["margarita", "margarita"]
 ) == {"juust": 2, "tomat": 2, "kaste": 2}, "Test case 2 failed"
 
+# Test case 3: Order with a pizza that is not on the menu
+assert count_ingredients(
+    {"margarita": ["juust", "tomat", "kaste"], "pepperoni": ["juust", "kaste", "pepperoni"]},
+    ["margarita", "hawaii"]
+) == {}, "Test case 3 failed"  # Should return an empty dictionary
 
 # Test case 4: Order list is empty (no pizzas ordered)
 assert count_ingredients(
@@ -186,34 +195,68 @@ assert count_ingredients(
 
 print("All test cases passed!")
 
-# Test case 1: Basic functionality with multiple orders
-assert format_orders(["5&kanapitsa", "1&pepperoni", "20&MeXican"]) == {5: "kanapitsa", 1: "pepperoni", 20: "mexican"}, "Test case 1 failed"
 
-# Test case 2: Single order
-assert format_orders(["10&margherita"]) == {10: "margherita"}, "Test case 2 failed"
+# Test case 1: Basic functionality with the target pizza at a valid index
+assert pizza_at_index(["pepperoni", "kanapitsa", "juustupitsa"], "juustupitsa") == "kanapitsa", "Test case 1 failed"
 
-# Test case 3: Orders with mixed case order names
-assert format_orders(["2&HAWAII", "3&cheesE", "4&VeGGiE"]) == {2: "hawaii", 3: "cheese", 4: "veggie"}, "Test case 3 failed"
+# Test case 2: Multiple occurrences of the target pizza, with the resulting index within range
+assert pizza_at_index(["juustupitsa", "pepperoni", "juustupitsa", "kanapitsa", "juustupitsa"], "juustupitsa") == "kanapitsa", "Test case 2 failed"
 
-# Test case 4: Orders with large order numbers
-assert format_orders(["1000&pepperoni", "500&bbq"]) == {1000: "pepperoni", 500: "bbq"}, "Test case 4 failed"
+# Test case 3: Target pizza does not exist in the list (should return an empty string)
+assert pizza_at_index(["pepperoni", "kanapitsa", "juustupitsa"], "hawaii") == "", "Test case 3 failed"
 
-# Test case 5: Empty input list
-assert format_orders([]) == {}, "Test case 5 failed"  # Should return an empty dictionary
+# Test case 4: Only one occurrence of the target pizza, and it's the last element
+assert pizza_at_index(["pepperoni", "kanapitsa", "juustupitsa"], "pepperoni") == "kanapitsa", "Test case 4 failed"
 
-# Test case 6: Orders with similar names but different numbers
-assert format_orders(["1&veggie", "2&VEGGIE", "3&Veggie"]) == {1: "veggie", 2: "veggie", 3: "veggie"}, "Test case 6 failed"
+# Test case 5: The target pizza count matches an out-of-range index
+assert pizza_at_index(["juustupitsa", "pepperoni"], "juustupitsa") == "pepperoni", "Test case 5 failed"
 
-# Test case 7: Orders with special characters in order names
-assert format_orders(["5&chicken-pizza", "7&bbq_ribs", "9&veggie deluxe"]) == {5: "chicken-pizza", 7: "bbq_ribs", 9: "veggie deluxe"}, "Test case 7 failed"
+# Test case 6: Target pizza occurs multiple times, but the resulting index is valid
+assert pizza_at_index(["juustupitsa", "juustupitsa", "juustupitsa"], "juustupitsa") == "", "Test case 6 failed"  # Index 3 is valid
 
-# Test case 8: Leading and trailing whitespace in order name
-#assert format_orders(["10&  Margherita ", "11&PePPeroni "]) == {10: "margherita", 11: "pepperoni"}, "Test case 8 failed"
+# Test case 7: Empty list (should return an empty string)
+assert pizza_at_index([], "pepperoni") == "", "Test case 7 failed"
 
-# Test case 9: Edge case with very large number as order number
-assert format_orders(["999999999&supreme"]) == {999999999: "supreme"}, "Test case 9 failed"
+# Test case 8: Single-element list, where the target pizza does not exist
+assert pizza_at_index(["juustupitsa"], "pepperoni") == "", "Test case 8 failed"
 
-# Test case 10: Multiple orders with different formats to confirm order is preserved
-assert format_orders(["3&margherita", "1&pepperoni", "2&hawaiian"]) == {3: "margherita", 1: "pepperoni", 2: "hawaiian"}, "Test case 10 failed"
+# Test case 9: Single-element list, where the target pizza exists
+assert pizza_at_index(["pepperoni"], "pepperoni") == "", "Test case 9 failed"  # Index 1 is out of range
+
+# Test case 10: Multiple types of pizzas with varying counts
+assert pizza_at_index(["pepperoni", "juustupitsa", "kanapitsa", "juustupitsa", "pepperoni", "juustupitsa"], "pepperoni") == "kanapitsa", "Test case 10 failed"
+
+print("All test cases passed!")
+
+
+# Test case 1: Basic functionality with mixed delimiters
+assert calculate_income("15.03*05.99|)=01.20&.$50.37") == 72.59, "Test case 1 failed"
+
+# Test case 2: Only prices with different delimiters
+assert calculate_income("10.00|20.50&30.00") == 60.50, "Test case 2 failed"
+
+# Test case 3: Single price without delimiters
+assert calculate_income("15.99") == 15.99, "Test case 3 failed"
+
+# Test case 4: Multiple prices with unusual symbols between them
+assert calculate_income("99.99*&^#20.01$$$45.50") == 165.50, "Test case 4 failed"
+
+# Test case 5: No valid prices (should return 0.0)
+assert calculate_income("&^#%@$$$") == 0.0, "Test case 5 failed"
+
+# Test case 6: Prices with unusual spacing
+assert calculate_income("    05.55**07.25 !! 12.00%%") == 24.80, "Test case 6 failed"
+
+# Test case 7: Edge case with price at start and end
+assert calculate_income("30.00hello45.25goodbye60.75") == 136.00, "Test case 7 failed"
+
+# Test case 8: Large input with repeated prices
+assert calculate_income("10.00|") == 10.00, "Test case 8 failed"  # Should correctly sum up repeated prices
+
+# Test case 9: Mixed decimal points and non-price dot occurrences
+assert calculate_income("15.03extra.text99.99dots15.99") == 131.01, "Test case 9 failed"
+
+# Test case 10: Prices with special characters but valid pattern
+assert calculate_income("*20.40*random*text*10.10*50.50*") == 81.00, "Test case 10 failed"
 
 print("All test cases passed!")

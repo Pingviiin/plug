@@ -31,6 +31,7 @@ def fix_names(ingredients: list) -> list:
         list: A list of correct ingredient names
     """
     output = []
+
     for ingredient in ingredients:
         if ingredient == "":
             continue
@@ -40,6 +41,7 @@ def fix_names(ingredients: list) -> list:
             continue
 
         str_output = ""
+
         for i in ingredient:
             if i.islower():
                 str_output += i
@@ -60,26 +62,26 @@ def pizza_at_index(pizzas: list, pizza: str) -> str:
     Returns:
         str: Name of pizza, which is at the index
     """
-    pizzas = fix_names(pizzas)
     index = pizzas.count(pizza)
-    if index == 0:
+
+    if index >= len(pizzas):
         return ""
-    elif index >= len(pizzas):
-        return ""
+
     else:
         return pizzas[index]
 
 
 def format_orders(nr_order: list) -> dict:
     output = {}
+
     for order in nr_order:
         order = order.split("&")
         output[int(order[0])] = order[1].lower()
+
     return output
 
 
 def calculate_income(prices: str) -> float:
-    
     if len(prices) < 5:
         return 0.0
 
@@ -95,25 +97,31 @@ def calculate_income(prices: str) -> float:
 
 def switch_keys_and_values(pizza_orders: dict) -> dict:
     output = {}
+
     for pizza, nums in pizza_orders.items():
+
         for i in nums:
             if i not in output:
                 output[i] = [pizza]
             else:
                 output[i] += [pizza]
+
     return output
 
 
 def count_ingredients(menu: dict, order: list) -> dict | None:
     output = {}
+
     for pizza in order:
         if pizza not in menu:
             return {}
+
         for ingredient in menu[pizza]:
             if ingredient not in output:
                 output[ingredient] = 1
             else:
                 output[ingredient] += 1
+
     return output
 
 

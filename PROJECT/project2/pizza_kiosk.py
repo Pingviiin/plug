@@ -65,7 +65,7 @@ def pizza_at_index(pizzas: list, pizza: str) -> str:
     index = pizzas.count(pizza)
     if pizzas == []:
         return ""
-    if index >= len(pizzas) or index == 0:
+    elif index >= len(pizzas) or index == 0:
         return ""
     else:
         return pizzas[index]

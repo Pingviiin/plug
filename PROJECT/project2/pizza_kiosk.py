@@ -79,15 +79,18 @@ def format_orders(nr_order: list) -> dict:
 
 
 def calculate_income(prices: str) -> float:
-    prices = re.findall(r'(\d{2}\.\d{2})', prices)
+    
+    if len(prices) < 5:
+        return 0.0
 
-    def price_total(prices, total):
-        if not prices:
-            return total
-        else:
-            return price_total(prices[1:], total + float(prices[0]))
+    match = re.match(r'(\d{2}\.\d{2})', prices)
 
-    return price_total(prices, 0.0)
+    if match:
+        price = float(match.group(1))
+        return price + calculate_income(prices[match.end():])
+
+    else:
+        return calculate_income(prices[1:])
 
 
 def switch_keys_and_values(pizza_orders: dict) -> dict:

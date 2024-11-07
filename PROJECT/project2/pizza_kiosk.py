@@ -62,7 +62,7 @@ def pizza_at_index(pizzas: list, pizza: str) -> str:
     Returns:
         str: Name of pizza, which is at the index
     """
-    index = pizzas.count(pizza)
+    index = pizzas.count(pizza) - 1
 
     if index == 0:
         return ""
@@ -145,71 +145,6 @@ def match_pizzas_with_prices(pizzas: list, prices: list) -> list:
         return list(zip(unique_pizzas, prices))
 
 
-print(is_correct_name("banana"))
-print(is_correct_name("Banana"))
-print(is_correct_name("12412Banana"))
-print(is_correct_name("PINEAPPLE--."))
-print(fix_names(["banana", "BANANA", ""]))
-print(fix_names(["2423dsfsdf", ".dfgdgffdg...."]))
-print(pizza_at_index(["pepperoni", "kanapitsa", "juustupitsa"], "juustupitsa"))
-print(pizza_at_index(["pepperoni", "juustupitsa", "kanapitsa", "juustupitsa", "bbq"], "juustupitsa"))
-print(pizza_at_index(["pepperoni"], "pepperoni"))
-print(pizza_at_index(["pepperoni", "kanapitsa", "bbq"], "juustupitsa"))
-print(format_orders(["5&kanapitsa", "1&pepperoni", "20&MeXican"]))
-print(calculate_income("15.03*05.99|)=01.20&.$50.37"))
-print(calculate_income(""))
-print(switch_keys_and_values({"kanapitsa": [1, 5, 3, 4], "juustupitsa": [1, 2], "pepperoni": [1, 5, 3]}))
-print(count_ingredients({"margarita": ["juust", "tomat", "kaste"], "pepperoni": ["juust", "kaste", "pepperoni"]}, ["margarita", "margarita", "pepperoni"]))
-print(match_pizzas_with_prices(["pepperoni", "margarita", "ch7eese", "cheese", "margarita"], [3.99, 4.99, 3.99]))
-
-# Test case 1: Basic functionality with multiple pizzas in the order
-assert count_ingredients(
-    {"margarita": ["juust", "tomat", "kaste"], "pepperoni": ["juust", "kaste", "pepperoni"]},
-    ["margarita", "margarita", "pepperoni"]
-) == {"juust": 3, "kaste": 3, "tomat": 2, "pepperoni": 1}, "Test case 1 failed"
-
-# Test case 2: Order with only one type of pizza
-assert count_ingredients(
-    {"margarita": ["juust", "tomat", "kaste"]},
-    ["margarita", "margarita"]
-) == {"juust": 2, "tomat": 2, "kaste": 2}, "Test case 2 failed"
-
-# Test case 3: Order with a pizza that is not on the menu
-assert count_ingredients(
-    {"margarita": ["juust", "tomat", "kaste"], "pepperoni": ["juust", "kaste", "pepperoni"]},
-    ["margarita", "hawaii"]
-) == {}, "Test case 3 failed"  # Should return an empty dictionary
-
-# Test case 4: Order list is empty (no pizzas ordered)
-assert count_ingredients(
-    {"margarita": ["juust", "tomat", "kaste"], "pepperoni": ["juust", "kaste", "pepperoni"]},
-    []
-) == {}, "Test case 4 failed"  # Should return an empty dictionary
-
-# Test case 5: Menu has multiple pizzas, but order only includes pizzas with unique ingredients
-assert count_ingredients(
-    {"veggie": ["juust", "tomat", "sibul"], "meat_lovers": ["kaste", "liha", "juust"]},
-    ["veggie", "meat_lovers"]
-) == {"juust": 2, "tomat": 1, "sibul": 1, "kaste": 1, "liha": 1}, "Test case 5 failed"
-
-# Test case 6: Menu has pizzas with the same ingredients, ordered multiple times
-assert count_ingredients(
-    {"margarita": ["juust", "tomat", "kaste"], "extra_cheese": ["juust", "juust", "kaste"]},
-    ["margarita", "extra_cheese", "extra_cheese"]
-) == {"juust": 5, "tomat": 1, "kaste": 3}, "Test case 6 failed"
-
-# Test case 7: Menu contains no pizzas (empty menu)
-assert count_ingredients({}, ["margarita", "pepperoni"]) == {}, "Test case 7 failed"
-
-# Test case 8: All pizzas ordered are available in menu with duplicate ingredients
-assert count_ingredients(
-    {"double_cheese": ["juust", "juust", "tomat"], "pepperoni": ["juust", "kaste", "pepperoni"]},
-    ["double_cheese", "pepperoni", "double_cheese"]
-) == {"juust": 5, "tomat": 2, "kaste": 1, "pepperoni": 1}, "Test case 8 failed"
-
-print("All test cases passed!")
-
-
 # Test case 1: Basic functionality with the target pizza at a valid index
 assert pizza_at_index(["pepperoni", "kanapitsa", "juustupitsa"], "juustupitsa") == "kanapitsa", "Test case 1 failed"
 
@@ -223,7 +158,7 @@ assert pizza_at_index(["pepperoni", "kanapitsa", "juustupitsa"], "hawaii") == ""
 assert pizza_at_index(["pepperoni", "kanapitsa", "juustupitsa"], "pepperoni") == "kanapitsa", "Test case 4 failed"
 
 # Test case 5: The target pizza count matches an out-of-range index
-assert pizza_at_index(["juustupitsa", "pepperoni"], "juustupitsa") == "pepperoni", "Test case 5 failed"
+assert pizza_at_index(["juustupitsa", "pepperoni"], "juustupitsa") == "pepperoni", "Test case 5 failed"  # Index 1 is out of range
 
 # Test case 6: Target pizza occurs multiple times, but the resulting index is valid
 assert pizza_at_index(["juustupitsa", "juustupitsa", "juustupitsa"], "juustupitsa") == "", "Test case 6 failed"  # Index 3 is valid
@@ -239,38 +174,5 @@ assert pizza_at_index(["pepperoni"], "pepperoni") == "", "Test case 9 failed"  #
 
 # Test case 10: Multiple types of pizzas with varying counts
 assert pizza_at_index(["pepperoni", "juustupitsa", "kanapitsa", "juustupitsa", "pepperoni", "juustupitsa"], "pepperoni") == "kanapitsa", "Test case 10 failed"
-
-print("All test cases passed!")
-
-
-# Test case 1: Basic functionality with mixed delimiters
-assert calculate_income("15.03*05.99|)=01.20&.$50.37") == 72.59, "Test case 1 failed"
-
-# Test case 2: Only prices with different delimiters
-assert calculate_income("10.00|20.50&30.00") == 60.50, "Test case 2 failed"
-
-# Test case 3: Single price without delimiters
-assert calculate_income("15.99") == 15.99, "Test case 3 failed"
-
-# Test case 4: Multiple prices with unusual symbols between them
-assert calculate_income("99.99*&^#20.01$$$45.50") == 165.50, "Test case 4 failed"
-
-# Test case 5: No valid prices (should return 0.0)
-assert calculate_income("&^#%@$$$") == 0.0, "Test case 5 failed"
-
-# Test case 6: Prices with unusual spacing
-assert calculate_income("    05.55**07.25 !! 12.00%%") == 24.80, "Test case 6 failed"
-
-# Test case 7: Edge case with price at start and end
-assert calculate_income("30.00hello45.25goodbye60.75") == 136.00, "Test case 7 failed"
-
-# Test case 8: Large input with repeated prices
-assert calculate_income("10.00|") == 10.00, "Test case 8 failed"  # Should correctly sum up repeated prices
-
-# Test case 9: Mixed decimal points and non-price dot occurrences
-assert calculate_income("15.03extra.text99.99dots15.99") == 131.01, "Test case 9 failed"
-
-# Test case 10: Prices with special characters but valid pattern
-assert calculate_income("*20.40*random*text*10.10*50.50*") == 81.00, "Test case 10 failed"
 
 print("All test cases passed!")

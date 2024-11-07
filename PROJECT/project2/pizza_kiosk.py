@@ -63,9 +63,8 @@ def pizza_at_index(pizzas: list, pizza: str) -> str:
         str: Name of pizza, which is at the index
     """
     index = pizzas.count(pizza)
-    if pizzas == []:
-        return ""
-    elif index >= len(pizzas) or index == 0:
+
+    if index >= len(pizzas):
         return ""
     else:
         return pizzas[index]
@@ -141,7 +140,3 @@ def match_pizzas_with_prices(pizzas: list, prices: list) -> list:
     
     else:
         return list(zip(unique_pizzas, prices))
-
-
-print(pizza_at_index([], "pepperoni"))  # Returns ""
-

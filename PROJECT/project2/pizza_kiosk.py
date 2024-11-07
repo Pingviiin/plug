@@ -1,6 +1,5 @@
-import re
-
 """Pizza making."""
+import re
 
 
 def is_correct_name(ingredient: str) -> bool:

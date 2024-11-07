@@ -64,11 +64,11 @@ def pizza_at_index(pizzas: list, pizza: str) -> str:
     """
     index = pizzas.count(pizza)
 
-    if index >= len(pizzas) or index == 0:
-        return ""
-
-    else:
+    if index < len(pizzas):
         return pizzas[index]
+    
+    else:
+        return ""
 
 
 def format_orders(nr_order: list) -> dict:

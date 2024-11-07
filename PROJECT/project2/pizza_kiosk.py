@@ -1,5 +1,8 @@
 import re
 
+"""Pizza making."""
+
+
 def is_correct_name(ingredient: str) -> bool:
     """Check if ingredient name is correct.
 
@@ -66,12 +69,20 @@ def pizza_at_index(pizzas: list, pizza: str) -> str:
 
     if index >= len(pizzas):
         return ""
+
     else:
         return pizzas[index]
 
 
-
 def format_orders(nr_order: list) -> dict:
+    """Format orders from a list of string into a dictionary.
+
+    Args:
+        nr_order (list): List of strings
+
+    Returns:
+        dict: Correctly formatted order
+    """
     output = {}
 
     for order in nr_order:
@@ -82,6 +93,14 @@ def format_orders(nr_order: list) -> dict:
 
 
 def calculate_income(prices: str) -> float:
+    """Calculate daily income.
+
+    Args:
+        prices (str): String which contains numbers with random symbols inbetween
+
+    Returns:
+        float: Sum of daily income
+    """
     if len(prices) < 5:
         return 0.0
 
@@ -96,6 +115,14 @@ def calculate_income(prices: str) -> float:
 
 
 def switch_keys_and_values(pizza_orders: dict) -> dict:
+    """Switch the keys and values in a dictionary.
+
+    Args:
+        pizza_orders (dict): Dictionary with pizza orders
+
+    Returns:
+        dict: Dictionary with counts of specific pizzas
+    """
     output = {}
 
     for pizza, nums in pizza_orders.items():
@@ -110,6 +137,15 @@ def switch_keys_and_values(pizza_orders: dict) -> dict:
 
 
 def count_ingredients(menu: dict, order: list) -> dict | None:
+    """Count ingredients needed to make multiple pizzas.
+
+    Args:
+        menu (dict): Dictionary of all the valid pizzas
+        order (list): List of pizzas which require ingredients
+
+    Returns:
+        dict | None: Dictionary of required ingredients to make pizzas in a order
+    """
     output = {}
 
     for pizza in order:
@@ -126,17 +162,26 @@ def count_ingredients(menu: dict, order: list) -> dict | None:
 
 
 def match_pizzas_with_prices(pizzas: list, prices: list) -> list:
+    """Match pizzas with prices.
+
+    Args:
+        pizzas (list): List of pizzas
+        prices (list): List of prices
+
+    Returns:
+        list: List of pizzas with matching prices
+    """
     unique_pizzas = []
     duplicates = set()
     pattern = re.compile(r"^[a-z]+$")
-    
+
     for pizza in pizzas:
         if pattern.match(pizza) and pizza not in duplicates:
             unique_pizzas.append(pizza)
             duplicates.add(pizza)
-    
+
     if len(prices) != len(unique_pizzas):
         return []
-    
+
     else:
         return list(zip(unique_pizzas, prices))

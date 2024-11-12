@@ -1,6 +1,7 @@
 """Cars."""
 import json
 
+
 class Car:
     """Car class."""
 
@@ -109,16 +110,15 @@ def most_popular_feature(cars: list[Car]) -> str:
     :return: The most popular feature among the given cars.
     """
     all_features = {}
-    
+
     for car in cars:
         for feature in car.features:
             if feature in all_features:
                 all_features[feature] += 1
             else:
                 all_features[feature] = 1
-    
+
     return max(all_features, key=lambda x: all_features[x])
-            
 
 
 def write_cars_to_file(cars: list[Car], file_name: str):
@@ -129,21 +129,22 @@ def write_cars_to_file(cars: list[Car], file_name: str):
     The keys of the dictionaries should be the attributes of the car and the values should be
     the values of the attributes. The order of the cars in the list should stay the same.
     lang="python" class="code highlight js-syntax-highlight language-python dark" data-canonical-lang="python" data-sourcepos="154:1-322:3" id="code-74">
-    
+
     :param cars: The list of cars to write to the file.
     :param file_name: The name of the file to write the cars to.
     """
     data = [
-    {
-        "make": car.make,
-        "model": car.model,
-        "fuel_consumption": car.fuel_consumption,
-        "features": car.features
-    } for car in cars
+        {
+            "make": car.make,
+            "model": car.model,
+            "fuel_consumption": car.fuel_consumption,
+            "features": car.features
+        } for car in cars
     ]
 
     with open(file_name, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2)
+
 
 def read_cars_from_file(file_name: str) -> list[Car]:
     """
@@ -158,30 +159,37 @@ def read_cars_from_file(file_name: str) -> list[Car]:
     """
     with open(file_name, "r", encoding="utf-8") as f:
         data = json.load(f)
-    
+
     return [Car(car["make"], car["model"], car["fuel_consumption"], car["features"]) for car in data]
 
 
 if __name__ == '__main__':
     list_of_cars = [Car('BMW', 'X5', 12.3, ['leather', 'heated seats', 'GPS']),
-                    Car('BMW', 'X6', 7.2, ['leather', 'heated seats', 'panorama', 'GPS']),
-                    Car('Audi', 'A6', 9.93, ['leather', 'heated seats', 'panorama', 'GPS']),
-                    Car('Audi', 'A7', 15.21, ['leather', 'heated seats', 'panorama', 'sport package']),
+                    Car('BMW', 'X6', 7.2, ['leather',
+                        'heated seats', 'panorama', 'GPS']),
+                    Car('Audi', 'A6', 9.93, [
+                        'leather', 'heated seats', 'panorama', 'GPS']),
+                    Car('Audi', 'A7', 15.21, [
+                        'leather', 'heated seats', 'panorama', 'sport package']),
                     Car('Mercedes', 'S500', 10.6, ['leather', 'panorama', 'sport package',
                                                    'premium sound system'])]
 
     print(list_of_cars)  # [BMW X5, BMW X6, Audi A6, Audi A7, Mercedes S500]
-    print(sort_cars_by_make(list_of_cars))  # [Audi A6, Audi A7, BMW X5, BMW X6, Mercedes S500]
+    # [Audi A6, Audi A7, BMW X5, BMW X6, Mercedes S500]
+    print(sort_cars_by_make(list_of_cars))
     print()
 
     print(find_cars_by_make_and_model(list_of_cars, 'BMW', 'X6'))  # [BMW X6]
-    print(find_cars_by_feature(list_of_cars, 'panorama'))  # [Audi A6, Audi A7, BMW X6, Mercedes S500]
+    # [Audi A6, Audi A7, BMW X6, Mercedes S500]
+    print(find_cars_by_feature(list_of_cars, 'panorama'))
     print()
 
-    print(fuel_needed(list_of_cars[0], 150))  # 18.45; may be different due to floating point arithmetic errors
+    # 18.45; may be different due to floating point arithmetic errors
+    print(fuel_needed(list_of_cars[0], 150))
     print(calculate_average_fuel_consumption(list_of_cars))  # 11.048
     print()
 
     print(most_popular_feature(list_of_cars))  # leather
-    #print(write_cars_to_file(list_of_cars, 'cars.json'))
-    print(read_cars_from_file('cars.json'))  # [BMW X5, BMW X6, Audi A6, Audi A7, Mercedes S500]
+    print(write_cars_to_file(list_of_cars, 'cars.json'))
+    # [BMW X5, BMW X6, Audi A6, Audi A7, Mercedes S500]
+    print(read_cars_from_file('cars.json'))

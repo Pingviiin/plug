@@ -18,7 +18,7 @@ def create_simple_pyramid_left(height: int, pyramid_row: int = 1) -> str:
     if pyramid_row > height:
         return ""
     
-    return f"{pyramid_row * "*"}\n{create_simple_pyramid_left(height, pyramid_row + 1)}"
+    return (pyramid_row * "*") + "\n" + create_simple_pyramid_left(height, pyramid_row + 1)
 
 def create_simple_pyramid_right(height: int, current=1) -> str:
     """
@@ -112,7 +112,18 @@ def create_number_pyramid_left_down(height: int, current=1) -> str:
     :param current: Keeping track of current layer.
     :return: Pyramid.
     """
-    pass
+    if 0 > height:
+        return ""
+    
+    def row(n: int) -> str:
+        if n == 1:
+            return "1"
+        return row(n - 1) + str(n)
+    
+    current_row = row(current)
+    
+    return f"{current_row}\n{create_number_pyramid_left(height - 1, current)}"
+
 
 
 def create_number_pyramid_right_down(height: int, current=1) -> str:

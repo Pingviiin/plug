@@ -1,5 +1,7 @@
 """Create table from the given string."""
 import re
+from datetime import datetime
+
 
 def create_table_string(text: str) -> str:
     """
@@ -35,7 +37,7 @@ def create_table_string(text: str) -> str:
     """
     
     "pikima_kategooria_nimi + üks_tühik + eraldaja + üks_tühik + kategooria_logi_andmed"
-    time = sorted(format_time(get_times(text)))
+    time = format_time(sorted(list(set((get_times(text))))))
     user = sorted(get_usernames(text))
     error = sorted(get_errors(text))
     ipv4 = sorted(get_addresses(text))
@@ -52,55 +54,51 @@ def get_times(text: str) -> list[tuple[int, int, int]]:
     :param text: text to search for the times
     :return: list of tuples containing the time and offset
     """
-    pattern = r"\[(\d{1,2})\D(\d{1,2}) UTC([+-])(\d)"
-    match = re.findall(pattern, text)
+    pattern = r"\[(\d{1,2})\D(\d{1,2}) UTC([+-])(\d{1,2})"
+    matches = re.findall(pattern, text)
     
     output = []
-    if match != []:
-        for m in match:
+    if matches != []:
+        for m in matches:
             hours = int(m[0])
             minutes = int(m[1])
-            
+
             utc_sign = m[2]
             utc_time = int(m[3])
-            
+
             if utc_sign == "-":
                 utc_time = -utc_time
-            
-            output += [(hours, minutes, utc_time)]
+                
+            if hours > 23 or minutes > 59 or -12 > utc_time > 12:
+                continue
+            else:
+                output += [(hours, minutes, utc_time)]
 
     return output
-    
+
 
 def format_time(time_list: list) -> list:
     """Format time data to 12-hour format."""
-
-    if time_list == []:
-        return []
-
     output = []
-    for tup in time_list:
-        hours = tup[0]
-        minutes = tup[1]
-        utc_time = tup[2]
 
-        hours = (hours + -utc_time) % 24
+    for hours, minutes, utc in time_list:
 
+        hours += utc
         if hours == 0:
-            meridiem = "AM"
             hours = 12
-        elif hours < 12:
-            meridiem = "AM"
-        elif hours == 12:
-            meridiem = "PM"
-        else:
-            meridiem = "PM"
-            hours = hours - 12
+            output += [f"{hours}:{minutes:02d} AM"]
 
-        output += [f"{hours}:{minutes:02d} {meridiem}"]
+        elif hours < 12:
+            output += [f"{hours}:{minutes:02d} AM"]
+
+        elif hours == 12:
+            output += [f"{hours}:{minutes:02d} PM"]
+
+        else:
+            hours = hours - 12
+            output += [f"{hours}:{minutes:02d} PM"]
     
     return output
-
 
 
 def get_usernames(text: str) -> list[str]:
@@ -112,8 +110,8 @@ def get_usernames(text: str) -> list[str]:
 def get_errors(text: str) -> list[int]:
     """Get errors from text. No need to sort here."""
     pattern = r"error\s([\d]{1,3})"
-    return re.findall(pattern, text, re.IGNORECASE)
-
+    data = re.findall(pattern, text, re.IGNORECASE)
+    return list(map(lambda x: int(x), data))
 
 def get_addresses(text: str) -> list[str]:
     """Get IPv4 addresses from text. No need to sort here."""
@@ -144,14 +142,14 @@ if __name__ == '__main__':
 [0?0 UTC+0] ok
 [0.0 UTC+0] also ok
             """
-    #print(get_endpoints(f'/cfepechz /api/orders')) # -> ['/cfepechz', '/api/orders']
-    #print(get_times("[-1b35 UTC+0")) # -> []
-    #print(get_times("[10:53 UTC+3]")) # -> [(10, 53, 3)]
-    #print(get_times("[1:43 UTC+0]")) # -> [(1, 43, 0)]
-    #print(get_times("[14A3 UTC-4] [14:3 UTC-4]"))# -> [(14, 3, -4), (14, 3, -4)]
-    #print("")
-    #print(get_times(logs))
+
+    print(get_times("[10:53 UTC+3]")) # -> [(10, 53, 3)]
+    print(get_times("[1:43 UTC+0]")) # -> [(1, 43, 0)]
+    print(get_times("[14A3 UTC-4] [14:3 UTC-4]"))# -> [(14, 3, -4), (14, 3, -4)]
+    print("")
+    print(format_time(get_times("[24:60 UTC-6]")))
     print(create_table_string(logs))
+    
 #time     | 12:00 AM, 12:05 AM, 1:54 AM, 3:46 AM, 8:53 AM, 11:07 AM, 5:57 PM, 9:53 PM
 #user     | 96NC9yqb, B3HIyLm, uJV5sf82_
 #error    | 9, 452, 700, 741, 844

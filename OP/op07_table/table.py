@@ -43,17 +43,26 @@ def create_table_string(text: str) -> str:
     ipv4 = sorted(get_addresses(text))
     endpoint = sorted(get_endpoints(text))
 
+    if time or user or ipv4:
+        max_len = 5
+    
+    if error:
+        max_len = 6
+
+    if endpoint:
+        max_len = 9
+
     table = []
     if time:
-        table.append(f"time     | {', '.join(time)}")
+        table.append(f"{"time":<{max_len}}| " + ', '.join(time))
     if user:
-        table.append(f"user     | {', '.join(user)}")
+        table.append(f"{"user":<{max_len}}| " + ', '.join(user))
     if error:
-        table.append(f"error    | {', '.join(map(str, error))}")
+        table.append(f"{"error":<{max_len}}| " + ', '.join(map(str, error)))
     if ipv4:
-        table.append(f"ipv4     | {', '.join(ipv4)}")
+        table.append(f"{"ipv4":<{max_len}}| " + ', '.join(ipv4))
     if endpoint:
-        table.append(f"endpoint | {', '.join(endpoint)}")
+        table.append(f"{"endpoint":<{max_len}}| " + ', '.join(endpoint))
 
     return '\n'.join(table)
 

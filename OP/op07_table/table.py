@@ -35,7 +35,7 @@ def create_table_string(text: str) -> str:
     Times in the table should be displayed in UTC(https://et.wikipedia.org/wiki/UTC) time.
     If no items were found, return an empty string.
     """
-    
+
     "pikima_kategooria_nimi + üks_tühik + eraldaja + üks_tühik + kategooria_logi_andmed"
     categories = {
         "time": list(map(lambda x: get_formatted_time(x), sorted(set(format_time(hour, minute, offset) for hour, minute, offset in get_times(text))))),
@@ -44,10 +44,15 @@ def create_table_string(text: str) -> str:
         "ipv4": sorted(set(get_addresses(text))),
         "endpoint": sorted(set(get_endpoints(text))),
     }
-    
-    max_width = max(len(cat) for cat, values in categories.items() if values) + 1
 
-    table = [f"{cat:<{max_width}}| {', '.join(values)}" for cat, values in categories.items() if values]
+    if categories == {}:
+        return []
+
+    max_width = max(len(cat)
+                    for cat, values in categories.items() if values) + 1
+
+    table = [
+        f"{cat:<{max_width}}| {', '.join(values)}" for cat, values in categories.items() if values]
 
     return '\n'.join(table)
 
@@ -63,7 +68,7 @@ def get_times(text: str) -> list[tuple[int, int, int]]:
     """
     pattern = r"\[(\d{1,2})\D(\d{1,2}) UTC([+-])(\d{1,2})"
     matches = re.findall(pattern, text)
-    
+
     output = []
     if matches != []:
         for m in matches:
@@ -75,7 +80,7 @@ def get_times(text: str) -> list[tuple[int, int, int]]:
 
             if utc_sign == "-":
                 utc_time = -utc_time
-                
+
             if hours > 23 or minutes > 59 or -12 > utc_time > 12:
                 continue
             else:
@@ -83,7 +88,7 @@ def get_times(text: str) -> list[tuple[int, int, int]]:
 
     return output
 
-    
+
 def format_time(hour, minute, offset):
     """Format time data to 24-hour format."""
     utc_hour = (hour - offset) % 24
@@ -107,6 +112,7 @@ def get_errors(text: str) -> list[int]:
     pattern = r"error\s([\d]{1,3})"
     data = re.findall(pattern, text, re.IGNORECASE)
     return list(map(lambda x: int(x), data))
+
 
 def get_addresses(text: str) -> list[str]:
     """Get IPv4 addresses from text. No need to sort here."""
@@ -137,15 +143,19 @@ if __name__ == '__main__':
 [0?0 UTC+0] ok
 [0.0 UTC+0] also ok
             """
+a = """
+    error 511 error 8
+    """
+print(get_times("[10:53 UTC+3]"))  # -> [(10, 53, 3)]
+print(get_times("[1:43 UTC+0]"))  # -> [(1, 43, 0)]
+print(get_times("[14A3 UTC-4] [14:3 UTC-4]"))  # -> [(14, 3, -4), (14, 3, -4)]
+print("")
+print(create_table_string(logs))
+print("")
+print(create_table_string(a))
 
-    print(get_times("[10:53 UTC+3]")) # -> [(10, 53, 3)]
-    print(get_times("[1:43 UTC+0]")) # -> [(1, 43, 0)]
-    print(get_times("[14A3 UTC-4] [14:3 UTC-4]"))# -> [(14, 3, -4), (14, 3, -4)]
-    print("")
-    print(create_table_string(logs))
-    
-#time     | 12:00 AM, 12:05 AM, 1:54 AM, 3:46 AM, 8:53 AM, 11:07 AM, 5:57 PM, 9:53 PM
-#user     | 96NC9yqb, B3HIyLm, uJV5sf82_
-#error    | 9, 452, 700, 741, 844
-#ipv4     | 119.892.677.533, 15.822.272.473, 268.495.856.225, 468.793.214.681, 715.545.485.989, 776.330.579.818
-#endpoint | /1slr8I, /NBYFaC0, /aA?Y4pK
+# time     | 12:00 AM, 12:05 AM, 1:54 AM, 3:46 AM, 8:53 AM, 11:07 AM, 5:57 PM, 9:53 PM
+# user     | 96NC9yqb, B3HIyLm, uJV5sf82_
+# error    | 9, 452, 700, 741, 844
+# ipv4     | 119.892.677.533, 15.822.272.473, 268.495.856.225, 468.793.214.681, 715.545.485.989, 776.330.579.818
+# endpoint | /1slr8I, /NBYFaC0, /aA?Y4pK

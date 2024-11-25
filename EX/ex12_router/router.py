@@ -1,6 +1,6 @@
+"""Route all the packets."""
 import re
 import random
-"""Route all the packets."""
 
 
 class Packet:

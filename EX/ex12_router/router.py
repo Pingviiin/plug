@@ -1,4 +1,4 @@
-import ipaddress
+import re
 import random
 """Route all the packets."""
 
@@ -88,13 +88,7 @@ class Router:
     def __validate_ipv4(self, ip_address: str) -> bool:
         """Validate IPv4."""
         # Write your code here
-        if ip_address == "192.168.1.0":
-            return False
-        try:
-            ipaddress.ip_address(ip_address)
-            return True
-        except ValueError:
-            return False
+        return bool(re.search(r"^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$", ip_address))
 
     def __init__(self, ip_address: str):
         """
@@ -108,7 +102,7 @@ class Router:
         The first 3 sections ("192.168.0" in this example) form a subnet. You will need this later!
         """
         # Write your code here
-        if self.__validate_ipv4(ip_address):
+        if self.__validate_ipv4(ip_address) and self.ip_address.rsplit(".", 1)[1] == 1:
             self.ip_address = ip_address
         else:
             self.ip_address = "192.168.0.1"

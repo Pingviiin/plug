@@ -1,4 +1,4 @@
-import re
+import ipaddress
 import random
 """Route all the packets."""
 
@@ -88,7 +88,10 @@ class Router:
     def __validate_ipv4(self, ip_address: str) -> bool:
         """Validate IPv4."""
         # Write your code here
-        return bool(re.search(r"[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}", ip_address))
+        if ipaddress.ip_address(ip_address):
+            return True
+        else:
+            return False
 
     def __init__(self, ip_address: str):
         """

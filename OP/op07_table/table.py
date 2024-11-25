@@ -99,7 +99,7 @@ def format_time(hour, minute, offset):
 
 
 def get_formatted_time(time: str):
-    if time == "":
+    if isinstance(time, list):
         return ""
     d = datetime.strptime(time, "%H:%M")
     return d.strftime("%I:%M %p").lstrip("0")

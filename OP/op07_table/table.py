@@ -37,7 +37,7 @@ def create_table_string(text: str) -> str:
     """
     
     "pikima_kategooria_nimi + üks_tühik + eraldaja + üks_tühik + kategooria_logi_andmed"
-    time = sorted(set(format_time(h, m, o) for h, m, o in get_times(text)))
+    time = list(map(lambda x: get_formatted_time(x), sorted(set(format_time(hour, minute, offset) for hour, minute, offset in get_times(text)))))
     user = sorted(get_usernames(text))
     error = sorted(get_errors(text))
     ipv4 = sorted(get_addresses(text))
@@ -91,10 +91,15 @@ def get_times(text: str) -> list[tuple[int, int, int]]:
 
     
 def format_time(hour, minute, offset):
-    """Format time data to 12-hour format."""
+    """Format time data to 24-hour format."""
     utc_hour = (hour - offset) % 24
     time_obj = datetime(2000, 1, 1, utc_hour, minute)
-    return time_obj.strftime('%I:%M %p').lstrip('0')
+    return time_obj.strftime('%H:%M')
+
+
+def get_formatted_time(time: str):
+    d = datetime.strptime(time, "%H:%M")
+    return d.strftime("%I:%M %p").lstrip("0")
 
 
 def get_usernames(text: str) -> list[str]:

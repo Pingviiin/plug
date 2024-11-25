@@ -37,12 +37,25 @@ def create_table_string(text: str) -> str:
     """
     
     "pikima_kategooria_nimi + üks_tühik + eraldaja + üks_tühik + kategooria_logi_andmed"
-    time = format_time(sorted(list(set((get_times(text))))))
+    time = sorted(set(format_time(h, m, o) for h, m, o in get_times(text)))
     user = sorted(get_usernames(text))
     error = sorted(get_errors(text))
     ipv4 = sorted(get_addresses(text))
     endpoint = sorted(get_endpoints(text))
-    return f"{time}\n{user}\n{error}\n{ipv4}\n{endpoint}"
+
+    table = []
+    if time:
+        table.append(f"time     | {', '.join(time)}")
+    if user:
+        table.append(f"user     | {', '.join(user)}")
+    if error:
+        table.append(f"error    | {', '.join(map(str, error))}")
+    if ipv4:
+        table.append(f"ipv4     | {', '.join(ipv4)}")
+    if endpoint:
+        table.append(f"endpoint | {', '.join(endpoint)}")
+
+    return '\n'.join(table)
 
 
 def get_times(text: str) -> list[tuple[int, int, int]]:
@@ -76,29 +89,12 @@ def get_times(text: str) -> list[tuple[int, int, int]]:
 
     return output
 
-
-def format_time(time_list: list) -> list:
-    """Format time data to 12-hour format."""
-    output = []
-
-    for hours, minutes, utc in time_list:
-
-        hours += utc
-        if hours == 0:
-            hours = 12
-            output += [f"{hours}:{minutes:02d} AM"]
-
-        elif hours < 12:
-            output += [f"{hours}:{minutes:02d} AM"]
-
-        elif hours == 12:
-            output += [f"{hours}:{minutes:02d} PM"]
-
-        else:
-            hours = hours - 12
-            output += [f"{hours}:{minutes:02d} PM"]
     
-    return output
+def format_time(hour, minute, offset):
+    """Format time data to 12-hour format."""
+    utc_hour = (hour - offset) % 24
+    time_obj = datetime(2000, 1, 1, utc_hour, minute)
+    return time_obj.strftime('%I:%M %p').lstrip('0')
 
 
 def get_usernames(text: str) -> list[str]:
@@ -147,7 +143,6 @@ if __name__ == '__main__':
     print(get_times("[1:43 UTC+0]")) # -> [(1, 43, 0)]
     print(get_times("[14A3 UTC-4] [14:3 UTC-4]"))# -> [(14, 3, -4), (14, 3, -4)]
     print("")
-    print(format_time(get_times("[24:60 UTC-6]")))
     print(create_table_string(logs))
     
 #time     | 12:00 AM, 12:05 AM, 1:54 AM, 3:46 AM, 8:53 AM, 11:07 AM, 5:57 PM, 9:53 PM

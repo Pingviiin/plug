@@ -88,9 +88,10 @@ class Router:
     def __validate_ipv4(self, ip_address: str) -> bool:
         """Validate IPv4."""
         # Write your code here
-        if ipaddress.ip_address(ip_address):
+        try:
+            ipaddress.ip_address(ip_address)
             return True
-        else:
+        except ValueError:
             return False
 
     def __init__(self, ip_address: str):

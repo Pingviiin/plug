@@ -37,32 +37,17 @@ def create_table_string(text: str) -> str:
     """
     
     "pikima_kategooria_nimi + üks_tühik + eraldaja + üks_tühik + kategooria_logi_andmed"
-    time = list(map(lambda x: get_formatted_time(x), sorted(set(format_time(hour, minute, offset) for hour, minute, offset in get_times(text)))))
-    user = sorted(get_usernames(text))
-    error = sorted(get_errors(text))
-    ipv4 = sorted(get_addresses(text))
-    endpoint = sorted(get_endpoints(text))
-
-    if time or user or ipv4:
-        max_len = 5
+    categories = {
+        "time": list(map(lambda x: get_formatted_time(x), sorted(set(format_time(hour, minute, offset) for hour, minute, offset in get_times(text))))),
+        "user": sorted(set(get_usernames(text))),
+        "error": sorted(set(map(str, get_errors(text)))),
+        "ipv4": sorted(set(get_addresses(text))),
+        "endpoint": sorted(set(get_endpoints(text))),
+    }
     
-    if error:
-        max_len = 6
+    max_width = max(len(cat) for cat, values in categories.items() if values) + 1
 
-    if endpoint:
-        max_len = 9
-
-    table = []
-    if time:
-        table.append(f"{"time":<{max_len}}| " + ', '.join(time))
-    if user:
-        table.append(f"{"user":<{max_len}}| " + ', '.join(user))
-    if error:
-        table.append(f"{"error":<{max_len}}| " + ', '.join(map(str, error)))
-    if ipv4:
-        table.append(f"{"ipv4":<{max_len}}| " + ', '.join(ipv4))
-    if endpoint:
-        table.append(f"{"endpoint":<{max_len}}| " + ', '.join(endpoint))
+    table = [f"{cat:<{max_width}}| {', '.join(values)}" for cat, values in categories.items() if values]
 
     return '\n'.join(table)
 

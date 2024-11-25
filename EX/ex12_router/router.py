@@ -1,3 +1,5 @@
+import re
+import random
 """Route all the packets."""
 
 
@@ -7,7 +9,11 @@ class Packet:
     def __init__(self, content: str, source_ip: str, destination_ip: str, id: int, sequence_number: int):
         """Initialize packet class."""
         # Write your code here
-        pass
+        self.content = content
+        self.source_ip = source_ip
+        self.destination_ip = destination_ip
+        self.id = id
+        self.sequence_number = sequence_number
 
     def __repr__(self) -> str:
         """
@@ -17,7 +23,7 @@ class Packet:
         '[content] from [source_ip] to [destination_ip] ([id]:[sequence_number])'
         """
         # Write your code here
-        pass
+        return f"{self.content} from {self.source_ip} to {self.destination_ip} ({self.id}:{self.sequence_number})"
 
 
 class EndDevice:
@@ -31,12 +37,13 @@ class EndDevice:
         Also, end device will collect all packets that are sent to them.
         """
         # Write your code here
-        pass
+        self.ip_address = ""
+        self.packets = []
 
     def get_ip_address(self) -> str:
         """Return the current IP address of the device."""
         # Write your code here
-        pass
+        return self.ip_address
 
     def set_ip_address(self, ip_address: str) -> None:
         """
@@ -45,32 +52,34 @@ class EndDevice:
         You don't need to validate the IP address here.
         """
         # Write your code here
-        pass
+        self.ip_address = ip_address
+        
+        return self.ip_address
 
     def add_packet(self, packet: Packet) -> None:
         """Add a packet to end device."""
         # Write your code here
-        pass
+        self.packets += [packet]
 
     def clear_packet_history(self) -> None:
         """Clear all packets from history."""
         # Write your code here
-        pass
+        self.packets.clear()
 
     def get_all_packets(self) -> list[Packet]:
         """Get a list of all packets in the order they were added."""
         # Write your code here
-        pass
+        return self.packets
 
     def get_all_packets_by_id(self, given_id: int) -> list[Packet]:
         """Get a list of all packets that have the given ID."""
         # Write your code here
-        pass
+        return [packet for packet in self.packets if packet.id == given_id]
 
     def get_all_packets_by_source_ip(self, given_ip: str) -> list[Packet]:
         """Get a list of all packets that have given source IP."""
         # Write your code here
-        pass
+        return [packet for packet in self.packets if packet.source_ip == given_ip]
 
 
 class Router:
@@ -79,7 +88,7 @@ class Router:
     def __validate_ipv4(self, ip_address: str) -> bool:
         """Validate IPv4."""
         # Write your code here
-        pass
+        return bool(re.search(r"^((25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9][0-9]|[1-9]?[0-9])$", ip_address))
 
     def __init__(self, ip_address: str):
         """
@@ -93,12 +102,18 @@ class Router:
         The first 3 sections ("192.168.0" in this example) form a subnet. You will need this later!
         """
         # Write your code here
-        pass
+        if self.__validate_ipv4(ip_address):
+            self.ip_address = ip_address
+        else:
+            self.ip_address = "192.168.0.1"
+            
+        self.used_addresses = set()
+        self.devices = []
 
     def get_ip_address(self) -> str:
         """Return the current IP address of the router."""
         # Write your code here
-        pass
+        return self.ip_address
 
     def generate_ip_address(self) -> str:
         """
@@ -114,7 +129,18 @@ class Router:
         If there are no possible IP addresses to generate, raise an IPv4AddressSpaceExhaustedException().
         """
         # Write your code here
-        pass
+        subnet = self.ip_address.rsplit(".", 1)[0]
+        possible_addresses = [f"{subnet}.{i}" for i in range(2, 255)]
+        available_addresses = [ip for ip in possible_addresses if ip not in self.used_addresses]
+        
+        if available_addresses == []:
+            raise IPv4AddressSpaceExhaustedException()
+            
+        random_address = random.choice(available_addresses)
+        self.used_addresses.add(random_address)
+        
+        return random_address
+        
 
     def add_device(self, device: EndDevice) -> bool:
         """
@@ -126,7 +152,17 @@ class Router:
         The method should return True if device was added, else False.
         """
         # Write your code here
-        pass
+        if device in self.devices:
+            return False
+
+        ip_address = self.generate_ip_address()
+
+        if ip_address:
+            device.ip_address = ip_address
+            self.devices += [device]
+            return True
+        else:
+            return False
 
     def remove_device(self, device: EndDevice) -> bool:
         """
@@ -138,12 +174,19 @@ class Router:
         The method should return True if device was removed, else False.
         """
         # Write your code here
-        pass
+        if device in self.devices:
+            self.used_addresses.discard(device.ip_address)
+            device.ip_address = ""
+            self.devices.remove(device)
+            return True
+        
+        else:
+            return False
 
     def get_devices(self) -> list[EndDevice]:
         """Get all devices that are connected to the router in the order they were connected."""
         # Write your code here
-        pass
+        return self.devices
 
     def get_device_by_ip(self, ip: str) -> EndDevice | None:
         """
@@ -153,7 +196,11 @@ class Router:
         Otherwise return the found device.
         """
         # Write your code here
-        pass
+        for device in self.devices:
+            if device.ip_address == ip:
+                return device
+        else:
+            return None
 
     def receive_packet(self, packet: Packet) -> None:
         """
@@ -163,7 +210,10 @@ class Router:
         Otherwise drop this packet. (don't do anything with it)
         """
         # Write your code here
-        pass
+        for device in self.devices:
+            if device.ip_address == packet.destination_ip:
+                device.add_packet(packet)
+                return
 
 
 class IPv4AddressSpaceExhaustedException(Exception):

@@ -144,11 +144,12 @@ if __name__ == '__main__':
 [0.0 UTC+0] also ok
             """
 
-print(get_times("[10:53 UTC+3]"))  # -> [(10, 53, 3)]
-print(get_times("[1:43 UTC+0]"))  # -> [(1, 43, 0)]
-print(get_times("[14A3 UTC-4] [14:3 UTC-4]"))  # -> [(14, 3, -4), (14, 3, -4)]
-print("")
-print(create_table_string(logs))
+    print(get_times("[10:53 UTC+3]"))  # -> [(10, 53, 3)]
+    print(get_times("[1:43 UTC+0]"))  # -> [(1, 43, 0)]
+    # -> [(14, 3, -4), (14, 3, -4)]
+    print(get_times("[14A3 UTC-4] [14:3 UTC-4]"))
+    print("")
+    print(create_table_string(logs))
 
 # time     | 12:00 AM, 12:05 AM, 1:54 AM, 3:46 AM, 8:53 AM, 11:07 AM, 5:57 PM, 9:53 PM
 # user     | 96NC9yqb, B3HIyLm, uJV5sf82_

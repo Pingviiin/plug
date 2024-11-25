@@ -102,7 +102,7 @@ class Router:
         The first 3 sections ("192.168.0" in this example) form a subnet. You will need this later!
         """
         # Write your code here
-        if self.__validate_ipv4(ip_address) and self.ip_address.rsplit(".", 1)[1] == 1:
+        if self.__validate_ipv4(ip_address) and ip_address.rsplit(".", 1)[1] == 1:
             self.ip_address = ip_address
         else:
             self.ip_address = "192.168.0.1"

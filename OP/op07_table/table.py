@@ -45,11 +45,13 @@ def create_table_string(text: str) -> str:
         "endpoint": sorted(set(get_endpoints(text))),
     }
 
-    if categories == {}:
+    used_categories = [len(cat)
+                       for cat, values in categories.items() if values]
+
+    if used_categories == []:
         return []
 
-    max_width = max(len(cat)
-                    for cat, values in categories.items() if values) + 1
+    max_width = max(used_categories) + 1
 
     table = [
         f"{cat:<{max_width}}| {', '.join(values)}" for cat, values in categories.items() if values]

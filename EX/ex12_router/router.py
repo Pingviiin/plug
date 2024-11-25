@@ -53,7 +53,7 @@ class EndDevice:
         """
         # Write your code here
         self.ip_address = ip_address
-        
+
         return self.ip_address
 
     def add_packet(self, packet: Packet) -> None:
@@ -106,7 +106,7 @@ class Router:
             self.ip_address = ip_address
         else:
             self.ip_address = "192.168.0.1"
-            
+
         self.used_addresses = set()
         self.devices = []
 
@@ -131,16 +131,16 @@ class Router:
         # Write your code here
         subnet = self.ip_address.rsplit(".", 1)[0]
         possible_addresses = [f"{subnet}.{i}" for i in range(2, 255)]
-        available_addresses = [ip for ip in possible_addresses if ip not in self.used_addresses]
-        
+        available_addresses = [
+            ip for ip in possible_addresses if ip not in self.used_addresses]
+
         if available_addresses == []:
             raise IPv4AddressSpaceExhaustedException()
-            
+
         random_address = random.choice(available_addresses)
         self.used_addresses.add(random_address)
-        
+
         return random_address
-        
 
     def add_device(self, device: EndDevice) -> bool:
         """
@@ -179,7 +179,7 @@ class Router:
             device.ip_address = ""
             self.devices.remove(device)
             return True
-        
+
         else:
             return False
 
@@ -242,16 +242,22 @@ if __name__ == "__main__":
     print()
 
     # Check generated IP addresses
-    print(device1.get_ip_address().startswith("192.168.1."))                # True (correct subnet)
-    print(1 < int(device1.get_ip_address().split(".")[-1]) < 255)           # True (correct ending)
-    print(device1.get_ip_address() == device2.get_ip_address())             # False (different IP addresses generated)
+    print(device1.get_ip_address().startswith("192.168.1.")
+          )                # True (correct subnet)
+    # True (correct ending)
+    print(1 < int(device1.get_ip_address().split(".")[-1]) < 255)
+    # False (different IP addresses generated)
+    print(device1.get_ip_address() == device2.get_ip_address())
     print(router.get_device_by_ip(device1.get_ip_address()) == device1)     # True
     print()
 
     # Create packet from device1 to device2
-    packet1 = Packet("message1", device1.get_ip_address(), device2.get_ip_address(), 1, 1)
-    print(packet1)                          # message1 from 192.168.1.[some number] to 192.168.1.[some number](1:1)
-    router.receive_packet(packet1)          # (this should send packet to device2)
+    packet1 = Packet("message1", device1.get_ip_address(),
+                     device2.get_ip_address(), 1, 1)
+    # message1 from 192.168.1.[some number] to 192.168.1.[some number](1:1)
+    print(packet1)
+    # (this should send packet to device2)
+    router.receive_packet(packet1)
     print(len(device2.get_all_packets()))   # 1
     print(len(device1.get_all_packets()))   # 0
     print(len(device2.get_all_packets_by_id(1)))    # 1

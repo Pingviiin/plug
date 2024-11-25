@@ -35,7 +35,6 @@ def create_table_string(text: str) -> str:
     Times in the table should be displayed in UTC(https://et.wikipedia.org/wiki/UTC) time.
     If no items were found, return an empty string.
     """
-
     "pikima_kategooria_nimi + üks_tühik + eraldaja + üks_tühik + kategooria_logi_andmed"
     categories = {
         "time": list(map(lambda x: get_formatted_time(x), sorted(set(format_time(hour, minute, offset) for hour, minute, offset in get_times(text))))),
@@ -99,6 +98,7 @@ def format_time(hour, minute, offset):
 
 
 def get_formatted_time(time: str):
+    """Format 24-hour time to 12-hour time."""
     d = datetime.strptime(time, "%H:%M")
     return d.strftime("%I:%M %p").lstrip("0")
 

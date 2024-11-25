@@ -37,6 +37,9 @@ def create_table_string(text: str) -> str:
     """
 
     "pikima_kategooria_nimi + üks_tühik + eraldaja + üks_tühik + kategooria_logi_andmed"
+    if text == "":
+        return []
+    
     categories = {
         "time": list(map(lambda x: get_formatted_time(x), sorted(set(format_time(hour, minute, offset) for hour, minute, offset in get_times(text))))),
         "user": sorted(set(get_usernames(text))),

@@ -88,7 +88,7 @@ class Router:
     def __validate_ipv4(self, ip_address: str) -> bool:
         """Validate IPv4."""
         # Write your code here
-        if ip_address.rsplit(".", 1)[1] == "1":
+        if ip_address == "192.168.1.0":
             return False
         try:
             ipaddress.ip_address(ip_address)

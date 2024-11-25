@@ -40,7 +40,7 @@ def create_table_string(text: str) -> str:
     categories = {
         "time": list(map(lambda x: get_formatted_time(x), sorted(set(format_time(hour, minute, offset) for hour, minute, offset in get_times(text))))),
         "user": sorted(set(get_usernames(text))),
-        "error": sorted(set(map(str, get_errors(text)))),
+        "error": sorted(set(map(str, get_errors(text))), key=int),
         "ipv4": sorted(set(get_addresses(text))),
         "endpoint": sorted(set(get_endpoints(text))),
     }

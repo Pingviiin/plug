@@ -49,7 +49,7 @@ def create_table_string(text: str) -> str:
                        for cat, values in categories.items() if values]
 
     if used_categories == []:
-        return []
+        return ""
 
     max_width = max(used_categories) + 1
 
@@ -99,8 +99,6 @@ def format_time(hour, minute, offset):
 
 
 def get_formatted_time(time: str):
-    if isinstance(time, list):
-        return ""
     d = datetime.strptime(time, "%H:%M")
     return d.strftime("%I:%M %p").lstrip("0")
 

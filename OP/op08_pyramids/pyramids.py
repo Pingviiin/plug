@@ -87,14 +87,13 @@ def create_number_pyramid_right(height: int, current=1) -> str:
     if current > height:
         return ""
     
-    def row(n: int) -> str:
-        if n == 0:
-            return ""
-        return str(n) + row(n - 1)
+    spaces = ' ' * (height - current)
     
-    current_row = f"{' ' * (height - current)}{row(current)[::-1]}"
-    
-    return current_row + "\n" + create_number_pyramid_right(height, current + 1)
+    numbers = ''.join(str(i) for i in range(current, 0, -1))
+
+    current_layer = f"{spaces}{numbers}"
+
+    return f"{current_layer}\n" + create_number_pyramid_right(height, current + 1)
 
 
 def create_number_pyramid_left_down(height: int, current=0) -> str:

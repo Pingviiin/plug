@@ -9,7 +9,7 @@ def create_simple_pyramid_left(height: int, pyramid_row: int = 1) -> str:
     **
     ***
     ****
-    
+
     Use recursion!
 
     :param height: Pyramid height.
@@ -17,8 +17,9 @@ def create_simple_pyramid_left(height: int, pyramid_row: int = 1) -> str:
     """
     if pyramid_row > height:
         return ""
-    
+
     return (pyramid_row * "*") + "\n" + create_simple_pyramid_left(height, pyramid_row + 1)
+
 
 def create_simple_pyramid_right(height: int, current=1) -> str:
     """
@@ -30,14 +31,14 @@ def create_simple_pyramid_right(height: int, current=1) -> str:
     ****
 
     Use recursion!
-    
+
     :param height: Pyramid height.
     :param current: Keeping track of current layer.
     :return: Pyramid.
     """
     if current > height:
         return ""
-    
+
     return "{:>{}}".format(current * "*", height) + "\n" + create_simple_pyramid_right(height, current + 1)
 
 
@@ -51,21 +52,21 @@ def create_number_pyramid_left(height: int, current=1) -> str:
     1234
 
     Use recursion!
-    
+
     :param height: Pyramid height.
     :param current: Keeping track of current layer.
     :return: Pyramid.
     """
     if current > height:
         return ""
-    
+
     def row(n: int) -> str:
         if n == 0:
             return ""
         return row(n - 1) + str(n)
-    
+
     current_row = row(current)
-    
+
     return current_row + "\n" + create_number_pyramid_left(height, current + 1)
 
 
@@ -86,9 +87,9 @@ def create_number_pyramid_right(height: int, current=1) -> str:
     """
     if current > height:
         return ""
-    
+
     spaces = ' ' * (height - current)
-    
+
     numbers = ''.join(str(i) for i in range(current, 0, -1))
 
     current_layer = f"{spaces}{numbers}"
@@ -113,15 +114,15 @@ def create_number_pyramid_left_down(height: int, current=0) -> str:
     """
     if height == 0:
         return ""
-    
+
     def row(n: int) -> str:
         if n == 0:
             return ""
         return f"{n}{row(n - 1)}"
-    
+
     current_row = row(height)
     rem_pyramid = create_number_pyramid_left_down(height - 1, current + 1)
-    
+
     return current_row + "\n" + rem_pyramid if rem_pyramid else current_row
 
 
@@ -153,8 +154,8 @@ def create_number_pyramid_right_down(height: int, current=1) -> str:
     rem_pyramid = create_number_pyramid_right_down(height - 1, current + 1)
 
     return f"{spaces}{current_layer}\n{rem_pyramid}" if rem_pyramid else f"{spaces}{current_layer}"
-    
-    
+
+
 def create_regular_pyramid(height: int, current=1) -> str:
     """
     Create regular pyramid.
@@ -172,14 +173,14 @@ def create_regular_pyramid(height: int, current=1) -> str:
     """
     if current > height:
         return ""
-    
+
     spaces = ' ' * (height - current)
     stars = '*' * (2 * current - 1)
-    
+
     current_layer = f"{spaces}{stars}"
-    
+
     return f"{current_layer}\n" + create_regular_pyramid(height, current + 1)
-    
+
 
 def create_regular_pyramid_upside_down(height: int, current=1) -> str:
     """
@@ -198,19 +199,19 @@ def create_regular_pyramid_upside_down(height: int, current=1) -> str:
     """
     if current > height:
         return ""
-    
+
     spaces = ' ' * (current - 1)
     stars = '*' * (2 * (height - current + 1) - 1)
-    
+
     current_layer = f"{spaces}{stars}"
-    
+
     return f"{current_layer}\n" + create_regular_pyramid_upside_down(height, current + 1)
 
 
 def create_diamond(height: int, current=1) -> str:
     """
     Create diamond using recursion.
-    
+
        *
       ***
      *****
@@ -226,13 +227,14 @@ def create_diamond(height: int, current=1) -> str:
     """
     if current > height:
         return create_diamond_bottom(height, current - 1)
-    
+
     spaces = ' ' * (height - current)
     stars = '*' * (2 * current - 1)
-    
+
     current_layer = f"{spaces}{stars}"
-    
+
     return f"{current_layer}\n" + create_diamond(height, current + 1)
+
 
 def create_diamond_bottom(height: int, current) -> str:
     """
@@ -244,12 +246,12 @@ def create_diamond_bottom(height: int, current) -> str:
     """
     if current == 0:
         return ""
-    
+
     spaces = ' ' * (height - current)
     stars = '*' * (2 * current - 1)
-    
+
     current_layer = f"{spaces}{stars}"
-    
+
     return f"{current_layer}\n" + create_diamond_bottom(height, current - 1)
 
 
@@ -261,7 +263,7 @@ def create_empty_pyramid(height: int, current=1) -> str:
       * *
      *   *
     *******
-    
+
     Use recursion!
 
     :param height: Pyramid height.
@@ -270,9 +272,9 @@ def create_empty_pyramid(height: int, current=1) -> str:
     """
     if current > height:
         return ""
-    
+
     spaces = ' ' * (height - current)
-    
+
     if current == 1:
         stars = '*'
     elif current == height:
@@ -280,9 +282,9 @@ def create_empty_pyramid(height: int, current=1) -> str:
     else:
         inner_spaces = ' ' * (2 * current - 3)
         stars = f"*{inner_spaces}*"
-    
+
     current_layer = f"{spaces}{stars}"
-    
+
     return f"{current_layer}\n" + create_empty_pyramid(height, current + 1)
 
 
@@ -303,7 +305,7 @@ if __name__ == '__main__':
     print("\ncreate_number_pyramid_right:")
     print("expected:\n   1\n  21\n 321\n4321")
     print(f"\ngot:\n{create_number_pyramid_right(4)}")
-    
+
 
     print("\ncreate_number_pyramid_right_bigger_pyramid:")
     print("expected:\n          1\n         21\n        321\n"
@@ -313,7 +315,7 @@ if __name__ == '__main__':
           "         4321\n        54321\n       654321\n      7654321\n"
           "     87654321\n    987654321\n  10987654321\n1110987654321")
     print(f"\ngot:\n{create_number_pyramid_right(11)}")
-    
+
     print("\ncreate_number_pyramid_left_down:")
     print("expected:\n4321\n321\n21\n1")
     print(f"\ngot:\n{create_number_pyramid_left_down(4)}")

@@ -199,7 +199,7 @@ class Match:
 
             if team == self.team1:
 
-                if player in self.team1.get_players():
+                if player in self.team1.get_players() and not self.has_red_card(player):
                     self.team1_score += 1
 
                 else:
@@ -207,7 +207,7 @@ class Match:
 
             elif team == self.team2:
 
-                if player in self.team2.get_players():
+                if player in self.team2.get_players() and not self.has_red_card(player):
                     self.team2_score += 1
 
                 else:
@@ -230,9 +230,9 @@ class Match:
         """
         if player in self.team1.get_players() or player in self.team2.get_players():
             player.red_cards += 1
-            return False
-        else:
             return True
+        else:
+            return False
 
     def get_score(self, team: Team) -> int:
         """
@@ -269,13 +269,9 @@ class Match:
 
         :return: The player with the most scored goals.
         """
-        team1_most = self.team1.get_players_sorted()[0].get_goals_scored()
-        team2_most = self.team2.get_players_sorted()[0].get_goals_scored()
+        players = self.team1.get_players() + self.team2.get_players()
         
-        if team1_most < team2_most:
-            return team2_most
-        elif team1_most > team2_most:
-            return team1_most
+        return max(players, key=lambda player: player.get_goals_scored())
 
     def has_red_card(self, player: Player) -> bool:
         """

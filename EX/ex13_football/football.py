@@ -1,6 +1,7 @@
 """Football."""
 import random
 
+
 class Player:
     """Player class."""
 
@@ -59,7 +60,6 @@ class Player:
         :return: Amount of red cards.
         """
         return self.red_cards
-
 
 
 class Team:
@@ -212,7 +212,7 @@ class Match:
                     self.team2_score += 1
 
                 else:
-                    return False            
+                    return False
 
             player.goals += 1
             return True
@@ -229,7 +229,7 @@ class Match:
         :param player: The player to give the red card to.
         :return: True if the red card was given, else False.
         """
-        if (player in self.team1.get_players() or player in self.team2.get_players()) and player.match_red_card == False:
+        if (player in self.team1.get_players() or player in self.team2.get_players()) and not player.match_red_card:
             player.match_red_card = True
             player.red_cards += 1
             return True
@@ -245,7 +245,7 @@ class Match:
         """
         if team == self.team1:
             return self.team1_score
-        
+
         if team == self.team2:
             return self.team2_score
 
@@ -272,7 +272,7 @@ class Match:
         :return: The player with the most scored goals.
         """
         players = self.team1.get_players() + self.team2.get_players()
-        
+
         return max(players, key=lambda player: player.get_goals_scored())
 
     def has_red_card(self, player: Player) -> bool:

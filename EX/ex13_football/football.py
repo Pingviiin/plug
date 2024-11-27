@@ -230,9 +230,9 @@ class Match:
         """
         if player in self.team1.get_players() or player in self.team2.get_players():
             player.red_cards += 1
-            return True
-        else:
             return False
+        else:
+            return True
 
     def get_score(self, team: Team) -> int:
         """
@@ -290,9 +290,12 @@ class Match:
         """
         naughty_players = []
         team_players = self.team1.get_players() + self.team2.get_players()
+
         for player in team_players:
+
             if self.has_red_card(player):
                 naughty_players += [player]
+
         return naughty_players
 
 

@@ -92,7 +92,7 @@ class Team:
 
         :return: The method should return True if the team is full, else False.
         """
-        return len(self.players) <= 11
+        return len(self.players) >= 11
 
     def add_player(self, player: Player) -> bool:
         """
@@ -230,9 +230,9 @@ class Match:
         """
         if player in self.team1.get_players() or player in self.team2.get_players():
             player.red_cards += 1
-            return True
-        else:
             return False
+        else:
+            return True
 
     def get_score(self, team: Team) -> int:
         """
@@ -269,8 +269,8 @@ class Match:
 
         :return: The player with the most scored goals.
         """
-        team1_most = self.team1.get_players_sorted()[0]
-        team2_most = self.team2.get_players_sorted()[0]
+        team1_most = self.team1.get_players_sorted()[0].get_goals_scored()
+        team2_most = self.team2.get_players_sorted()[0].get_goals_scored()
         
         if team1_most < team2_most:
             return team2_most

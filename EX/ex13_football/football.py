@@ -92,7 +92,7 @@ class Team:
 
         :return: The method should return True if the team is full, else False.
         """
-        return self.players.count() <= 11
+        return len(self.players) <= 11
 
     def add_player(self, player: Player) -> bool:
         """
@@ -165,7 +165,7 @@ class Team:
         :return: Team players as a sorted list.
         """
         random.shuffle(self.players)
-        return sorted(self.players, key=lambda x: self.players(-x.goals, x.red_cards))
+        return sorted(self.players, key=lambda x: (-x.goals, x.red_cards))
 
 
 class Match:
@@ -228,7 +228,7 @@ class Match:
         :param player: The player to give the red card to.
         :return: True if the red card was given, else False.
         """
-        if player in self.team1 or player in self.team2:
+        if player in self.team1.get_players() or player in self.team2.get_players():
             player.red_cards += 1
             return True
         else:
@@ -293,7 +293,7 @@ class Match:
         :return: List of players with red cards.
         """
         naughty_players = []
-        team_players = self.team1.get_players + self.team2.get_players()
+        team_players = self.team1.get_players() + self.team2.get_players()
         for player in team_players:
             if self.has_red_card(player):
                 naughty_players += [player]

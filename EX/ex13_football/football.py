@@ -15,6 +15,7 @@ class Player:
         self.player_number = player_number
         self.goals = 0
         self.red_cards = 0
+        self.match_red_card = False
 
     def __repr__(self) -> str:
         """
@@ -228,11 +229,12 @@ class Match:
         :param player: The player to give the red card to.
         :return: True if the red card was given, else False.
         """
-        if player in self.team1.get_players() or player in self.team2.get_players():
+        if player in self.team1.get_players() or player in self.team2.get_players() and player.match_red_card == False:
+            player.match_red_card = True
             player.red_cards += 1
-            return False
-        else:
             return True
+        else:
+            return False
 
     def get_score(self, team: Team) -> int:
         """

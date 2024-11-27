@@ -229,7 +229,7 @@ class Match:
         :param player: The player to give the red card to.
         :return: True if the red card was given, else False.
         """
-        if player in self.team1.get_players() or player in self.team2.get_players() and player.match_red_card == False:
+        if (player in self.team1.get_players() or player in self.team2.get_players()) and player.match_red_card == False:
             player.match_red_card = True
             player.red_cards += 1
             return True

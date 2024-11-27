@@ -18,7 +18,11 @@ def mesh_dictionaries_to_csv(dict1: dict, dict2: dict):
     a,b,x,y
     1,2,10,20
     """
-    pass
+    with open("combined_file.csv", "w", newline="") as file:
+        writer = csv.writer(file)
+        
+        for i in range(len(dict1.values)):
+            writer.writerow({dict1[i], dict2[i]})
 
 
 def process_csv(input_filename: str, output_filename: str):

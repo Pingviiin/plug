@@ -300,9 +300,9 @@ class Match:
 
         return naughty_players
 
-
+"""
 if __name__ == "__main__":
-    """Main for testing the functions."""
+    Main for testing the functions.
     # Initialize teams
     team1 = Team("Team A")
     team2 = Team("Team B")
@@ -339,3 +339,4 @@ if __name__ == "__main__":
     print(match.get_score(team1))  # 1
     print(match.get_score(team2))  # 0
     print(match.get_winner())  # Team A
+"""

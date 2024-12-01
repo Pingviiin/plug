@@ -1,9 +1,9 @@
 class Crewmate:
     def __init__(self, color: str, role: str, tasks: int = 10):
-        self.color = color.capitalize()
+        self.color = color.title()
 
         if role.lower() in ["crewmate", "sheriff", "guardian angel", "altruist"]:
-            self.role = role.capitalize()
+            self.role = role.title()
         else:
             self.role = "Crewmate"
 
@@ -53,24 +53,25 @@ class Spaceship():
 
     def add_impostor(self, impostor: Impostor):
         if (impostor not in (self.crewmate_list and self.dead_players)):
-            if (len(self.impostor_list) < 4):
+            if (len(self.impostor_list) <= 3):
                 if isinstance(impostor, Impostor):
                     if impostor.color not in self.player_colors:
                         self.impostor_list += [impostor]
                         self.player_colors += [impostor.color]
 
     def kill_impostor(self, sheriff: Crewmate, color: str):
-        for impostor in self.impostor_list:
-            if impostor.color == color:
-                self.impostor_list.remove(impostor)
-                self.dead_players.append(impostor)
-                break
-        else:
-            self.crewmate_list.remove(sheriff)
-            self.dead_players.append(sheriff)
+        if sheriff in self.crewmate_list:
+            for impostor in self.impostor_list:
+                if impostor.color == color:
+                    self.impostor_list.remove(impostor)
+                    self.dead_players.append(impostor)
+                    break
+            else:
+                self.crewmate_list.remove(sheriff)
+                self.dead_players.append(sheriff)
 
     def revive_crewmate(self, altruist: Crewmate, dead_crewmate: Crewmate):
-        if altruist.role == "Altruist":
+        if (altruist.role == "Altruist") and (dead_crewmate in self.dead_players) and (altruist in self.crewmate_list):
             self.crewmate_list.remove(altruist)
             self.dead_players.append(altruist)
 
@@ -84,12 +85,13 @@ class Spaceship():
                     if crewmate.protected == True:
                         return
                 else:
-                    crewmate_to_protect.protected = True
+                    if crewmate_to_protect in self.crewmate_list:
+                        crewmate_to_protect.protected = True
 
     def kill_crewmate(self, impostor: Impostor, color: str):
         color = color.capitalize()
 
-        if color in self.player_colors:
+        if (color in self.player_colors) and (impostor in self.impostor_list):
             for crewmate in self.crewmate_list:
                 if crewmate.color == color:
                     if crewmate.protected:
@@ -120,7 +122,7 @@ class Spaceship():
                 return "Impostor"
 
     def get_crewmate_with_most_tasks_done(self):
-        return max(self.crewmate_list, key=lambda crewmate: crewmate.tasks)
+        return max(self.crewmate_list, key=lambda crewmate: crewmate.tasks, reverse=True)
 
     def get_impostor_with_most_kills(self):
         return max(self.impostor_list, key=lambda impostor: impostor.kills)

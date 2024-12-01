@@ -60,7 +60,7 @@ class Spaceship():
                         self.player_colors += [impostor.color]
 
     def kill_impostor(self, sheriff: Crewmate, color: str):
-        if sheriff in self.crewmate_list and sheriff.role == "Sheriff":
+        if (sheriff in self.crewmate_list) and (sheriff.role == "Sheriff"):
             for impostor in self.impostor_list:
                 if impostor.color == color:
                     self.impostor_list.remove(impostor)
@@ -79,13 +79,10 @@ class Spaceship():
             self.crewmate_list.append(dead_crewmate)
 
     def protect_crewmate(self, guardian_angel: Crewmate, crewmate_to_protect: Crewmate):
-        if guardian_angel.role == "Guardian angel":
+        if guardian_angel.role == "Guardian Angel":
             if guardian_angel in self.dead_players:
                 for crewmate in self.crewmate_list:
-                    if crewmate.protected == True:
-                        return
-                else:
-                    if not crewmate_to_protect.protected:
+                    if crewmate == crewmate_to_protect and not crewmate.protected:
                         crewmate_to_protect.protected = True
 
     def kill_crewmate(self, impostor: Impostor, color: str):
@@ -116,6 +113,10 @@ class Spaceship():
         for crewmate in self.crewmate_list:
             if crewmate.color == color:
                 return crewmate.role
+        
+        for player in self.dead_players:
+            if player.color == color:
+                return player.role
 
         for impostor in self.impostor_list:
             if impostor.color == color:

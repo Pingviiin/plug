@@ -34,6 +34,7 @@ class Spaceship():
         self.impostor_list = []
         self.dead_players = []
         self.player_colors = []
+        self.crewmate_protected = False
 
     def get_crewmate_list(self):
         return self.crewmate_list
@@ -66,9 +67,11 @@ class Spaceship():
                     self.impostor_list.remove(impostor)
                     self.dead_players.append(impostor)
                     break
-            else:
-                self.crewmate_list.remove(sheriff)
-                self.dead_players.append(sheriff)
+
+            for crewmate in self.impostor_list:
+                if crewmate.color == color:
+                    self.crewmate_list.remove(sheriff)
+                    self.dead_players.append(sheriff)
 
     def revive_crewmate(self, altruist: Crewmate, dead_crewmate: Crewmate):
         if (altruist.role == "Altruist") and (dead_crewmate in self.dead_players) and (altruist in self.crewmate_list):
@@ -82,7 +85,7 @@ class Spaceship():
         if guardian_angel.role == "Guardian Angel":
             if guardian_angel in self.dead_players:
                 for crewmate in self.crewmate_list:
-                    if crewmate == crewmate_to_protect and not crewmate.protected:
+                    if (crewmate == crewmate_to_protect) and (not crewmate.protected) and not self.crewmate_protected:
                         crewmate_to_protect.protected = True
 
     def kill_crewmate(self, impostor: Impostor, color: str):
@@ -93,6 +96,7 @@ class Spaceship():
                 if crewmate.color == color:
                     if crewmate.protected:
                         crewmate.protected = False
+                        self.crewmate_protected = False
                         break
                     else:
                         self.crewmate_list.remove(crewmate)
@@ -110,18 +114,15 @@ class Spaceship():
         return list(filter(lambda crewmate: crewmate.role == "Crewmate", self.crewmate_list))
 
     def get_role_of_player(self, color: str):
-        for crewmate in self.crewmate_list:
-            if crewmate.color == color:
-                return crewmate.role
+        players = self.crewmate_list + self.impostor_list + self.dead_players
         
-        for player in self.dead_players:
-            if player.color == color:
-                return player.role
-
-        for impostor in self.impostor_list:
-            if impostor.color == color:
+        for player in players:
+            if isinstance(player, Impostor) and player.color == color:
                 return "Impostor"
-
+            
+            elif player.color == color:
+                return player.role
+        
     def get_crewmate_with_most_tasks_done(self):
         return min(self.crewmate_list, key=lambda crewmate: crewmate.tasks)
 

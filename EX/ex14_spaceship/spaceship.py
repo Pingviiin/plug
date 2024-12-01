@@ -53,14 +53,14 @@ class Spaceship():
 
     def add_impostor(self, impostor: Impostor):
         if (impostor not in (self.crewmate_list and self.dead_players)):
-            if (len(self.impostor_list) <= 3):
+            if (len(self.impostor_list) <= 2):
                 if isinstance(impostor, Impostor):
                     if impostor.color not in self.player_colors:
                         self.impostor_list += [impostor]
                         self.player_colors += [impostor.color]
 
     def kill_impostor(self, sheriff: Crewmate, color: str):
-        if sheriff in self.crewmate_list:
+        if sheriff in self.crewmate_list and sheriff.role == "Sheriff":
             for impostor in self.impostor_list:
                 if impostor.color == color:
                     self.impostor_list.remove(impostor)
@@ -85,7 +85,7 @@ class Spaceship():
                     if crewmate.protected == True:
                         return
                 else:
-                    if crewmate_to_protect in self.crewmate_list:
+                    if not crewmate_to_protect.protected:
                         crewmate_to_protect.protected = True
 
     def kill_crewmate(self, impostor: Impostor, color: str):
@@ -122,7 +122,7 @@ class Spaceship():
                 return "Impostor"
 
     def get_crewmate_with_most_tasks_done(self):
-        return max(self.crewmate_list, key=lambda crewmate: crewmate.tasks, reverse=True)
+        return min(self.crewmate_list, key=lambda crewmate: crewmate.tasks)
 
     def get_impostor_with_most_kills(self):
         return max(self.impostor_list, key=lambda impostor: impostor.kills)

@@ -99,7 +99,7 @@ class Spaceship():
 
         if (color in self.player_colors) and (impostor in self.impostor_list):
             for crewmate in self.crewmate_list:
-                if crewmate.color == color:
+                if crewmate.color == color.capitalize():
                     if crewmate.protected:
                         crewmate.protected = False
                         self.crewmate_protected = False

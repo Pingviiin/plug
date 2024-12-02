@@ -66,10 +66,10 @@ class OPSpaceship(Spaceship):
         most_voted_players = [key for key, value in counted_votes if value == max(counted_votes.values())]
         non_voters_amount = len(self.player_colors) - len(self.votes)
         
-        if non_voters_amount > max(counted_votes.values()):
+        if non_voters_amount > max(list(counted_votes.values())):
             return "No one was ejected. (Skipped)"
 
-        elif len(most_voted_players) > 1 or max(counted_votes.values()) == non_voters_amount:
+        elif len(most_voted_players) > 1 or max(list(counted_votes.values())) == non_voters_amount:
             return "No one was ejected. (Tie)"
         
         elif len(most_voted_players) == 1:

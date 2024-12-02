@@ -30,8 +30,7 @@ class Crewmate:
         return f"{self.color}, role: {self.role}, tasks left: {self.tasks}."
 
     def complete_task(self):
-        """Complete a task.
-        """
+        """Complete a task."""
         if self.tasks > 0:
             self.tasks -= 1
 
@@ -62,8 +61,7 @@ class Spaceship:
     """Spaceship class."""
 
     def __init__(self):
-        """Initialize spaceship class.
-        """
+        """Initialize spaceship class."""
         self.crewmate_list = []
         self.impostor_list = []
         self.dead_players = []

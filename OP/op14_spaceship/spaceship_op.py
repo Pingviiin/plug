@@ -1,4 +1,4 @@
-from spaceship import *
+from spaceship import Spaceship, Impostor, Crewmate
 
 class OPSpaceship(Spaceship):
     """OPSpaceship class."""
@@ -7,10 +7,8 @@ class OPSpaceship(Spaceship):
         """Initialize OPSpaceship class."""
         super().__init__()
         
-        difficulty = difficulty.lower()
-        
-        if difficulty in ["easy", "hard"]:
-            self.difficulty = difficulty
+        if difficulty.lower() == "easy":
+            self.difficulty = "easy"
         else:
             self.difficulty == "hard"
         
@@ -31,25 +29,26 @@ class OPSpaceship(Spaceship):
     
     def kill_impostor(self, sheriff: Crewmate, color: str):
         if self.game and not self.meeting:
-            return super().kill_impostor(sheriff, color)
+            super().kill_impostor(sheriff, color)
+            self.check_is_game_over()
         
     def kill_crewmate(self, impostor: Impostor, color: str):
         if self.game and not self.meeting:
-            return super().kill_crewmate(impostor, color)
+            super().kill_crewmate(impostor, color)
+            self.check_is_game_over()
         
     def start_game(self):
         if (len(self.impostor_list) > 0) and (len(self.crewmate_list) > 1) and (len(self.crewmate_list) > len(self.impostor_list)) and not self.game:
             self.game = True
     
     def report_dead_body(self, reporting_player: Crewmate | Impostor, dead_body: Crewmate):
-        if dead_body in self.dead_players:
+        if dead_body in self.dead_players and reporting_player in (self.crewmate_list + self.impostor_list):
             self.meeting = True
-            self.reporting_player = reporting_player
     
     def cast_vote(self, player: Crewmate | Impostor, target_player_color: str):
-        if (player.color not in self.votes.keys()) and player not in self.dead_players:
-            if self.meeting and target_player_color in self.player_colors:
-                self.votes[player.color] = target_player_color
+        if (player.color not in self.votes.keys()) and (player not in self.dead_players):
+            if self.meeting and target_player_color.title() in self.player_colors:
+                self.votes[player.color] = target_player_color.title()
                 
     def count_votes(self):
         counted_votes = {}
@@ -62,8 +61,10 @@ class OPSpaceship(Spaceship):
         return counted_votes
     
     def end_meeting(self):
-        counted_votes = self.count_votes()
+        if not self.meeting:
+            return
 
+        counted_votes = self.count_votes()
         if not counted_votes:
             return "No one was ejected. (Skipped)"
 
@@ -71,9 +72,11 @@ class OPSpaceship(Spaceship):
         non_voters_amount = len(self.player_colors) - len(self.votes)
 
         if non_voters_amount > max(counted_votes.values()):
+            self.meeting = False
             return "No one was ejected. (Skipped)"
 
         elif len(most_voted_players) > 1 or max(counted_votes.values()) == non_voters_amount:
+            self.meeting = False
             return "No one was ejected. (Tie)"
         
         elif len(most_voted_players) == 1:
@@ -86,6 +89,7 @@ class OPSpaceship(Spaceship):
                 return winner
             
             if self.difficulty == "easy":
+
                 if voted in [impostor.color for impostor in self.get_impostor_list()]:
                     if len(self.impostor_list) > 1:
                         return f"{voted} was an Impostor. {len(self.impostor_list)} Impostors remain."
@@ -97,7 +101,7 @@ class OPSpaceship(Spaceship):
                         return f"{voted} was not an Impostor. {len(self.impostor_list)} Impostors remain."
                     elif len(self.impostor_list) == 1:
                         return f"{voted} was not an Impostor. {len(self.impostor_list)} Impostor remains."
-                    
+
             elif self.difficulty == "hard":
                 return f"{voted} was ejected."
             

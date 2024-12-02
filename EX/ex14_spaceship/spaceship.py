@@ -20,7 +20,7 @@ class Crewmate:
 
 class Impostor:
     def __init__(self, color: str):
-        self.color = color.capitalize()
+        self.color = color.title()
 
         self.kills = 0
 
@@ -61,17 +61,20 @@ class Spaceship():
                         self.player_colors += [impostor.color]
 
     def kill_impostor(self, sheriff: Crewmate, color: str):
+        color = color.title()
+        
         if (sheriff in self.crewmate_list) and (sheriff.role == "Sheriff"):
             for impostor in self.impostor_list:
                 if impostor.color == color:
                     self.impostor_list.remove(impostor)
                     self.dead_players.append(impostor)
-                    break
+                    return
 
-            for crewmate in self.impostor_list:
+            for crewmate in self.crewmate_list:
                 if crewmate.color == color:
                     self.crewmate_list.remove(sheriff)
                     self.dead_players.append(sheriff)
+                    return
 
     def revive_crewmate(self, altruist: Crewmate, dead_crewmate: Crewmate):
         if (altruist.role == "Altruist") and (dead_crewmate in self.dead_players) and (altruist in self.crewmate_list):
@@ -84,12 +87,15 @@ class Spaceship():
     def protect_crewmate(self, guardian_angel: Crewmate, crewmate_to_protect: Crewmate):
         if guardian_angel.role == "Guardian Angel":
             if guardian_angel in self.dead_players:
-                for crewmate in self.crewmate_list:
-                    if (crewmate == crewmate_to_protect) and (not crewmate.protected) and not self.crewmate_protected:
-                        crewmate_to_protect.protected = True
+                if not self.crewmate_protected:
+                    for crewmate in self.crewmate_list:
+                        if (crewmate == crewmate_to_protect) and (not crewmate.protected):
+                            crewmate_to_protect.protected = True
+                            self.crewmate_protected = True
+                            return
 
     def kill_crewmate(self, impostor: Impostor, color: str):
-        color = color.capitalize()
+        color = color.title()
 
         if (color in self.player_colors) and (impostor in self.impostor_list):
             for crewmate in self.crewmate_list:
@@ -114,6 +120,7 @@ class Spaceship():
         return list(filter(lambda crewmate: crewmate.role == "Crewmate", self.crewmate_list))
 
     def get_role_of_player(self, color: str):
+        color = color.title()
         players = self.crewmate_list + self.impostor_list + self.dead_players
         
         for player in players:

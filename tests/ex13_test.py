@@ -1,4 +1,4 @@
-from football import Team, Player, Match
+from EX.ex13_football.football import *
 
 
 def test_get_player_number():

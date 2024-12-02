@@ -38,7 +38,7 @@ class OPSpaceship(Spaceship):
             return super().kill_crewmate(impostor, color)
         
     def start_game(self):
-        if (len(self.impostor_list) > 0) and (len(self.crewmate_list) > 1) and (self.crewmate_list > self.impostor_list):
+        if (len(self.impostor_list) > 0) and (len(self.crewmate_list) > 1) and (len(self.crewmate_list) > len(self.impostor_list)) and not self.game:
             self.game = True
     
     def report_dead_body(self, reporting_player: Crewmate | Impostor, dead_body: Crewmate):

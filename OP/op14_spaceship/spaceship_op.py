@@ -10,7 +10,7 @@ class OPSpaceship(Spaceship):
         if difficulty.lower() == "easy":
             self.difficulty = "easy"
         else:
-            self.difficulty == "hard"
+            self.difficulty = "hard"
         
         self.ejected_players = []
         self.meeting = False
@@ -66,59 +66,75 @@ class OPSpaceship(Spaceship):
 
         counted_votes = self.count_votes()
         if not counted_votes:
+            self.reset_meeting()
             return "No one was ejected. (Skipped)"
 
-        most_voted_players = [key for key, value in counted_votes if value == max(counted_votes.values())]
+        most_voted_players = [key for key, value in counted_votes.items() if value == max(counted_votes.values())]
         non_voters_amount = len(self.player_colors) - len(self.votes)
 
         if non_voters_amount > max(counted_votes.values()):
-            self.meeting = False
+            self.reset_meeting()
             return "No one was ejected. (Skipped)"
 
-        elif len(most_voted_players) > 1 or max(counted_votes.values()) == non_voters_amount:
-            self.meeting = False
+        elif len(most_voted_players) > 1 or max(counted_votes.values()) <= non_voters_amount:
+            self.reset_meeting()
             return "No one was ejected. (Tie)"
         
-        elif len(most_voted_players) == 1:
-            voted = most_voted_players[0]
-            self.ejected_players.append(voted)
-            
-            if self.check_is_game_over():
-                winner = self.winner
-                self.__init__()
-                return winner
-            
-            if self.difficulty == "easy":
+        voted = most_voted_players[0]
+        self.ejected_players.append(voted)
+        
+        self.impostor_list = [impostor for impostor in self.impostor_list if impostor.color != voted]
+        self.crewmate_list = [crewmate for crewmate in self.crewmate_list if crewmate.color != voted]
+        
+        if self.check_is_game_over():
+            winner = self.winner
+            self.__init__(self.difficulty)
+            return winner
 
-                if voted in [impostor.color for impostor in self.get_impostor_list()]:
-                    if len(self.impostor_list) > 1:
-                        return f"{voted} was an Impostor. {len(self.impostor_list)} Impostors remain."
-                    elif len(self.impostor_list) == 1:
-                        return f"{voted} was an Impostor. {len(self.impostor_list)} Impostor remains."
-                
-                if voted in [crewmate.color for crewmate in self.get_crewmate_list()]:
-                    if len(self.impostor_list) > 1:
-                        return f"{voted} was not an Impostor. {len(self.impostor_list)} Impostors remain."
-                    elif len(self.impostor_list) == 1:
-                        return f"{voted} was not an Impostor. {len(self.impostor_list)} Impostor remains."
+        self.reset_meeting()
 
-            elif self.difficulty == "hard":
-                return f"{voted} was ejected."
+        if self.difficulty == "easy":
+
+            if voted in [impostor.color for impostor in self.get_impostor_list()]:
+                if len(self.impostor_list) > 1:
+                    return f"{voted} was an Impostor. {len(self.impostor_list)} Impostors remain."
+                elif len(self.impostor_list) == 1:
+                    return f"{voted} was an Impostor. {len(self.impostor_list)} Impostor remains."
             
+            if voted in [crewmate.color for crewmate in self.get_crewmate_list()]:
+                if len(self.impostor_list) > 1:
+                    return f"{voted} was not an Impostor. {len(self.impostor_list)} Impostors remain."
+                elif len(self.impostor_list) == 1:
+                    return f"{voted} was not an Impostor. {len(self.impostor_list)} Impostor remains."
+
+        elif self.difficulty == "hard":
+            return f"{voted} was ejected."
+        
+    def reset_meeting(self):
+        self.dead_players.clear()
+        self.votes.clear()
+        self.meeting = False
+
     def check_is_game_over(self):
         if len(self.impostor_list) == 0:
             self.winner = "Crewmates won."
+            self.dead_players.clear()
+            self.votes.clear()
+            self.meeting = False
             return True
         
         elif (len(self.impostor_list) == len(self.crewmate_list)) and (len(self.impostor_list) < 4) and (len(self.crewmate_list) < 4):
             self.winner = "Impostors won."
+            self.dead_players.clear()
+            self.votes.clear()
+            self.meeting = False
             return True
         
         else:
             return False
         
     def get_vote(self, color: str):
-        for voter, candidate in self.votes:
+        for voter, candidate in self.votes.items():
             if voter.lower() == color.lower():
                 return candidate
         else:

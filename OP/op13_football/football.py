@@ -98,7 +98,7 @@ class League:
         self.scoreboard = {}
 
         for team in self.teams:
-            self.scoreboard[team] = team.score
+            self.scoreboard[team] = 0
 
     def add_team(self, team: Team) -> None:
         """
@@ -125,9 +125,10 @@ class League:
         for team in self.teams:
             if team.name == team_name:
                 removed_team = team
+                break
 
-                self.teams.remove(removed_team)
-                self.scoreboard.pop(removed_team)
+        self.teams.remove(removed_team)
+        self.scoreboard.pop(removed_team)
 
     def play_games(self) -> None:
         """
@@ -144,7 +145,12 @@ class League:
 
                 game = Game(team1, team2)
 
-                game.play()
+                winner = game.play()
+
+                if winner in self.scoreboard:
+                    self.scoreboard[winner] += 1
+                else:
+                    self.scoreboard[winner] = 1
 
     def get_first_place(self) -> Team:
         """
@@ -168,8 +174,7 @@ class League:
 
         :return: None.
         """
-        if self.scoreboard:
-            {team: 0 for team in self.scoreboard}
+        self.scoreboard = {}
 
     def get_name(self) -> str:
         """Return league name."""
@@ -223,9 +228,6 @@ class Game:
 
         :return: winner team object.
         """
-        if self.team1.name == self.team2.name or not self.team1.name or not self.team2.name:
-            return
-
         team1_points = 0
         team2_points = 0
 
@@ -257,8 +259,6 @@ class Game:
 
         elif team2_points < team1_points:
             winner = self.team1
-
-        winner.score += 1
 
         return winner
 

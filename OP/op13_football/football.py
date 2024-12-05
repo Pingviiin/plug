@@ -239,7 +239,10 @@ class Game:
             elif self.team2.attack + self.team2.defence < self.team1.attack + self.team1.defence:
                 winner = self.team1
             else:
-                winner = sorted([self.team1(), self.team2()])[0]
+                if self.team1.name < self.team2.name:
+                    winner = self.team1
+                else:
+                    winner = self.team2
 
         if team1_points < team2_points:
             winner = self.team2

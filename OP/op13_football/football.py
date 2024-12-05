@@ -124,7 +124,7 @@ class League:
                 break
 
         if removed_team is None:
-            raise ValueError("Given team doesn't exist in the league.")
+            return
 
         self.teams.remove(removed_team)
         self.scoreboard.pop(removed_team)
@@ -228,8 +228,11 @@ class Game:
 
         :return: winner team object.
         """
+        if not self.team1.name or not self.team2.name:
+            raise ValueError("Team names cannot be empty.")
+
         if self.team1 == self.team2:
-            return
+            raise ValueError("A team cannot play against itself.")
 
         team1_points = 0
         team2_points = 0

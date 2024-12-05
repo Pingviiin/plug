@@ -47,7 +47,6 @@ class Team:
         :return: None.
         """
         self.score = score
-        return
 
     def get_attack(self) -> int:
         """
@@ -90,10 +89,7 @@ class League:
         """
         self.name = name
         self.teams = teams
-        self.scoreboard = {}
-
-        for team in self.teams:
-            self.scoreboard[team] = 0
+        self.scoreboard = {team.name: 0 for team in teams}
 
     def add_team(self, team: Team) -> None:
         """
@@ -104,9 +100,10 @@ class League:
 
         :param team: Team object.
         """
-        if len(self.teams) < 10:
-            self.teams.append(team)
-            self.scoreboard[team] = 0
+        if len(self.teams) >= 10:
+            raise ValueError("Too many teams.")
+        self.teams.append(team)
+        self.scoreboard[team.name] = 0
 
     def remove_team(self, team_name: str) -> None:
         """
@@ -116,14 +113,8 @@ class League:
 
         :param team_name: Name of team to remove from league.
         """
-        removed_team = Team
-        for team in self.teams:
-            if team.name == team_name:
-                removed_team = team
-                break
-
-        self.teams.remove(removed_team)
-        self.scoreboard.pop(removed_team)
+        self.teams = [team for team in self.teams if team.name != team_name]
+        self.scoreboard.pop(team_name)
 
     def play_games(self) -> None:
         """
@@ -139,8 +130,8 @@ class League:
                 team2 = self.teams[n]
 
                 game = Game(team1, team2)
-
-                game.play()
+                winner = game.play()
+                self.scoreboard[winner.name] += 1
 
     def get_first_place(self) -> Team:
         """
@@ -227,37 +218,42 @@ class Game:
 
         team1_points = 0
         team2_points = 0
+        
+        def compare_attack(self):
+            if self.team1.attack < self.team2.attack:
+                team2_points += 1
 
-        if self.team1.attack < self.team2.attack:
-            team2_points += 1
+            elif self.team2.attack < self.team1.attack:
+                team1_points += 1
 
-        elif self.team2.attack < self.team1.attack:
-            team1_points += 1
+        def compare_defence(self):
+            if self.team1.defence < self.team2.defence:
+                team2_points += 1
 
-        if self.team1.defence < self.team2.defence:
-            team2_points += 1
+            elif self.team2.defence < self.team1.defence:
+                team1_points += 1
 
-        elif self.team2.defence < self.team1.defence:
-            team1_points += 1
-
-        if team1_points == team2_points:
-            if self.team1.attack + self.team1.defence < self.team2.attack + self.team2.defence:
-                winner = self.team2
-            elif self.team2.attack + self.team2.defence < self.team1.attack + self.team1.defence:
-                winner = self.team1
-            else:
-                if self.team1.name < self.team2.name:
+        def tie_breaker(self):
+            if team1_points == team2_points:
+                if self.team1.attack + self.team1.defence < self.team2.attack + self.team2.defence:
+                    winner = self.team2
+                elif self.team2.attack + self.team2.defence < self.team1.attack + self.team1.defence:
                     winner = self.team1
                 else:
-                    winner = self.team2
+                    if self.team1.name < self.team2.name:
+                        winner = self.team1
+                    else:
+                        winner = self.team2
 
+        compare_attack()
+        compare_defence()
+        tie_breaker()
+        
         if team1_points < team2_points:
             winner = self.team2
 
         elif team2_points < team1_points:
             winner = self.team1
-
-        winner.score += 1
 
         return winner
 

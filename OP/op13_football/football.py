@@ -229,10 +229,10 @@ class Game:
         :return: winner team object.
         """
         if not self.team1.name or not self.team2.name:
-            return self.team1
+            return ""
 
         if self.team1.name == self.team2.name:
-            return ""
+            return self.team1
 
         team1_points = 0
         team2_points = 0

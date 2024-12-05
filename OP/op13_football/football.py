@@ -195,8 +195,7 @@ class Game:
     """Football Game class."""
 
     def __init__(self, team1: Team, team2: Team):
-        """
-        Initialize Game object.
+        """Initialize Game object.
 
         :param team1: first team in the game.
         :param team2: second team in the game.
@@ -213,7 +212,7 @@ class Game:
         Simulate a game.
 
         The "play" function simulates a game between two teams, where each team earns points based on their attack and defence scores.
-        If the scores are tied, the sum of each team's attack and defence points is considered. 
+        If the scores are tied, the sum of each team's attack and defence points is considered.
         If this still does not resolve the tie, the team whose name comes first alphabetically wins.
 
         - The function starts by setting the points for both teams: `team1_points` and `team2_points`,

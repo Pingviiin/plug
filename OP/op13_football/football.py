@@ -245,10 +245,10 @@ class Game:
                     else:
                         winner = self.team2
 
-        compare_attack()
-        compare_defence()
-        tie_breaker()
-        
+        self.compare_attack()
+        self.compare_defence()
+        self.tie_breaker()
+
         if team1_points < team2_points:
             winner = self.team2
 

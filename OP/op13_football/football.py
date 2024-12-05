@@ -17,7 +17,6 @@ class Team:
         self.defence = defence
         self.score = 0
 
-
     def train(self) -> None:
         """
         Train the team.
@@ -211,8 +210,9 @@ class Game:
 
     def play(self) -> object:
         """
-        The "play" function simulates a game between two teams, where each team earns points based on their attack
-        and defence scores. 
+        Simulate a game.
+
+        The "play" function simulates a game between two teams, where each team earns points based on their attack and defence scores.
         If the scores are tied, the sum of each team's attack and defence points is considered. 
         If this still does not resolve the tie, the team whose name comes first alphabetically wins.
 
@@ -235,7 +235,7 @@ class Game:
             return self.team1
 
         self.calculate_points()
-        
+
         if self.team1_points == self.team2_points:
             winner = self.tiebreaker()
 
@@ -250,12 +250,14 @@ class Game:
         return winner
 
     def validate_teams(self):
+        """Validate teams."""
         if not self.team1.name or not self.team2.name:
             return True
         if self.team1.name == self.team2.name:
             return True
 
     def tiebreaker(self):
+        """Break a tie."""
         if self.team1.attack + self.team1.defence < self.team2.attack + self.team2.defence:
             winner = self.team2
         elif self.team2.attack + self.team2.defence < self.team1.attack + self.team1.defence:
@@ -268,6 +270,7 @@ class Game:
         return winner
 
     def calculate_points(self):
+        """Calculate points."""
         if self.team1.attack < self.team2.attack:
             self.team2_points += 1
 

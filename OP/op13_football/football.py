@@ -47,6 +47,7 @@ class Team:
         :return: None.
         """
         self.score = score
+        return
 
     def get_attack(self) -> int:
         """
@@ -100,10 +101,9 @@ class League:
 
         :param team: Team object.
         """
-        if len(self.teams) >= 10:
-            raise ValueError("Too many teams.")
-        self.teams.append(team)
-        self.scoreboard[team.name] = 0
+        if len(self.teams) < 10:
+            self.teams.append(team)
+            self.scoreboard[team] = 0
 
     def remove_team(self, team_name: str) -> None:
         """
@@ -114,7 +114,7 @@ class League:
         :param team_name: Name of team to remove from league.
         """
         self.teams = [team for team in self.teams if team.name != team_name]
-        self.scoreboard.pop(team_name)
+        self.scoreboard.pop(team_name, None)
 
     def play_games(self) -> None:
         """
@@ -130,6 +130,7 @@ class League:
                 team2 = self.teams[n]
 
                 game = Game(team1, team2)
+
                 winner = game.play()
                 self.scoreboard[winner.name] += 1
 
@@ -155,8 +156,7 @@ class League:
 
         :return: None.
         """
-        for team in self.scoreboard:
-            team.set_score(0)
+        self.scoreboard = {team.name: 0 for team in self.teams}
 
     def get_name(self) -> str:
         """Return league name."""
@@ -210,52 +210,34 @@ class Game:
 
         :return: winner team object.
         """
-        if self.team1.__repr__() == self.team2.__repr__():
-            return
-        
-        if self.team1.__repr__() == "" or self.team2.__repr__() == "":
-            return
 
         team1_points = 0
         team2_points = 0
-        
-        def compare_attack():
-            if self.team1.attack < self.team2.attack:
-                team2_points += 1
 
-            elif self.team2.attack < self.team1.attack:
-                team1_points += 1
+        if self.team1.attack < self.team2.attack:
+            team2_points += 1
 
-        def compare_defence():
-            if self.team1.defence < self.team2.defence:
-                team2_points += 1
+        elif self.team2.attack < self.team1.attack:
+            team1_points += 1
 
-            elif self.team2.defence < self.team1.defence:
-                team1_points += 1
+        if self.team1.defence < self.team2.defence:
+            team2_points += 1
 
-        def tie_breaker():
-            if team1_points == team2_points:
-                if self.team1.attack + self.team1.defence < self.team2.attack + self.team2.defence:
-                    winner = self.team2
-                elif self.team2.attack + self.team2.defence < self.team1.attack + self.team1.defence:
-                    winner = self.team1
-                else:
-                    if self.team1.name < self.team2.name:
-                        winner = self.team1
-                    else:
-                        winner = self.team2
+        elif self.team2.defence < self.team1.defence:
+            team1_points += 1
 
-        compare_attack()
-        compare_defence()
-        tie_breaker()
+        if team1_points == team2_points:
+            team1_total = self.team1.attack + self.team1.defence
+            team2_total = self.team2.attack + self.team2.defence
 
-        if team1_points < team2_points:
-            winner = self.team2
+            if team1_total > team2_total:
+                return self.team1
+            elif team1_total < team2_total:
+                return self.team2
+            else:
+                return self.team1 if self.team1.name < self.team2.name else self.team2
 
-        elif team2_points < team1_points:
-            winner = self.team1
-
-        return winner
+        return self.team1 if team1_points > team2_points else self.team2
 
     def __repr__(self):
         """Format the string of the game as: '[team1] vs. [team2]'."""

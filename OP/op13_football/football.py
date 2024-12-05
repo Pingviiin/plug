@@ -17,12 +17,6 @@ class Team:
         self.defence = defence
         self.score = 0
 
-    def __eq__(self, other):
-        if not isinstance(other, Team):
-            return False
-        else:
-            return self.name == other.name
-
     def train(self) -> None:
         """
         Train the team.

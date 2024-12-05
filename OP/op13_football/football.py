@@ -228,37 +228,47 @@ class Game:
 
         :return: winner team object.
         """
-        if not self.team1.name or not self.team2.name:
-            return self.team1
-
-        if self.team1.name == self.team2.name:
-            return self.team1
 
         team1_points = 0
         team2_points = 0
 
-        if self.team1.attack < self.team2.attack:
-            team2_points += 1
+        def validate_teams(self):
+            if not self.team1.name or not self.team2.name:
+                return self.team1
+            if self.team1.name == self.team2.name:
+                return self.team1
 
-        elif self.team2.attack < self.team1.attack:
-            team1_points += 1
+        validate_teams()
 
-        if self.team1.defence < self.team2.defence:
-            team2_points += 1
+        def calculate_points(self):
+            if self.team1.attack < self.team2.attack:
+                team2_points += 1
 
-        elif self.team2.defence < self.team1.defence:
-            team1_points += 1
+            elif self.team2.attack < self.team1.attack:
+                team1_points += 1
 
-        if team1_points == team2_points:
-            if self.team1.attack + self.team1.defence < self.team2.attack + self.team2.defence:
-                winner = self.team2
-            elif self.team2.attack + self.team2.defence < self.team1.attack + self.team1.defence:
-                winner = self.team1
-            else:
-                if self.team1.name < self.team2.name:
+            if self.team1.defence < self.team2.defence:
+                team2_points += 1
+
+            elif self.team2.defence < self.team1.defence:
+                team1_points += 1
+        
+        calculate_points()
+
+        def tiebreaker(self):
+            if team1_points == team2_points:
+                if self.team1.attack + self.team1.defence < self.team2.attack + self.team2.defence:
+                    winner = self.team2
+                elif self.team2.attack + self.team2.defence < self.team1.attack + self.team1.defence:
                     winner = self.team1
                 else:
-                    winner = self.team2
+                    if self.team1.name < self.team2.name:
+                        winner = self.team1
+                    else:
+                        winner = self.team2
+            return winner
+
+        winner = tiebreaker()
 
         if team1_points < team2_points:
             winner = self.team2

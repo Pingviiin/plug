@@ -219,21 +219,21 @@ class Game:
         team1_points = 0
         team2_points = 0
         
-        def compare_attack(self):
+        def compare_attack():
             if self.team1.attack < self.team2.attack:
                 team2_points += 1
 
             elif self.team2.attack < self.team1.attack:
                 team1_points += 1
 
-        def compare_defence(self):
+        def compare_defence():
             if self.team1.defence < self.team2.defence:
                 team2_points += 1
 
             elif self.team2.defence < self.team1.defence:
                 team1_points += 1
 
-        def tie_breaker(self):
+        def tie_breaker():
             if team1_points == team2_points:
                 if self.team1.attack + self.team1.defence < self.team2.attack + self.team2.defence:
                     winner = self.team2
@@ -245,9 +245,9 @@ class Game:
                     else:
                         winner = self.team2
 
-        self.compare_attack()
-        self.compare_defence()
-        self.tie_breaker()
+        compare_attack()
+        compare_defence()
+        tie_breaker()
 
         if team1_points < team2_points:
             winner = self.team2

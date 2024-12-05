@@ -17,6 +17,12 @@ class Team:
         self.defence = defence
         self.score = 0
 
+    def __eq__(self, other):
+        if not isinstance(other, Team):
+            return False
+        else:
+            return self.name == other.name
+
     def train(self) -> None:
         """
         Train the team.
@@ -92,7 +98,7 @@ class League:
         self.scoreboard = {}
 
         for team in self.teams:
-            self.scoreboard[team] = 0
+            self.scoreboard[team] = team.score
 
     def add_team(self, team: Team) -> None:
         """
@@ -138,12 +144,7 @@ class League:
 
                 game = Game(team1, team2)
 
-                winner = game.play()
-
-                if winner in self.get_scoreboard():
-                    self.scoreboard[winner] += 1
-                else:
-                    self.scoreboard[winner] = 1
+                game.play()
 
     def get_first_place(self) -> Team:
         """
@@ -167,7 +168,8 @@ class League:
 
         :return: None.
         """
-        {team: 0 for team in self.scoreboard}
+        if self.scoreboard:
+            {team: 0 for team in self.scoreboard}
 
     def get_name(self) -> str:
         """Return league name."""
@@ -221,7 +223,7 @@ class Game:
 
         :return: winner team object.
         """
-        if self.team1 == self.team2 or not self.team1 or not self.team2:
+        if self.team1.name == self.team2.name or not self.team1.name or not self.team2.name:
             return
 
         team1_points = 0
@@ -255,7 +257,9 @@ class Game:
 
         elif team2_points < team1_points:
             winner = self.team1
-        
+
+        winner.score += 1
+
         return winner
 
     def __repr__(self):

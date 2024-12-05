@@ -74,7 +74,7 @@ class Team:
 
     def __repr__(self):
         """Format the string of the team as: '[name]'."""
-        return f"{self.name}."
+        return f"{self.name}"
 
 
 class League:
@@ -112,8 +112,9 @@ class League:
 
         :param team_name: Name of team to remove from league.
         """
-        self.teams.remove(team_name)
-        self.scoreboard.pop(team_name)
+        if team_name in self.teams:
+            self.teams.remove(team_name)
+            self.scoreboard.pop(team_name)
 
     def play_games(self) -> None:
         """
@@ -143,7 +144,7 @@ class League:
 
         :return: team on the first place in scoreboard.
         """
-        return max(self.scoreboard, key=self.scoreboard.values())
+        return max(self.scoreboard, key=lambda x: self.scoreboard[x])
 
     def get_last_place(self) -> Team:
         """
@@ -151,7 +152,7 @@ class League:
 
         :return: team on the last place in scoreboard.
         """
-        return max(self.scoreboard, key=self.scoreboard.values())
+        return min(self.scoreboard, key=lambda x: self.scoreboard[x])
 
     def clear_scoreboard(self):
         """
@@ -175,7 +176,7 @@ class League:
 
     def __repr__(self):
         """Format the string of the league as: '[name]'."""
-        return f"{self.name}."
+        return f"{self.name}"
 
 
 class Game:
@@ -234,7 +235,7 @@ class Game:
             elif self.team2.attack + self.team2.defence < self.team1.attack + self.team1.defence:
                 winner = self.team1
             else:
-                winner = sorted([self.team1, self.team2])[0]
+                winner = sorted([self.team1.__repr__(), self.team2.__repr__()])[0]
 
         if team1_points < team2_points:
             winner = self.team2

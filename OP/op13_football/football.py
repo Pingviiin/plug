@@ -16,7 +16,14 @@ class Team:
         self.attack = attack
         self.defence = defence
         self.score = 0
-    
+
+    def __eq__(self, other):
+        if isinstance(other, Team):
+            return (
+                self.name == other.name and
+                self.attack == other.attack and
+                self.defence == other.defence and
+                self.score == other.score)
 
     def train(self) -> None:
         """
@@ -117,7 +124,7 @@ class League:
         :param team_name: Name of team to remove from league.
         """
         removed_team = None
-        
+
         for team in self.teams:
             if team.name == team_name:
                 removed_team = team
@@ -202,7 +209,7 @@ class Game:
         :param team1: first team in the game.
         :param team2: second team in the game.
         """
-        
+
         self.team1 = team1
         self.team2 = team2
 
@@ -229,10 +236,9 @@ class Game:
         :return: winner team object.
         """
         if not self.team1.name or not self.team2.name:
-            raise ValueError("Team names cannot be empty.")
+            return
 
         if self.team1 == self.team2:
-            raise ValueError("A team cannot play against itself.")
 
         team1_points = 0
         team2_points = 0

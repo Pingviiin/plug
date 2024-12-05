@@ -236,7 +236,7 @@ class Game:
         self.calculate_points()
         
         if self.team1_points == self.team2_points:
-            self.tiebreaker()
+            winner = self.tiebreaker()
 
         if self.team1_points < self.team2_points:
             winner = self.team2

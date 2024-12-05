@@ -206,8 +206,8 @@ class Game:
         self.team1 = team1
         self.team2 = team2
 
-        team1_points = 0
-        team2_points = 0
+        self.team1_points = 0
+        self.team2_points = 0
 
     def play(self) -> object:
         """

@@ -206,6 +206,9 @@ class Game:
         self.team1 = team1
         self.team2 = team2
 
+        team1_points = 0
+        team2_points = 0
+
     def play(self) -> object:
         """
         The "play" function simulates a game between two teams, where each team earns points based on their attack
@@ -228,57 +231,53 @@ class Game:
 
         :return: winner team object.
         """
+        self.validate_teams()
 
-        team1_points = 0
-        team2_points = 0
-
-        def validate_teams(self):
-            if not self.team1.name or not self.team2.name:
-                return self.team1
-            if self.team1.name == self.team2.name:
-                return self.team1
-
-        validate_teams()
-
-        def calculate_points(self):
-            if self.team1.attack < self.team2.attack:
-                team2_points += 1
-
-            elif self.team2.attack < self.team1.attack:
-                team1_points += 1
-
-            if self.team1.defence < self.team2.defence:
-                team2_points += 1
-
-            elif self.team2.defence < self.team1.defence:
-                team1_points += 1
+        self.calculate_points()
         
-        calculate_points()
+        if self.team1_points == self.team2_points:
+            self.tiebreaker()
 
-        def tiebreaker(self):
-            if team1_points == team2_points:
-                if self.team1.attack + self.team1.defence < self.team2.attack + self.team2.defence:
-                    winner = self.team2
-                elif self.team2.attack + self.team2.defence < self.team1.attack + self.team1.defence:
-                    winner = self.team1
-                else:
-                    if self.team1.name < self.team2.name:
-                        winner = self.team1
-                    else:
-                        winner = self.team2
-            return winner
-
-        winner = tiebreaker()
-
-        if team1_points < team2_points:
+        if self.team1_points < self.team2_points:
             winner = self.team2
 
-        elif team2_points < team1_points:
+        elif self.team2_points < self.team1_points:
             winner = self.team1
 
         winner.score += 1
 
         return winner
+
+    def validate_teams(self):
+        if not self.team1.name or not self.team2.name:
+            return self.team1
+        if self.team1.name == self.team2.name:
+            return self.team1
+
+    def tiebreaker(self):
+        if self.team1.attack + self.team1.defence < self.team2.attack + self.team2.defence:
+            winner = self.team2
+        elif self.team2.attack + self.team2.defence < self.team1.attack + self.team1.defence:
+            winner = self.team1
+        else:
+            if self.team1.name < self.team2.name:
+                winner = self.team1
+            else:
+                winner = self.team2
+        return winner
+
+    def calculate_points(self):
+        if self.team1.attack < self.team2.attack:
+            self.team2_points += 1
+
+        elif self.team2.attack < self.team1.attack:
+            self.team1_points += 1
+
+        if self.team1.defence < self.team2.defence:
+            self.team2_points += 1
+
+        elif self.team2.defence < self.team1.defence:
+            self.team1_points += 1
 
     def __repr__(self):
         """Format the string of the game as: '[team1] vs. [team2]'."""

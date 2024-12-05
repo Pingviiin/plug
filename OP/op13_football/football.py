@@ -91,6 +91,10 @@ class League:
         self.teams = teams
         self.scoreboard = {}
 
+        for team in self.teams:
+            self.scoreboard[team] = 0
+
+
     def add_team(self, team: Team) -> None:
         """
         Add team to league.
@@ -235,7 +239,7 @@ class Game:
             elif self.team2.attack + self.team2.defence < self.team1.attack + self.team1.defence:
                 winner = self.team1
             else:
-                winner = sorted([self.team1.__repr__(), self.team2.__repr__()])[0]
+                winner = sorted([self.team1(), self.team2()])[0]
 
         if team1_points < team2_points:
             winner = self.team2
@@ -247,4 +251,4 @@ class Game:
 
     def __repr__(self):
         """Format the string of the game as: '[team1] vs. [team2]'."""
-        return f"{self.team1} vs. {self.team2}."
+        return f"{self.team1} vs. {self.team2}"

@@ -116,11 +116,15 @@ class League:
 
         :param team_name: Name of team to remove from league.
         """
-        removed_team = Team
+        removed_team = None
+        
         for team in self.teams:
             if team.name == team_name:
                 removed_team = team
                 break
+
+        if removed_team is None:
+            raise ValueError("Given team doesn't exist in the league.")
 
         self.teams.remove(removed_team)
         self.scoreboard.pop(removed_team)
@@ -166,8 +170,10 @@ class League:
 
         :return: None.
         """
-        for team in self.scoreboard:
+        for team in self.teams:
             team.set_score(0)
+        for team in self.scoreboard:
+            self.scoreboard[team] = 0
 
     def get_name(self) -> str:
         """Return league name."""
@@ -264,17 +270,3 @@ class Game:
     def __repr__(self):
         """Format the string of the game as: '[team1] vs. [team2]'."""
         return f"{self.team1} vs. {self.team2}"
-    
-# Example test
-team_a = Team("TeamA", 5, 3)
-team_b = Team("TeamB", 4, 6)
-league = League("Test League", [team_a, team_b])
-
-# Train teams before playing
-team_a.train()
-team_b.train()
-
-# Play all games
-league.play_games()
-
-assert league.get_scoreboard()[team_a] == 1 or league.get_scoreboard()[team_b] == 1, "Scoreboard not updated!"

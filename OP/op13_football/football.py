@@ -17,13 +17,6 @@ class Team:
         self.defence = defence
         self.score = 0
 
-    def __eq__(self, other):
-        if isinstance(other, Team):
-            return (
-                self.name == other.name and
-                self.attack == other.attack and
-                self.defence == other.defence and
-                self.score == other.score)
 
     def train(self) -> None:
         """
@@ -238,7 +231,7 @@ class Game:
         if not self.team1.name or not self.team2.name:
             return
 
-        if self.team1 == self.team2:
+        if self.team1.name == self.team2.name:
             return
 
         team1_points = 0

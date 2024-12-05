@@ -239,6 +239,7 @@ class Game:
             return
 
         if self.team1 == self.team2:
+            return
 
         team1_points = 0
         team2_points = 0

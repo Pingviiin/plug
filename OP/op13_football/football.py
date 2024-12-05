@@ -90,7 +90,10 @@ class League:
         """
         self.name = name
         self.teams = teams
-        self.scoreboard = {team.name: 0 for team in teams}
+        self.scoreboard = {}
+
+        for team in self.teams:
+            self.scoreboard[team] = 0
 
     def add_team(self, team: Team) -> None:
         """
@@ -113,8 +116,14 @@ class League:
 
         :param team_name: Name of team to remove from league.
         """
-        self.teams = [team for team in self.teams if team.name != team_name]
-        self.scoreboard.pop(team_name, None)
+        removed_team = Team
+        for team in self.teams:
+            if team.name == team_name:
+                removed_team = team
+                break
+
+        self.teams.remove(removed_team)
+        self.scoreboard.pop(removed_team)
 
     def play_games(self) -> None:
         """
@@ -132,7 +141,8 @@ class League:
                 game = Game(team1, team2)
 
                 winner = game.play()
-                self.scoreboard[winner.name] += 1
+
+                self.scoreboard[winner] = winner.score
 
     def get_first_place(self) -> Team:
         """
@@ -156,7 +166,8 @@ class League:
 
         :return: None.
         """
-        self.scoreboard = {team.name: 0 for team in self.teams}
+        for team in self.scoreboard:
+            team.set_score(0)
 
     def get_name(self) -> str:
         """Return league name."""
@@ -185,6 +196,7 @@ class Game:
         :param team1: first team in the game.
         :param team2: second team in the game.
         """
+        
         self.team1 = team1
         self.team2 = team2
 
@@ -210,6 +222,8 @@ class Game:
 
         :return: winner team object.
         """
+        if self.team1 == self.team2:
+            return
 
         team1_points = 0
         team2_points = 0
@@ -227,18 +241,40 @@ class Game:
             team1_points += 1
 
         if team1_points == team2_points:
-            team1_total = self.team1.attack + self.team1.defence
-            team2_total = self.team2.attack + self.team2.defence
-
-            if team1_total > team2_total:
-                return self.team1
-            elif team1_total < team2_total:
-                return self.team2
+            if self.team1.attack + self.team1.defence < self.team2.attack + self.team2.defence:
+                winner = self.team2
+            elif self.team2.attack + self.team2.defence < self.team1.attack + self.team1.defence:
+                winner = self.team1
             else:
-                return self.team1 if self.team1.name < self.team2.name else self.team2
+                if self.team1.name < self.team2.name:
+                    winner = self.team1
+                else:
+                    winner = self.team2
 
-        return self.team1 if team1_points > team2_points else self.team2
+        if team1_points < team2_points:
+            winner = self.team2
+
+        elif team2_points < team1_points:
+            winner = self.team1
+
+        winner.score += 1
+
+        return winner
 
     def __repr__(self):
         """Format the string of the game as: '[team1] vs. [team2]'."""
         return f"{self.team1} vs. {self.team2}"
+    
+# Example test
+team_a = Team("TeamA", 5, 3)
+team_b = Team("TeamB", 4, 6)
+league = League("Test League", [team_a, team_b])
+
+# Train teams before playing
+team_a.train()
+team_b.train()
+
+# Play all games
+league.play_games()
+
+assert league.get_scoreboard()[team_a] == 1 or league.get_scoreboard()[team_b] == 1, "Scoreboard not updated!"

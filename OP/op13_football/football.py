@@ -16,6 +16,7 @@ class Team:
         self.attack = attack
         self.defence = defence
         self.score = 0
+    
 
     def train(self) -> None:
         """
@@ -163,7 +164,8 @@ class League:
 
         :return: None.
         """
-        self.scoreboard = {}
+        for team in self.scoreboard:
+            team.set_score(0)
 
     def get_name(self) -> str:
         """Return league name."""
@@ -217,6 +219,12 @@ class Game:
 
         :return: winner team object.
         """
+        if self.team1.__repr__() == self.team2.__repr__():
+            return
+        
+        if self.team1.__repr__() == "" or self.team2.__repr__() == "":
+            return
+
         team1_points = 0
         team2_points = 0
 

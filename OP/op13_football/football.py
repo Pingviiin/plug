@@ -200,7 +200,6 @@ class Game:
         :param team1: first team in the game.
         :param team2: second team in the game.
         """
-
         self.team1 = team1
         self.team2 = team2
 

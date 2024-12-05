@@ -231,7 +231,8 @@ class Game:
 
         :return: winner team object.
         """
-        self.validate_teams()
+        if self.validate_teams():
+            return self.team1
 
         self.calculate_points()
         
@@ -250,9 +251,9 @@ class Game:
 
     def validate_teams(self):
         if not self.team1.name or not self.team2.name:
-            return self.team1
+            return True
         if self.team1.name == self.team2.name:
-            return self.team1
+            return True
 
     def tiebreaker(self):
         if self.team1.attack + self.team1.defence < self.team2.attack + self.team2.defence:

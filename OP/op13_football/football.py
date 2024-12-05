@@ -94,7 +94,6 @@ class League:
         for team in self.teams:
             self.scoreboard[team] = 0
 
-
     def add_team(self, team: Team) -> None:
         """
         Add team to league.
@@ -116,9 +115,14 @@ class League:
 
         :param team_name: Name of team to remove from league.
         """
-        if team_name in self.teams:
-            self.teams.remove(team_name)
-            self.scoreboard.pop(team_name)
+        removed_team = Team
+        for team in self.teams:
+            if team.name == team_name:
+                removed_team = team
+                break
+
+        self.teams.remove(removed_team)
+        self.scoreboard.pop(removed_team)
 
     def play_games(self) -> None:
         """

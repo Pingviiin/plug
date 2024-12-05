@@ -139,12 +139,7 @@ class League:
 
                 game = Game(team1, team2)
 
-                winner = game.play()
-
-                if winner in self.scoreboard:
-                    self.scoreboard[winner] += 1
-                else:
-                    self.scoreboard[winner] = 1
+                game.play()
 
     def get_first_place(self) -> Team:
         """
@@ -253,6 +248,8 @@ class Game:
 
         elif team2_points < team1_points:
             winner = self.team1
+
+        winner.score += 1
 
         return winner
 

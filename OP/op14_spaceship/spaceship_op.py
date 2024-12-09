@@ -87,20 +87,19 @@ class OPSpaceship(Spaceship):
             return "No one was ejected. (Tie)"
 
         ejected = most_voted_players[0]
-        ejected = next((crewmate for crewmate in self.crewmate_list if crewmate.color == ejected), None)
+        ejected = next((crewmate for crewmate in self.crewmate_list if crewmate.color == ejected))
         self.ejected_players.append(ejected)
 
-        if ejected:
-            was_impostor = any(player.color == ejected.color for player in self.impostor_list)
-            if was_impostor:
-                self.impostor_list = [player for player in self.impostor_list if player.color != ejected.color]
-            else:
-                self.crewmate_list = [player for player in self.crewmate_list if player.color != ejected.color]
+        was_impostor = any(player.color == ejected.color for player in self.impostor_list)
+        if was_impostor:
+            self.impostor_list = [player for player in self.impostor_list if player.color != ejected.color]
+        else:
+            self.crewmate_list = [player for player in self.crewmate_list if player.color != ejected.color]
 
-            if self.check_is_game_over():
-                winner = self.winner
-                self.reset()
-                return winner
+        if self.check_is_game_over():
+            winner = self.winner
+            self.reset()
+            return winner
 
         self.reset_meeting()
         if self.difficulty == "easy":

@@ -79,11 +79,11 @@ class OPSpaceship(Spaceship):
         most_voted_players = [key for key, value in counted_votes.items() if value == max(counted_votes.values())]
         abstainers = len(self.player_colors) - sum(counted_votes.values())
 
-        if (abstainers == len(self.player_colors)) or abstainers > max_votes:
+        if (abstainers == len(self.player_colors)) or (abstainers > max_votes):
             self.reset_meeting()
             return "No one was ejected. (Skipped)"
 
-        if (len(most_voted_players) > 1) or abstainers == max_votes:
+        if (len(most_voted_players) > 1) or (abstainers == max_votes):
             self.reset_meeting()
             return "No one was ejected. (Tie)"
 

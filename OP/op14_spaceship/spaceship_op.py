@@ -76,7 +76,7 @@ class OPSpaceship(Spaceship):
         
         max_votes = max(counted_votes.values())
         most_voted_players = [key for key, value in counted_votes.items() if value == max(counted_votes.values())]
-        abstainers = len(self.player_colors) - sum(counted_votes.values())
+        abstainers = (len(self.crewmate_list) + len(self.impostor_list)) - sum(counted_votes.values())
 
         if abstainers > max_votes:
             self.reset_meeting()

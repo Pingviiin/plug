@@ -32,12 +32,14 @@ class OPSpaceship(Spaceship):
         if self.game and not self.meeting:
             super().kill_impostor(sheriff, color)
             if self.check_is_game_over():
+                self.reset()
                 return 'Crewmates won.'
 
     def kill_crewmate(self, impostor: Impostor, color: str):
         if self.game and not self.meeting:
             super().kill_crewmate(impostor, color)
             if self.check_is_game_over():
+                self.reset()
                 return 'Impostors won.'
 
     def start_game(self):
@@ -96,7 +98,7 @@ class OPSpaceship(Spaceship):
 
         if self.check_is_game_over():
             winner = self.winner
-            self.__init__(self.difficulty)
+            self.reset()
             return winner
 
         self.reset_meeting()
@@ -120,7 +122,6 @@ class OPSpaceship(Spaceship):
             self.dead_players.clear()
             self.votes.clear()
             self.meeting = False
-            self.game = False
             return True
 
         elif (len(self.impostor_list) == len(self.crewmate_list)) and (len(self.impostor_list) < 4) and (len(self.crewmate_list) < 4):
@@ -128,7 +129,6 @@ class OPSpaceship(Spaceship):
             self.dead_players.clear()
             self.votes.clear()
             self.meeting = False
-            self.game = False
             return True
 
         else:
@@ -149,6 +149,20 @@ class OPSpaceship(Spaceship):
 
     def is_meeting(self):
         return self.meeting
+    
+    def reset(self):
+        self.ejected_players = []
+        self.meeting = False
+        self.votes = {}
+        self.game = False
+        self.reporting_player = ""
+        self.winner = ""
+
+        self.crewmate_list = []
+        self.impostor_list = []
+        self.dead_players = []
+        self.player_colors = []
+        self.crewmate_protected = False
     
 def test_OP_spaceship_kill_impostor_game_ends():
 # Initialize the spaceship

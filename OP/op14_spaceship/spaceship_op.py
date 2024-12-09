@@ -162,3 +162,29 @@ class OPSpaceship(Spaceship):
         self.dead_players = []
         self.player_colors = []
         self.crewmate_protected = False
+
+def test_OP_spaceship_end_meeting_highest_votes_equals_skipped():
+    spaceship = OPSpaceship(difficulty="easy")
+
+    # Mängijate loomine
+    crewmate1 = Crewmate("Red", "crewmate")
+    crewmate2 = Crewmate("Blue", "crewmate")
+    crewmate3 = Crewmate("Green", "crewmate")
+
+    # Mängijad lisatakse kosmoselaeva
+    spaceship.add_crewmate(crewmate1)
+    spaceship.add_crewmate(crewmate2)
+    spaceship.add_crewmate(crewmate3)
+
+    spaceship.start_game()
+
+    # Häälte jagunemine
+    spaceship.meeting = True
+    spaceship.cast_vote(crewmate1, "Red")  # Red saab 1 hääle
+    # Blue ja Green on erapooletud (2 erapooletut)
+
+    # Koosoleku lõpetamine
+    result = spaceship.end_meeting()
+    assert result == "No one was ejected. (Skipped)"
+
+test_OP_spaceship_end_meeting_highest_votes_equals_skipped()

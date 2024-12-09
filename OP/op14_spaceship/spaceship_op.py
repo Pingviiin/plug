@@ -1,3 +1,4 @@
+"""OPSpaceship."""
 from spaceship import Spaceship, Impostor, Crewmate
 
 

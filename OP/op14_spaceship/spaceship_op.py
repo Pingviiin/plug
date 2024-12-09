@@ -106,9 +106,9 @@ class OPSpaceship(Spaceship):
         if self.difficulty == "easy":
             impostor_count = len(self.impostor_list)
             if was_impostor:
-                return f"{ejected.color} was an Impostor. {impostor_count} Impostor{'s' if impostor_count != 1 else ''} remain."
+                return f"{ejected.color} was an Impostor. {impostor_count} Impostor{'s' if impostor_count != 1 else ''} remain{'s' if impostor_count == 1 else ''}."
             else:
-                return f"{ejected.color} was not an Impostor. {impostor_count} Impostor{'s' if impostor_count != 1 else ''} remain."
+                return f"{ejected.color} was not an Impostor. {impostor_count} Impostor{'s' if impostor_count != 1 else ''} remain{'s' if impostor_count == 1 else ''}."
         else:
             return f"{ejected.color} was ejected."
 

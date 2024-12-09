@@ -79,11 +79,11 @@ class OPSpaceship(Spaceship):
         most_voted_players = [key for key, value in counted_votes.items() if value == max(counted_votes.values())]
         abstainers = len(self.player_colors) - sum(counted_votes.values())
 
-        if abstainers > max_votes:
+        if (abstainers == len(self.player_colors)) or abstainers > max_votes:
             self.reset_meeting()
             return "No one was ejected. (Skipped)"
 
-        if len(most_voted_players) > 1 or abstainers >= max_votes:
+        if (len(most_voted_players) > 1) or abstainers == max_votes:
             self.reset_meeting()
             return "No one was ejected. (Tie)"
 
@@ -164,32 +164,30 @@ class OPSpaceship(Spaceship):
         self.player_colors = []
         self.crewmate_protected = False
     
-def test_OP_spaceship_kill_impostor_game_ends():
-# Initialize the spaceship
+def test_OP_spaceship_end_meeting_highest_votes_equals_skipped():
+    # Initialize the spaceship
     spaceship = OPSpaceship(difficulty="easy")
-
+    
     # Create players
-    crewmate1 = Crewmate("Red", "sheriff")
-    crewmate2 = Crewmate("Blue", "crewmate")
+    crewmate1 = Crewmate("Red")
+    crewmate2 = Crewmate("Blue")
     impostor1 = Impostor("Green")
-
+    
     # Add players to the spaceship
     spaceship.add_crewmate(crewmate1)
     spaceship.add_crewmate(crewmate2)
     spaceship.add_impostor(impostor1)
-
+    
     # Start the game
     spaceship.start_game()
     assert spaceship.game, "Game should be started."
-
-    # Kill the impostor
-    result = spaceship.kill_impostor(crewmate1, impostor1.color)
-
-    # Check if the game ended and crewmates won
-    assert result == "Crewmates won.", "Crewmates should win when the last impostor is killed."
-    assert not spaceship.game, "Game should end when impostors are defeated."
-
-    # Validate that impostor list is empty
-    assert len(spaceship.impostor_list) == 0, "No impostors should remain."
-
-test_OP_spaceship_kill_impostor_game_ends()
+    
+    # Simulate a meeting and voting
+    spaceship.meeting = True
+    spaceship.cast_vote(crewmate1, "Skip")  # Skip vote
+    spaceship.cast_vote(crewmate2, "Green")  # Vote for impostor
+    spaceship.cast_vote(impostor1, "Skip")  # Skip vote
+    
+    # End the meeting and check the result
+    result = spaceship.end_meeting()
+    assert result == "No one was ejected. (Skipped)", f"Unexpected result: {result}"

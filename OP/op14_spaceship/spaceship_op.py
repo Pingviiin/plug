@@ -120,6 +120,7 @@ class OPSpaceship(Spaceship):
             self.dead_players.clear()
             self.votes.clear()
             self.meeting = False
+            self.game = False
             return True
 
         elif (len(self.impostor_list) == len(self.crewmate_list)) and (len(self.impostor_list) < 4) and (len(self.crewmate_list) < 4):
@@ -127,6 +128,7 @@ class OPSpaceship(Spaceship):
             self.dead_players.clear()
             self.votes.clear()
             self.meeting = False
+            self.game = False
             return True
 
         else:
@@ -147,3 +149,33 @@ class OPSpaceship(Spaceship):
 
     def is_meeting(self):
         return self.meeting
+    
+def test_OP_spaceship_kill_impostor_game_ends():
+# Initialize the spaceship
+    spaceship = OPSpaceship(difficulty="easy")
+
+    # Create players
+    crewmate1 = Crewmate("Red", "sheriff")
+    crewmate2 = Crewmate("Blue", "crewmate")
+    impostor1 = Impostor("Green")
+
+    # Add players to the spaceship
+    spaceship.add_crewmate(crewmate1)
+    spaceship.add_crewmate(crewmate2)
+    spaceship.add_impostor(impostor1)
+
+    # Start the game
+    spaceship.start_game()
+    assert spaceship.game, "Game should be started."
+
+    # Kill the impostor
+    result = spaceship.kill_impostor(crewmate1, impostor1.color)
+
+    # Check if the game ended and crewmates won
+    assert result == "Crewmates won.", "Crewmates should win when the last impostor is killed."
+    assert not spaceship.game, "Game should end when impostors are defeated."
+
+    # Validate that impostor list is empty
+    assert len(spaceship.impostor_list) == 0, "No impostors should remain."
+
+test_OP_spaceship_kill_impostor_game_ends()

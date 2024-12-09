@@ -53,7 +53,7 @@ class OPSpaceship(Spaceship):
     def cast_vote(self, player: Crewmate | Impostor, target_player_color: str):
         if (player.color not in self.votes.keys()) and (player not in self.dead_players) and self.game:
             if self.meeting and target_player_color.title() in self.player_colors:
-                self.votes[player] = target_player_color.title()
+                self.votes[player.color] = target_player_color.title()
 
     def count_votes(self):
         counted_votes = {}
@@ -87,6 +87,7 @@ class OPSpaceship(Spaceship):
             return "No one was ejected. (Tie)"
 
         ejected = most_voted_players[0]
+        ejected = next((crewmate for crewmate in self.crewmate_list if crewmate.color == ejected), None)
         self.ejected_players.append(ejected)
 
         was_impostor = any(player.color == ejected for player in self.impostor_list)
@@ -108,7 +109,7 @@ class OPSpaceship(Spaceship):
             else:
                 return f"{ejected.color} was not an Impostor. {impostor_count} Impostor{'s' if impostor_count != 1 else ''} remain."
         else:
-            return f"{ejected} was ejected."
+            return f"{ejected.color} was ejected."
 
     def reset_meeting(self):
         self.dead_players.clear()

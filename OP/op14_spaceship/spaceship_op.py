@@ -21,14 +21,17 @@ class OPSpaceship(Spaceship):
         self.winner = ""
 
     def add_crewmate(self, crewmate: Crewmate):
+        """Add crewmate to game."""
         if not self.game:
             return super().add_crewmate(crewmate)
 
     def add_impostor(self, impostor: Impostor):
+        """Add impostor to game."""
         if not self.game:
             return super().add_impostor(impostor)
 
     def kill_impostor(self, sheriff: Crewmate, color: str):
+        """Sheriff remove impostor from game."""
         if self.game and not self.meeting:
             super().kill_impostor(sheriff, color)
             if self.check_is_game_over():
@@ -36,6 +39,7 @@ class OPSpaceship(Spaceship):
                 return 'Crewmates won.'
 
     def kill_crewmate(self, impostor: Impostor, color: str):
+        """Impostor remove crewmate from game."""
         if self.game and not self.meeting:
             super().kill_crewmate(impostor, color)
             if self.check_is_game_over():
@@ -43,19 +47,23 @@ class OPSpaceship(Spaceship):
                 return 'Impostors won.'
 
     def start_game(self):
+        """Start the game."""
         if (len(self.impostor_list) > 0) and (len(self.crewmate_list) > 1) and (len(self.crewmate_list) > len(self.impostor_list)) and not self.game:
             self.game = True
 
     def report_dead_body(self, reporting_player: Crewmate | Impostor, dead_body: Crewmate):
+        """Report dead body."""
         if dead_body in self.dead_players and reporting_player in (self.crewmate_list + self.impostor_list):
             self.meeting = True
 
     def cast_vote(self, player: Crewmate | Impostor, target_player_color: str):
+        """Player can cast a vote."""
         if (player.color not in self.votes.keys()) and (player not in self.dead_players) and self.game:
             if self.meeting and target_player_color.title() in self.player_colors:
                 self.votes[player.color] = target_player_color.title()
 
     def count_votes(self):
+        """Count votes."""
         counted_votes = {}
         for candidate in self.votes.values():
             if candidate in counted_votes:
@@ -66,6 +74,7 @@ class OPSpaceship(Spaceship):
         return counted_votes
 
     def end_meeting(self):
+        """End meeting."""
         if not self.meeting:
             return
 
@@ -74,9 +83,10 @@ class OPSpaceship(Spaceship):
         if not counted_votes:
             self.reset_meeting()
             return "No one was ejected. (Skipped)"
-        
+
         max_votes = max(counted_votes.values())
-        most_voted_players = [key for key, value in counted_votes.items() if value == max(counted_votes.values())]
+        most_voted_players = [key for key, value in counted_votes.items(
+        ) if value == max(counted_votes.values())]
         abstainers = (len(player_list)) - sum(counted_votes.values())
 
         if abstainers > max_votes:
@@ -88,14 +98,18 @@ class OPSpaceship(Spaceship):
             return "No one was ejected. (Tie)"
 
         ejected = most_voted_players[0]
-        ejected = next((crewmate for crewmate in player_list if crewmate.color == ejected))
+        ejected = next(
+            (crewmate for crewmate in player_list if crewmate.color == ejected))
         self.ejected_players.append(ejected)
 
-        was_impostor = any(player.color == ejected.color for player in self.impostor_list)
+        was_impostor = any(
+            player.color == ejected.color for player in self.impostor_list)
         if was_impostor:
-            self.impostor_list = [player for player in self.impostor_list if player.color != ejected.color]
+            self.impostor_list = [
+                player for player in self.impostor_list if player.color != ejected.color]
         else:
-            self.crewmate_list = [player for player in self.crewmate_list if player.color != ejected.color]
+            self.crewmate_list = [
+                player for player in self.crewmate_list if player.color != ejected.color]
 
         if self.check_is_game_over():
             winner = self.winner
@@ -113,11 +127,13 @@ class OPSpaceship(Spaceship):
             return f"{ejected.color} was ejected."
 
     def reset_meeting(self):
+        """Reset meeting."""
         self.dead_players.clear()
         self.votes.clear()
         self.meeting = False
 
     def check_is_game_over(self):
+        """Check if the game is over."""
         if len(self.impostor_list) == 0:
             self.winner = "Crewmates won."
             self.dead_players.clear()
@@ -136,6 +152,7 @@ class OPSpaceship(Spaceship):
             return False
 
     def get_vote(self, color: str):
+        """Get player by their voted color."""
         for voter, candidate in self.votes.items():
             if voter.lower() == color.lower():
                 return candidate
@@ -143,15 +160,19 @@ class OPSpaceship(Spaceship):
             return "No vote found"
 
     def get_ejected_players(self):
+        """Get ejected players."""
         return self.ejected_players
 
     def get_votes(self):
+        """Get votes."""
         return self.votes
 
     def is_meeting(self):
+        """Check if meeting is active."""
         return self.meeting
-    
+
     def reset(self):
+        """Reset class values."""
         self.ejected_players = []
         self.meeting = False
         self.votes = {}

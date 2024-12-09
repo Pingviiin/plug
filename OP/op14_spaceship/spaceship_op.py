@@ -70,13 +70,14 @@ class OPSpaceship(Spaceship):
             return
 
         counted_votes = self.count_votes()
+        player_list = self.crewmate_list + self.impostor_list
         if not counted_votes:
             self.reset_meeting()
             return "No one was ejected. (Skipped)"
         
         max_votes = max(counted_votes.values())
         most_voted_players = [key for key, value in counted_votes.items() if value == max(counted_votes.values())]
-        abstainers = (len(self.crewmate_list) + len(self.impostor_list)) - sum(counted_votes.values())
+        abstainers = (len(self.player_list)) - sum(counted_votes.values())
 
         if abstainers > max_votes:
             self.reset_meeting()
@@ -87,7 +88,7 @@ class OPSpaceship(Spaceship):
             return "No one was ejected. (Tie)"
 
         ejected = most_voted_players[0]
-        ejected = next((crewmate for crewmate in self.crewmate_list if crewmate.color == ejected))
+        ejected = next((crewmate for crewmate in player_list if crewmate.color == ejected))
         self.ejected_players.append(ejected)
 
         was_impostor = any(player.color == ejected.color for player in self.impostor_list)

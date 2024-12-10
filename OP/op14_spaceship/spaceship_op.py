@@ -1,5 +1,4 @@
-from spaceship import Spaceship, Impostor, Crewmate
-
+from OP.op14_spaceship.spaceship import *
 
 class OPSpaceship(Spaceship):
     """OPSpaceship class."""
@@ -74,9 +73,10 @@ class OPSpaceship(Spaceship):
         if not counted_votes:
             self.reset_meeting()
             return "No one was ejected. (Skipped)"
-        
+
         max_votes = max(counted_votes.values())
-        most_voted_players = [key for key, value in counted_votes.items() if value == max(counted_votes.values())]
+        most_voted_players = [key for key, value in counted_votes.items(
+        ) if value == max(counted_votes.values())]
         abstainers = (len(player_list)) - sum(counted_votes.values())
 
         if abstainers > max_votes:
@@ -88,14 +88,18 @@ class OPSpaceship(Spaceship):
             return "No one was ejected. (Tie)"
 
         ejected = most_voted_players[0]
-        ejected = next((crewmate for crewmate in player_list if crewmate.color == ejected))
+        ejected = next(
+            (crewmate for crewmate in player_list if crewmate.color == ejected))
         self.ejected_players.append(ejected)
 
-        was_impostor = any(player.color == ejected.color for player in self.impostor_list)
+        was_impostor = any(
+            player.color == ejected.color for player in self.impostor_list)
         if was_impostor:
-            self.impostor_list = [player for player in self.impostor_list if player.color != ejected.color]
+            self.impostor_list = [
+                player for player in self.impostor_list if player.color != ejected.color]
         else:
-            self.crewmate_list = [player for player in self.crewmate_list if player.color != ejected.color]
+            self.crewmate_list = [
+                player for player in self.crewmate_list if player.color != ejected.color]
 
         if self.check_is_game_over():
             winner = self.winner
@@ -150,7 +154,7 @@ class OPSpaceship(Spaceship):
 
     def is_meeting(self):
         return self.meeting
-    
+
     def reset(self):
         self.ejected_players = []
         self.meeting = False

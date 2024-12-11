@@ -237,7 +237,7 @@ class VehicleRental:
         :param vehicle: Vehicle (Car or Motorcycle) to be added.
         :return: True if the vehicle was successfully added, False if it was already present.
         """
-        if hash(vehicle) not in list(map(hash(), self.booked_cars.keys())):
+        if hash(vehicle) not in list(map(lambda x: hash(x), self.booked_cars.keys())):
             self.booked_cars[vehicle] = []
             return True
         else:

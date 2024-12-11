@@ -62,7 +62,7 @@ class Car:
         self.make = make
         self.model = model
         self.year = year
-        self.rent_date = ""
+        self.rent_dates = []
         
         if isinstance(type_of_car, Type):
             self.type_of_car = type_of_car
@@ -104,7 +104,7 @@ class Motorcycle:
         self.make = make
         self.model = model
         self.year = year
-        self.rent_date = ""
+        self.rent_dates = []
 
     def __repr__(self) -> str:
         """
@@ -152,11 +152,23 @@ class Client:
         :param vehicle_rental: The rental service from which the vehicle is being booked.
         :return: True if the booking is successful, otherwise False.
         """
-        if self.budget >= get_price(vehicle):
-            if not(vehicle in vehicle_rental.get_vehicle_bookings_dict()):
-                for v, name in vehicle_rental.get_vehicle_bookings_dict():
-                    return
+        price = vehicle.get_price()
 
+        if self.budget >= price:
+            if not(vehicle in vehicle_rental.booked_cars.keys()):
+                for d in vehicle.rent_dates:
+                    if d == date:
+                        return False
+                else:
+                    vehicle.rent_dates.append(date)
+                    vehicle_rental.booked_cars[vehicle] = vehicle.rent_dates
+
+                    self.budget -= price
+                    self.spent += price
+
+                    self.bookings.append(vehicle)
+                    return True
+    
     def total_spent(self) -> int:
         """
         Calculate and return the total amount spent by the client.
@@ -175,7 +187,6 @@ class VehicleRental:
 
     def __init__(self) -> None:
         """Construct new VehicleRental."""
-        self.cars = []
         self.clients = []
         self.booked_cars = {}
         self.balance = 0
@@ -217,7 +228,7 @@ class VehicleRental:
         """:return: list of all clients who have placed a booking in rental."""
         return self.clients
 
-    def add_vehicle(self, vehicle: Car | Motorcycle) -> bool:
+    def add_vehicle(self, vehicle: Car | Motorcycle, date: str) -> bool:
         """
         Add a vehicle to the rental system if it is not already present.
 
@@ -227,7 +238,10 @@ class VehicleRental:
         :return: True if the vehicle was successfully added, False if it was already present.
         """
         if hash(vehicle) not in list(map(hash(), self.booked_cars.keys())):
-            return
+            self.booked_cars[vehicle] = []
+            return True
+        else:
+            return False
 
     def is_vehicle_available(self, vehicle: Car | Motorcycle, date: str) -> bool:
         """
@@ -237,7 +251,12 @@ class VehicleRental:
         :param date: The date to check availability on.
         :return: True if the vehicle is available, otherwise False.
         """
-        return False
+        for d in vehicle.rent_dates:
+            if d == date:
+                return False
+        else:
+            return True
+
 
     def rent_vehicle(self, vehicle: Car | Motorcycle, date: str, client: Client) -> bool:
         """
@@ -256,9 +275,14 @@ class VehicleRental:
             if self.is_vehicle_available(vehicle):
                 client.book_vehicle(vehicle, date, self)
 
+                self.add_vehicle(vehicle)
+                vehicle.rent_dates.append(date)
 
                 vehicle_price = vehicle.get_price()
                 self.balance += vehicle_price
+                return True
+            
+        return False
 
     def get_most_rented_vehicle(self) -> list[Motorcycle | Car]:
         """
@@ -268,7 +292,13 @@ class VehicleRental:
          rented the same number of times, all of those are returned. If no vehicle have been rented, return an empty
          list.
         """
-        return []
+        if not self.booked_cars:
+            return []
+        
+        most_rented_count = max(len(dates) for dates in self.booked_cars.values())
+        most_rented_vehicles = [vehicle for vehicle, dates in self.booked_cars.items() if len(dates) == most_rented_count]
+
+        return most_rented_vehicles
 
     def find_vehicle_by_make(self, make: str) -> list[Car | Motorcycle]:
         """
@@ -277,7 +307,14 @@ class VehicleRental:
         :param make: Manufacturer to search for (case-insensitive).
         :return: A list of vehicles matching the given make.
         """
-        return []
+        output = []
+        make = make.lower()
+
+        for vehicle in self.booked_cars.keys():
+            if vehicle.make == make:
+                output.append(vehicle)
+
+        return output
 
     def find_car_by_type(self, type_of_car: Type) -> list[Car]:
         """
@@ -286,7 +323,13 @@ class VehicleRental:
         :param type_of_car: The type of car to search for (an instance of Type enum).
         :return: A list of cars matching the given type.
         """
-        return []
+        output = []
+
+        for vehicle in self.booked_cars.keys():
+            if vehicle.type_of_car == type_of_car:
+                output.append(vehicle)
+
+        return output
 
     def get_best_client(self) -> Client:
         """
@@ -295,7 +338,11 @@ class VehicleRental:
         If multiple clients have rented the same number of vehicles, return the client who spent the most money.
         :return: The best client object.
         """
-        return None
+
+        if not self.clients:
+            return
+        
+        return max(self.clients, key=lambda client: (len(client.bookings), client.total_spent()))
 
     def get_sorted_vehicles_list(self) -> list[Car | Motorcycle]:
         """
@@ -304,7 +351,7 @@ class VehicleRental:
         In case of a tie, vehicles are sorted by price from highest to lowest.
         :return: A list of vehicles sorted by popularity and price.
         """
-        return []
+        return sorted(self.booked_cars.keys(), key= lambda vehicle: (len(self.booked_cars[vehicle]), vehicle.get_price()), reverse=True)
 
     def get_vehicles_by_year_range(self, start_year: int, end_year: int) -> list[Car | Motorcycle] | ValueError:
         """
@@ -315,4 +362,10 @@ class VehicleRental:
         :return: A list of vehicles manufactured within the specified year range.
         :raises ValueError: If start_year or end_year are not integers or if start_year > end_year.
         """
-        return []
+        if (not isinstance(start_year, int)) or (not isinstance(end_year, int)):
+            raise(ValueError)
+        
+        if start_year > end_year:
+            raise(ValueError)
+        
+        return [vehicle for vehicle in self.booked_cars.keys() if start_year <= vehicle.year <= end_year]

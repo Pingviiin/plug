@@ -345,21 +345,7 @@ class VehicleRental:
         if not self.clients:
             return None
 
-        clients_with_bookings = [client for client in self.clients if len(client.bookings) > 0]
-
-        if not clients_with_bookings:
-            return None
-
-        max_bookings = max(len(client.bookings) for client in clients_with_bookings)
-        max_spent = max(client.spent for client in clients_with_bookings if len(client.bookings) == max_bookings)
-
-        best_clients = [
-            client
-            for client in clients_with_bookings
-            if len(client.bookings) == max_bookings and client.spent == max_spent
-        ]
-
-        return best_clients if len(best_clients) > 1 else best_clients[0]
+        return max(self.clients, key=lambda client: (len(client.bookings), client.total_spent()))
 
     def get_sorted_vehicles_list(self) -> list[Car | Motorcycle]:
         """

@@ -279,7 +279,7 @@ class VehicleRental:
          rented the same number of times, all of those are returned. If no vehicle have been rented, return an empty
          list.
         """
-        if not self.booked_cars:
+        if not self.booked_cars or all(len(dates) == 0 for dates in self.booked_cars.values()):
             return []
 
         most_rented_count = max(len(dates) for dates in self.booked_cars.values())

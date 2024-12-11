@@ -2,7 +2,6 @@ from PROJECT.project3.vehicle_rental import *
 import pytest
 from datetime import datetime
 
-"""
 @pytest.fixture
 def setup_vehicle_rental():
     rental = VehicleRental()
@@ -89,7 +88,6 @@ def test_add_vehicle_hash_collision():
     assert rental.add_vehicle(car2) is False  # Should not add duplicate
     assert len(rental.booked_cars) == 1  # Only one car stored
 
-"""
 
 @pytest.fixture
 def setup_rental():
@@ -166,67 +164,178 @@ def test_rent_vehicle_hash_collision(setup_rental):
     assert rental.rent_vehicle(motorcycle, "12.12.2024", client) is True
     assert rental.get_money() == car.get_price() + motorcycle.get_price()
 
+def test_get_best_client_single_best():
+    rental = VehicleRental()
+
+    client1 = Client("Alice", 500)
+    client2 = Client("Bob", 500)
+
+    car1 = Car("Ford", "Mustang", 2020, Type.SPORTSCAR)
+    car2 = Car("Tesla", "Model S", 2022, Type.CONVERTIBLE)
+
+    rental.add_vehicle(car1)
+    rental.add_vehicle(car2)
+
+    rental.clients.extend([client1, client2])
+
+    rental.rent_vehicle(car1, "2024-12-01", client1)
+    rental.rent_vehicle(car2, "2024-12-02", client2)
+
+    best_client = rental.get_best_client()
+    assert best_client == client1 or best_client == client2, "The best client should be Alice or Bob."
+
+def test_get_best_client_by_spent():
+    rental = VehicleRental()
+
+    client1 = Client("Alice", 1000)
+    client2 = Client("Bob", 500)
+
+    car1 = Car("Ford", "Mustang", 2020, Type.SPORTSCAR)
+    car2 = Car("Toyota", "Camry", 2021, Type.OTHER)
+
+    rental.add_vehicle(car1)
+    rental.add_vehicle(car2)
+
+    rental.clients.extend([client1, client2])
+
+    rental.rent_vehicle(car1, "2024-12-01", client1)  # Alice spends 200
+    rental.rent_vehicle(car2, "2024-12-02", client2)  # Bob spends 50
+
+    best_client = rental.get_best_client()
+    assert best_client == client1, "Alice should be the best client based on money spent."
+
+def test_get_best_client_tie_rented():
+    rental = VehicleRental()
+
+    client1 = Client("Alice", 1000)
+    client2 = Client("Bob", 1000)
+
+    car1 = Car("Ford", "Mustang", 2020, Type.SPORTSCAR)
+    car2 = Car("Tesla", "Model S", 2022, Type.CONVERTIBLE)
+    car3 = Car("Toyota", "Camry", 2021, Type.OTHER)
+
+    rental.add_vehicle(car1)
+    rental.add_vehicle(car2)
+    rental.add_vehicle(car3)
+
+    rental.clients.extend([client1, client2])
+
+    rental.rent_vehicle(car1, "2024-12-01", client1)  # Alice rents car1
+    rental.rent_vehicle(car2, "2024-12-02", client1)  # Alice rents car2
+
+    rental.rent_vehicle(car3, "2024-12-03", client2)  # Bob rents car3
+    rental.rent_vehicle(car2, "2024-12-04", client2)  # Bob rents car2
+
+    best_client = rental.get_best_client()
+    assert best_client == client1 or best_client == client2, "The best client should be Alice or Bob due to tie."
+
 def test_get_best_client_no_clients():
     rental = VehicleRental()
-    result = rental.get_best_client()
-    assert result is None, "Expected None when no clients are in the rental system."
+    best_client = rental.get_best_client()
+    assert best_client is None, "No clients should result in None being returned."
 
-def test_get_best_client_single_client():
+def test_get_best_client_multiple_clients_tie_but_one_spent_more():
     rental = VehicleRental()
-    client = Client("Alice", budget=100)
-    rental.clients.append(client)
-    result = rental.get_best_client()
-    assert result == client, "Expected the single client to be the best client."
 
-def test_get_best_client_most_bookings():
-    rental = VehicleRental()
-    client1 = Client("Alice", budget=500)
-    client2 = Client("Bob", budget=500)
-    rental.clients.extend([client1, client2])
+    client1 = Client("Alice", 1000)
+    client2 = Client("Bob", 1000)
 
-    car1 = Car("Toyota", "Camry", 2020, Type.SPORTSCAR)
-    car2 = Car("Honda", "Civic", 2019, Type.CONVERTIBLE)
+    car1 = Car("Ford", "Mustang", 2020, Type.SPORTSCAR)
+    car2 = Car("Tesla", "Model S", 2022, Type.CONVERTIBLE)
 
     rental.add_vehicle(car1)
     rental.add_vehicle(car2)
 
-    rental.rent_vehicle(car1, "12.12.2024", client1)
-    rental.rent_vehicle(car2, "13.12.2024", client1)
-    rental.rent_vehicle(car1, "14.12.2024", client2)
-
-    result = rental.get_best_client()
-    assert result == client1, "Expected the client with the most bookings to be the best client."
-
-def test_get_best_client_tied_bookings_high_spender():
-    rental = VehicleRental()
-    client1 = Client("Alice", budget=1000)
-    client2 = Client("Bob", budget=1000)
     rental.clients.extend([client1, client2])
 
-    car1 = Car("Toyota", "Camry", 2020, Type.SPORTSCAR)
-    car2 = Car("Honda", "Civic", 2019, Type.CONVERTIBLE)
+    rental.rent_vehicle(car1, "2024-12-01", client1)  # Alice spends 200
+    rental.rent_vehicle(car2, "2024-12-02", client2)  # Bob spends 150
+    rental.rent_vehicle(car2, "2024-12-03", client1)  # Alice spends another 150
+
+    best_client = rental.get_best_client()
+    assert best_client == client1, "Alice should be the best client as she spent more money despite tie in rentals."
+
+def test_get_best_client_with_equal_rentals_and_equal_spent():
+    rental = VehicleRental()
+
+    client1 = Client("Alice", 1000)
+    client2 = Client("Bob", 1000)
+
+    car1 = Car("Ford", "Mustang", 2020, Type.SPORTSCAR)
+    car2 = Car("Tesla", "Model S", 2022, Type.CONVERTIBLE)
 
     rental.add_vehicle(car1)
     rental.add_vehicle(car2)
 
-    rental.rent_vehicle(car1, "12.12.2024", client1)
-    rental.rent_vehicle(car2, "13.12.2024", client2)
-    rental.rent_vehicle(car2, "14.12.2024", client1)  # Alice spends more
-
-    result = rental.get_best_client()
-    assert result == client1, "Expected the high spender to be the best client in case of tied bookings."
-
-def test_get_best_client_all_tied():
-    rental = VehicleRental()
-    client1 = Client("Alice", budget=500)
-    client2 = Client("Bob", budget=500)
     rental.clients.extend([client1, client2])
 
-    car = Car("Toyota", "Camry", 2020, Type.SPORTSCAR)
+    rental.rent_vehicle(car1, "2024-12-01", client1)  # Alice rents car1
+    rental.rent_vehicle(car2, "2024-12-02", client1)  # Alice rents car2
 
-    rental.add_vehicle(car)
-    rental.rent_vehicle(car, "12.12.2024", client1)
-    rental.rent_vehicle(car, "13.12.2024", client2)
+    rental.rent_vehicle(car1, "2024-12-03", client2)  # Bob rents car1
+    rental.rent_vehicle(car2, "2024-12-04", client2)  # Bob rents car2
 
-    result = rental.get_best_client()
-    assert result in [client1, client2], "Expected either client in case of a complete tie."
+    best_client = rental.get_best_client()
+    assert best_client in [client1, client2], "Either Alice or Bob could be the best client due to exact tie."
+
+def test_get_best_client_single_client_no_bookings():
+    rental = VehicleRental()
+
+    client1 = Client("Alice", 500)
+
+    rental.clients.append(client1)
+
+    best_client = rental.get_best_client()
+    assert best_client is None, "A single client with no bookings should not be the best client."
+
+def test_get_best_client_multiple_clients_no_bookings():
+    rental = VehicleRental()
+
+    client1 = Client("Alice", 500)
+    client2 = Client("Bob", 500)
+
+    rental.clients.extend([client1, client2])
+
+    best_client = rental.get_best_client()
+    assert best_client is None, "Multiple clients with no bookings should result in None."
+
+def test_get_best_client_client_with_most_expensive_booking():
+    rental = VehicleRental()
+
+    client1 = Client("Alice", 1000)
+    client2 = Client("Bob", 1000)
+
+    car1 = Car("Ford", "Mustang", 2020, Type.SPORTSCAR)  # Price: 200
+    car2 = Car("Toyota", "Camry", 2021, Type.OTHER)      # Price: 50
+
+    rental.add_vehicle(car1)
+    rental.add_vehicle(car2)
+
+    rental.clients.extend([client1, client2])
+
+    rental.rent_vehicle(car1, "2024-12-01", client1)  # Alice spends 200
+    rental.rent_vehicle(car2, "2024-12-02", client2)  # Bob spends 50
+
+    best_client = rental.get_best_client()
+    assert best_client == client1, "Alice should be the best client as she made the most expensive booking."
+
+def test_get_best_client_multiple_clients_with_different_booking_counts():
+    rental = VehicleRental()
+
+    client1 = Client("Alice", 1500)
+    client2 = Client("Bob", 1500)
+
+    car1 = Car("Ford", "Mustang", 2020, Type.SPORTSCAR)  # Price: 200
+    car2 = Car("Tesla", "Model S", 2022, Type.CONVERTIBLE)  # Price: 150
+
+    rental.add_vehicle(car1)
+    rental.add_vehicle(car2)
+
+    rental.clients.extend([client1, client2])
+
+    rental.rent_vehicle(car1, "2024-12-01", client1)  # Alice rents car1
+    rental.rent_vehicle(car2, "2024-12-02", client1)  # Alice rents car2
+    rental.rent_vehicle(car2, "2024-12-03", client2)  # Bob rents car2
+
+    best_client = rental.get_best_client()
+    assert best_client == client1, "Alice should be the best client as she rented more vehicles."

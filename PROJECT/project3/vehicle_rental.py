@@ -344,8 +344,13 @@ class VehicleRental:
         """
         if not self.clients:
             return None
+        
+        clients_with_bookings = [client for client in self.clients if len(client.bookings) > 0]
 
-        return max(self.clients, key=lambda client: (len(client.bookings), client.total_spent()))
+        if not clients_with_bookings:
+            return None
+
+        return max(self.clients, key=lambda client: (len(client.bookings), client.spent))
 
     def get_sorted_vehicles_list(self) -> list[Car | Motorcycle]:
         """

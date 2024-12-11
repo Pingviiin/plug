@@ -228,7 +228,7 @@ class VehicleRental:
         """:return: list of all clients who have placed a booking in rental."""
         return self.clients
 
-    def add_vehicle(self, vehicle: Car | Motorcycle, date: str) -> bool:
+    def add_vehicle(self, vehicle: Car | Motorcycle) -> bool:
         """
         Add a vehicle to the rental system if it is not already present.
 

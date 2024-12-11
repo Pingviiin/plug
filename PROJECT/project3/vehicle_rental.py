@@ -291,16 +291,13 @@ class VehicleRental:
         if not self.booked_cars:
             return []
 
-        max_rent_count = 0
-        most_rented_vehicles = []
+        non_empty_bookings = {vehicle: dates for vehicle, dates in self.booked_cars.items() if dates}
 
-        for vehicle, dates in self.booked_cars.items():
-            rent_count = len(dates)
-            if rent_count > max_rent_count:
-                max_rent_count = rent_count
-                most_rented_vehicles = [vehicle]
-            elif rent_count == max_rent_count:
-                most_rented_vehicles.append(vehicle)
+        if not non_empty_bookings:
+            return []
+
+        most_rented_count = max(len(dates) for dates in non_empty_bookings.values())
+        most_rented_vehicles = [vehicle for vehicle, dates in non_empty_bookings.items() if len(dates) == most_rented_count]
 
         return most_rented_vehicles
 

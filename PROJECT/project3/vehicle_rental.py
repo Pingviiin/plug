@@ -284,14 +284,14 @@ class VehicleRental:
         :return: True if the rental was successful, otherwise False.
         """
         if vehicle and date and client:
+            if vehicle not in self.booked_cars:
+                return False
+
+            price = vehicle.get_price()
             if self.is_vehicle_available(vehicle, date):
                 if client.book_vehicle(vehicle, date, self):
-                    client.budget -= vehicle.get_price()
-                    client.spent += vehicle.get_price()
-
-                    vehicle.rent_dates.append(date)
                     self.add_vehicle(vehicle)
-                    self.balance += vehicle.get_price()
+                    self.balance += price
                     return True
         return False
 

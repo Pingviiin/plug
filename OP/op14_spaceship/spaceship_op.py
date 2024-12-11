@@ -1,6 +1,5 @@
 """OPSpaceship."""
-from spaceship import Spaceship, Impostor, Crewmate
-
+from OP.op14_spaceship.spaceship import *
 
 class OPSpaceship(Spaceship):
     """OPSpaceship class."""

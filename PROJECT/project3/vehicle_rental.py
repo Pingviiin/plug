@@ -84,6 +84,21 @@ class Car:
         return: hash(make, model, year, type_of_car)
         """
         return hash((self.make, self.model, self.year, self.type_of_car))
+    
+    def __eq__(self, other) -> bool:
+        """
+        Return equal.
+
+        return: True or False
+        """
+        if isinstance(other, Car):
+            return (
+                self.make == other.make
+                and self.model == other.model
+                and self.year == other.year
+                and self.type_of_car == other.type_of_car
+            )
+        return False
 
     def get_price(self) -> int:
         """:return: price of the vehicle."""

@@ -18,11 +18,13 @@ def mesh_dictionaries_to_csv(dict1: dict, dict2: dict):
     a,b,x,y
     1,2,10,20
     """
+    keys = list(dict1.keys()) + list(dict2.keys())
+    values = list(dict1.values()) + list(dict2.values())
+    
     with open("combined_file.csv", "w", newline="") as file:
         writer = csv.writer(file)
-        
-        for i in range(len(dict1.values)):
-            writer.writerow({dict1[i], dict2[i]})
+        writer.writerow(keys)
+        writer.writerow(values)
 
 
 def process_csv(input_filename: str, output_filename: str):
@@ -32,7 +34,19 @@ def process_csv(input_filename: str, output_filename: str):
     This function reads a CSV file, removes columns where all cells are empty,
     and writes the result to a new CSV file.
     """
-    pass
+    with open(input_filename, "r", newline="") as input_file:
+        reader = csv.reader(input_file)
+        rows = list(reader)
+        
+        columns = list(zip(*rows))
+        
+        filled_columns = [column for column in columns if all(cell != "" for cell in column)]
+        
+        filtered_rows = list(zip(*filled_columns)) if filled_columns else []
+    
+    with open(output_filename, "w", newline="") as output_file:
+        writer = csv.writer(output_file)
+        writer.writerows(filtered_rows)
 
 
 def read_csv_file_into_list_of_dicts(input_filename: str) -> list[dict[str, str]]:

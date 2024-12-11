@@ -32,18 +32,18 @@ def get_price(vehicle) -> int:
     """
     if isinstance(vehicle, Motorcycle):
         return 100
-    
-    if vehicle.type_of_car == Type.VAN:
-        return 100
-    
-    elif vehicle.type_of_car == Type.CONVERTIBLE:
-        return 150
-    
-    elif vehicle.type_of_car == Type.SPORTSCAR:
-        return 200
-    
-    else:
-        return 50
+
+    if isinstance(vehicle, Car):
+        if vehicle.type_of_car == Type.VAN:
+            return 100
+
+        elif vehicle.type_of_car == Type.CONVERTIBLE:
+            return 150
+
+        elif vehicle.type_of_car == Type.SPORTSCAR:
+            return 200
+
+    return 50
 
 
 class Car:
@@ -63,11 +63,11 @@ class Car:
         self.model = model
         self.year = year
         self.rent_dates = []
-        
+
         if isinstance(type_of_car, Type):
             self.type_of_car = type_of_car
         else:
-            raise(ValueError)
+            raise ValueError("type_of_car must be an instance of Type enum")
 
     def __repr__(self) -> str:
         """
@@ -108,7 +108,7 @@ class Motorcycle:
 
     def __repr__(self) -> str:
         """
-        Return tring representation of Motorcycle.
+        Return string representation of Motorcycle.
 
         return: 'Motorcycle(make, model, year)'
         """
@@ -155,11 +155,8 @@ class Client:
         price = vehicle.get_price()
 
         if self.budget >= price:
-            if not(vehicle in vehicle_rental.booked_cars.keys()):
-                for d in vehicle.rent_dates:
-                    if d == date:
-                        return False
-                else:
+            if vehicle not in vehicle_rental.booked_cars:
+                if date not in vehicle.rent_dates:
                     vehicle.rent_dates.append(date)
                     vehicle_rental.booked_cars[vehicle] = vehicle.rent_dates
 
@@ -168,7 +165,8 @@ class Client:
 
                     self.bookings.append(vehicle)
                     return True
-    
+        return False
+
     def total_spent(self) -> int:
         """
         Calculate and return the total amount spent by the client.
@@ -237,11 +235,10 @@ class VehicleRental:
         :param vehicle: Vehicle (Car or Motorcycle) to be added.
         :return: True if the vehicle was successfully added, False if it was already present.
         """
-        if hash(vehicle) not in list(map(lambda x: hash(x), self.booked_cars.keys())):
+        if vehicle not in self.booked_cars:
             self.booked_cars[vehicle] = []
             return True
-        else:
-            return False
+        return False
 
     def is_vehicle_available(self, vehicle: Car | Motorcycle, date: str) -> bool:
         """
@@ -251,12 +248,7 @@ class VehicleRental:
         :param date: The date to check availability on.
         :return: True if the vehicle is available, otherwise False.
         """
-        for d in vehicle.rent_dates:
-            if d == date:
-                return False
-        else:
-            return True
-
+        return date not in vehicle.rent_dates
 
     def rent_vehicle(self, vehicle: Car | Motorcycle, date: str, client: Client) -> bool:
         """
@@ -272,16 +264,11 @@ class VehicleRental:
         :return: True if the rental was successful, otherwise False.
         """
         if vehicle and date and client:
-            if self.is_vehicle_available(vehicle):
-                client.book_vehicle(vehicle, date, self)
-
-                self.add_vehicle(vehicle)
-                vehicle.rent_dates.append(date)
-
-                vehicle_price = vehicle.get_price()
-                self.balance += vehicle_price
-                return True
-            
+            if self.is_vehicle_available(vehicle, date):
+                if client.book_vehicle(vehicle, date, self):
+                    self.add_vehicle(vehicle)
+                    self.balance += vehicle.get_price()
+                    return True
         return False
 
     def get_most_rented_vehicle(self) -> list[Motorcycle | Car]:
@@ -294,7 +281,7 @@ class VehicleRental:
         """
         if not self.booked_cars:
             return []
-        
+
         most_rented_count = max(len(dates) for dates in self.booked_cars.values())
         most_rented_vehicles = [vehicle for vehicle, dates in self.booked_cars.items() if len(dates) == most_rented_count]
 
@@ -307,14 +294,8 @@ class VehicleRental:
         :param make: Manufacturer to search for (case-insensitive).
         :return: A list of vehicles matching the given make.
         """
-        output = []
         make = make.lower()
-
-        for vehicle in self.booked_cars.keys():
-            if vehicle.make == make:
-                output.append(vehicle)
-
-        return output
+        return [vehicle for vehicle in self.booked_cars.keys() if vehicle.make.lower() == make]
 
     def find_car_by_type(self, type_of_car: Type) -> list[Car]:
         """
@@ -323,13 +304,7 @@ class VehicleRental:
         :param type_of_car: The type of car to search for (an instance of Type enum).
         :return: A list of cars matching the given type.
         """
-        output = []
-
-        for vehicle in self.booked_cars.keys():
-            if vehicle.type_of_car == type_of_car:
-                output.append(vehicle)
-
-        return output
+        return [vehicle for vehicle in self.booked_cars.keys() if isinstance(vehicle, Car) and vehicle.type_of_car == type_of_car]
 
     def get_best_client(self) -> Client:
         """
@@ -338,10 +313,9 @@ class VehicleRental:
         If multiple clients have rented the same number of vehicles, return the client who spent the most money.
         :return: The best client object.
         """
-
         if not self.clients:
-            return
-        
+            return None
+
         return max(self.clients, key=lambda client: (len(client.bookings), client.total_spent()))
 
     def get_sorted_vehicles_list(self) -> list[Car | Motorcycle]:
@@ -351,9 +325,9 @@ class VehicleRental:
         In case of a tie, vehicles are sorted by price from highest to lowest.
         :return: A list of vehicles sorted by popularity and price.
         """
-        return sorted(self.booked_cars.keys(), key= lambda vehicle: (len(self.booked_cars[vehicle]), vehicle.get_price()), reverse=True)
+        return sorted(self.booked_cars.keys(), key=lambda vehicle: (len(self.booked_cars[vehicle]), vehicle.get_price()), reverse=True)
 
-    def get_vehicles_by_year_range(self, start_year: int, end_year: int) -> list[Car | Motorcycle] | ValueError:
+    def get_vehicles_by_year_range(self, start_year: int, end_year: int) -> list[Car | Motorcycle]:
         """
         Return a list of vehicles manufactured within a specified year range.
 
@@ -362,10 +336,10 @@ class VehicleRental:
         :return: A list of vehicles manufactured within the specified year range.
         :raises ValueError: If start_year or end_year are not integers or if start_year > end_year.
         """
-        if (not isinstance(start_year, int)) or (not isinstance(end_year, int)):
-            raise(ValueError)
-        
+        if not isinstance(start_year, int) or not isinstance(end_year, int):
+            raise ValueError("Start and end years must be integers")
+
         if start_year > end_year:
-            raise(ValueError)
-        
+            raise ValueError("Start year must be less than or equal to end year")
+
         return [vehicle for vehicle in self.booked_cars.keys() if start_year <= vehicle.year <= end_year]

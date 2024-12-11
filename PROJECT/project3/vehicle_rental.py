@@ -152,23 +152,25 @@ class Client:
         :param vehicle_rental: The rental service from which the vehicle is being booked.
         :return: True if the booking is successful, otherwise False.
         """
-        price = vehicle.get_price()
+        if vehicle and vehicle_rental:
 
-        if self.budget >= price:
-            if vehicle_rental.is_vehicle_available(vehicle, date):
-                if vehicle not in vehicle_rental.booked_cars:
-                    vehicle_rental.booked_cars[vehicle] = []
+            price = vehicle.get_price()
 
-                vehicle_rental.booked_cars[vehicle].append(date)
-                vehicle.rent_dates.append(date)
+            if self.budget >= price:
+                if vehicle_rental.is_vehicle_available(vehicle, date):
+                    if vehicle not in vehicle_rental.booked_cars:
+                        vehicle_rental.booked_cars[vehicle] = []
 
-                self.budget -= price
-                self.spent += price
-                self.bookings.append(vehicle)
+                    vehicle_rental.booked_cars[vehicle].append(date)
+                    vehicle.rent_dates.append(date)
 
-                return True
+                    self.budget -= price
+                    self.spent += price
+                    self.bookings.append(vehicle)
 
-        return False
+                    return True
+
+            return False
 
     def total_spent(self) -> int:
         """

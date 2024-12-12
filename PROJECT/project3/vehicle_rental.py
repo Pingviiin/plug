@@ -201,7 +201,7 @@ class Client:
         """:return: List of all the vehicles client has booked."""
         return self.bookings
     
-    def check_date(date: str):
+    def check_date(self, date: str):
         """Check date format."""
         format = "%d.%m.%Y"
         res = True

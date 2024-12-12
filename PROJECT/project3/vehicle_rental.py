@@ -1,5 +1,6 @@
 """Vehicle rental. Project III."""
 import enum
+from datetime import datetime
 
 
 class Type(enum.Enum):
@@ -172,20 +173,21 @@ class Client:
             price = vehicle.get_price()
 
             if self.budget >= price:
-                if vehicle_rental.is_vehicle_available(vehicle, date):
-                    if vehicle not in vehicle_rental.booked_cars:
-                        vehicle_rental.booked_cars[vehicle] = []
+                if self.check_date(date):
+                    if vehicle_rental.is_vehicle_available(vehicle, date):
+                        if vehicle not in vehicle_rental.booked_cars:
+                            vehicle_rental.booked_cars[vehicle] = []
 
-                    vehicle_rental.booked_cars[vehicle].append(date)
-                    vehicle.rent_dates.append(date)
+                        vehicle_rental.booked_cars[vehicle].append(date)
+                        vehicle.rent_dates.append(date)
 
-                    self.budget -= price
-                    self.spent += price
-                    self.bookings.append(vehicle)
+                        self.budget -= price
+                        self.spent += price
+                        self.bookings.append(vehicle)
 
-                    return True
+                        return True
 
-            return False
+                return False
 
     def total_spent(self) -> int:
         """
@@ -198,7 +200,18 @@ class Client:
     def get_bookings(self) -> list[Car | Motorcycle]:
         """:return: List of all the vehicles client has booked."""
         return self.bookings
+    
+    def check_date(date: str):
+        """Check date format."""
+        format = "%d.%m.%Y"
+        res = True
 
+        try:
+            res = bool(datetime.strptime(date, format))
+        except ValueError:
+            res = False
+
+        return res
 
 class VehicleRental:
     """Vehicle rental system managing vehicles, rents and budget."""

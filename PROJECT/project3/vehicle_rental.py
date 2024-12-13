@@ -172,10 +172,9 @@ class Client:
             price = vehicle.get_price()
 
             if self.budget >= price:
-                if self.check_date(date):
-                    if vehicle_rental.is_vehicle_available(vehicle, date):
-                        if vehicle not in vehicle_rental.booked_cars:
-                            vehicle_rental.booked_cars[vehicle] = []
+                if vehicle_rental.is_vehicle_available(vehicle, date):
+                    if vehicle not in vehicle_rental.booked_cars:
+                        vehicle_rental.booked_cars[vehicle] = []
 
                     vehicle_rental.booked_cars[vehicle].append(date)
                     vehicle.rent_dates.append(date)
@@ -290,7 +289,7 @@ class VehicleRental:
 
             price = vehicle.get_price()
             if self.is_vehicle_available(vehicle, date):
-
+                if client.book_vehicle(vehicle, date, self):
                     self.add_vehicle(vehicle)
                     self.balance += price
                     return True

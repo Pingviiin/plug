@@ -344,7 +344,7 @@ class VehicleRental:
 
         best_client = max(
             self.clients, 
-            key=lambda client: (len(client.rented_vehicles), client.total_spent),
+            key=lambda client: (len(client.booked_cars[]), client.total_spent),
             default=None
         )
         return best_client

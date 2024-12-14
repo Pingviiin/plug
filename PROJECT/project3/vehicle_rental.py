@@ -167,21 +167,14 @@ class Client:
         :param vehicle_rental: The rental service from which the vehicle is being booked.
         :return: True if the booking is successful, otherwise False.
         """
-        if vehicle and vehicle_rental:
-
-            price = vehicle.get_price()
-
-            if self.budget >= price:
-                if vehicle_rental.is_vehicle_available(vehicle, date):
-                    if vehicle_rental.rent_vehicle(vehicle, date, self):
-                        if not vehicle in vehicle_rental.booked_cars:
-                            vehicle_rental.booked_cars[vehicle] = []
-
-                        vehicle_rental.booked_cars[vehicle].append(date)
-                        self.bookings.append(date)
-                        return True
-
+        if not vehicle or not date or not vehicle_rental:
             return False
+        
+        if vehicle_rental.rent_vehicle(vehicle, date, self):
+            return True
+        
+        return False
+
 
     def total_spent(self) -> int:
         """
@@ -279,22 +272,25 @@ class VehicleRental:
         :param client: Client who is renting the vehicle.
         :return: True if the rental was successful, otherwise False.
         """
-        if vehicle and date and client:
-            if vehicle not in self.booked_cars:
-                return False
+        if not vehicle or not date or not client:
+            return False
+        
+        if vehicle not in self.booked_cars or date in self.booked_cars[vehicle]:
+            return False
+        
+        price = vehicle.get_price()
+        if client.budget < price:
+            return False
+        
+        if vehicle not in self.booked_cars:
+            self.booked_cars[vehicle] = []
 
-            price = vehicle.get_price()
-            if self.is_vehicle_available(vehicle, date):
-                if client.budget >= price:
-                    client.budget -= price
-                    self.balance += price
-
-                    self.add_vehicle(vehicle)
-                    vehicle.rent_dates.append(date)
-                    client.bookings.append(date)
-                    
-                    return True
-        return False
+        client.budget -= price
+        self.balance += price
+        self.booked_cars[vehicle].append(date)
+        client.bookings.append(vehicle)
+        vehicle.rent_dates.append(date)
+        return True
 
     def get_most_rented_vehicle(self) -> list[Motorcycle | Car]:
         """

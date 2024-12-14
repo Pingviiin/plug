@@ -34,20 +34,24 @@ def process_csv(input_filename: str, output_filename: str):
     This function reads a CSV file, removes columns where all cells are empty,
     and writes the result to a new CSV file.
     """
-    with open(input_filename, "r", newline="") as input_file:
-        reader = csv.reader(input_file)
+    with open(input_filename, mode='r', encoding='utf-8') as infile:
+        reader = csv.reader(infile)
         rows = list(reader)
-        
-        columns = list(zip(*rows))
-        
-        filled_columns = [column for column in columns if all(cell != "" for cell in column)]
-        
-        filtered_rows = list(zip(*filled_columns)) if filled_columns else []
-    
-    with open(output_filename, "w", newline="") as output_file:
-        writer = csv.writer(output_file)
-        writer.writerows(filtered_rows)
 
+    if not rows:
+        with open(output_filename, mode='w', encoding='utf-8', newline='') as outfile:
+            pass
+        return
+
+    columns = list(zip(*rows))
+
+    non_empty_columns = [col for col in columns if any(cell.strip() for cell in col[1:])]
+
+    cleaned_rows = list(zip(*non_empty_columns))
+
+    with open(output_filename, mode='w', encoding='utf-8', newline='') as outfile:
+        writer = csv.writer(outfile)
+        writer.writerows(cleaned_rows)
 
 def read_csv_file_into_list_of_dicts(input_filename: str) -> list[dict[str, str]]:
     """

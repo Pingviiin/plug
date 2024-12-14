@@ -84,7 +84,7 @@ class Car:
         return: hash(make, model, year, type_of_car)
         """
         return hash((self.make, self.model, self.year, self.type_of_car))
-    
+
     def __eq__(self, other) -> bool:
         """
         Return equal.
@@ -169,12 +169,11 @@ class Client:
         """
         if not vehicle or not date or not vehicle_rental:
             return False
-        
+
         if vehicle_rental.rent_vehicle(vehicle, date, self):
             return True
-        
-        return False
 
+        return False
 
     def total_spent(self) -> int:
         """
@@ -274,10 +273,10 @@ class VehicleRental:
         """
         if not vehicle or not date or not client:
             return False
-        
+
         if vehicle not in self.booked_cars or date in self.booked_cars[vehicle]:
             return False
-        
+
         price = vehicle.get_price()
         if client.budget < price:
             return False
@@ -305,13 +304,16 @@ class VehicleRental:
         if not self.booked_cars:
             return []
 
-        non_empty_bookings = {vehicle: dates for vehicle, dates in self.booked_cars.items() if dates}
+        non_empty_bookings = {vehicle: dates for vehicle,
+                              dates in self.booked_cars.items() if dates}
 
         if not non_empty_bookings:
             return []
 
-        most_rented_count = max(len(dates) for dates in non_empty_bookings.values())
-        most_rented_vehicles = [vehicle for vehicle, dates in non_empty_bookings.items() if len(dates) == most_rented_count]
+        most_rented_count = max(len(dates)
+                                for dates in non_empty_bookings.values())
+        most_rented_vehicles = [vehicle for vehicle, dates in non_empty_bookings.items(
+        ) if len(dates) == most_rented_count]
 
         return most_rented_vehicles
 
@@ -345,10 +347,10 @@ class VehicleRental:
         for client in self.clients:
             if client.rented_vehicles:
                 checked_clients.append(client)
-        
+
         if not checked_clients:
             return None
-        
+
         return max(checked_clients, key=lambda client: (len(client.rented_vehicles), client.total_spent()))
 
     def get_sorted_vehicles_list(self) -> list[Car | Motorcycle]:
@@ -373,6 +375,7 @@ class VehicleRental:
             raise ValueError("Start and end years must be integers")
 
         if start_year > end_year:
-            raise ValueError("Start year must be less than or equal to end year")
+            raise ValueError(
+                "Start year must be less than or equal to end year")
 
         return [vehicle for vehicle in self.booked_cars.keys() if start_year <= vehicle.year <= end_year]

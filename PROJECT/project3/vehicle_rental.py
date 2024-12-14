@@ -186,7 +186,7 @@ class Client:
 
     def get_bookings(self) -> list[Car | Motorcycle]:
         """:return: List of all the vehicles client has booked."""
-        return self.bookings
+        return self.rented_vehicles
 
 
 class VehicleRental:
@@ -291,7 +291,6 @@ class VehicleRental:
         client.spent += price
         self.balance += price
         self.booked_cars[vehicle].append(date)
-        client.bookings.append(vehicle)
         vehicle.rent_dates.append(date)
         return True
 

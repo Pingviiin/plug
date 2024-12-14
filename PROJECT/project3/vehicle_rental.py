@@ -155,7 +155,7 @@ class Client:
         """
         self.name = name
         self.budget = budget
-        self.bookings = []
+        self.rented_vehicles = []
         self.spent = 0
 
     def book_vehicle(self, vehicle: Car | Motorcycle, date: str, vehicle_rental) -> bool:
@@ -281,11 +281,14 @@ class VehicleRental:
         price = vehicle.get_price()
         if client.budget < price:
             return False
-        
+
         if vehicle not in self.booked_cars:
             self.booked_cars[vehicle] = []
 
+        client.rented_vehicles.append(vehicle)
+        self.clients.append(client)
         client.budget -= price
+        client.spent += price
         self.balance += price
         self.booked_cars[vehicle].append(date)
         client.bookings.append(vehicle)
@@ -342,11 +345,7 @@ class VehicleRental:
         if not self.clients:
             return None
 
-        best_client = max(
-            self.clients, 
-            key=lambda client: (len(client.booked_cars[]), client.total_spent),
-            default=None
-        )
+        best_client = max(self.clients, key=lambda client: (len(client.rented_vehicles), client.total_spent), default=None)
         return best_client
 
     def get_sorted_vehicles_list(self) -> list[Car | Motorcycle]:

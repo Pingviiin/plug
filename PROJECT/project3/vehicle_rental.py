@@ -342,7 +342,7 @@ class VehicleRental:
         if not self.clients:
             return False
 
-        return max(self.clients, key=lambda client: (len(client.bookings), client.total_spent()))
+        return max(self.clients, key=lambda client: (len(client.bookings), client.total_spent()), reverse=True)
 
     def get_sorted_vehicles_list(self) -> list[Car | Motorcycle]:
         """

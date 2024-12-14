@@ -340,9 +340,22 @@ class VehicleRental:
         :return: The best client object.
         """
         if not self.clients:
-            return False
+            return None
+        
+        best_clients = None
+        max_rentals = 0
+        max_spent = 0
 
-        return max(self.clients, key=lambda client: (len(client.bookings), client.total_spent()), reverse=True)
+        for client in self.clients:
+            total_rentals = len(client.bookings)
+            total_spent = sum(vehicle.get_price() for vehicle in client.bookings)
+
+            if (total_rentals > max_rentals) or (total_rentals == max_rentals and total_spent > max_spent):
+                best_client = client
+                max_rentals = total_rentals
+                max_spent = total_spent
+
+        return best_client
 
     def get_sorted_vehicles_list(self) -> list[Car | Motorcycle]:
         """

@@ -173,7 +173,7 @@ class Client:
 
             if self.budget >= price:
                 if vehicle_rental.is_vehicle_available(vehicle, date):
-                    if vehicle_rental.rent_vehicle():
+                    if vehicle_rental.rent_vehicle(vehicle, date, self):
                         if not vehicle in vehicle_rental.booked_cars:
                             vehicle_rental.booked_cars[vehicle] = []
 

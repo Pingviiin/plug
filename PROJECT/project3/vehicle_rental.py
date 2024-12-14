@@ -173,17 +173,13 @@ class Client:
 
             if self.budget >= price:
                 if vehicle_rental.is_vehicle_available(vehicle, date):
-                    if vehicle not in vehicle_rental.booked_cars:
-                        vehicle_rental.booked_cars[vehicle] = []
+                    if vehicle_rental.rent_vehicle():
+                        if not vehicle in vehicle_rental.booked_cars:
+                            vehicle_rental.booked_cars[vehicle] = []
 
-                    vehicle_rental.booked_cars[vehicle].append(date)
-                    vehicle.rent_dates.append(date)
-
-                    self.budget -= price
-                    self.spent += price
-                    self.bookings.append(vehicle)
-
-                    return True
+                        vehicle_rental.booked_cars[vehicle].append(date)
+                        self.bookings.append(date)
+                        return True
 
             return False
 
@@ -289,9 +285,14 @@ class VehicleRental:
 
             price = vehicle.get_price()
             if self.is_vehicle_available(vehicle, date):
-                if client.book_vehicle(vehicle, date, self):
-                    self.add_vehicle(vehicle)
+                if client.budget >= price:
+                    client.budget -= price
                     self.balance += price
+
+                    self.add_vehicle(vehicle)
+                    vehicle.rent_dates.append(date)
+                    client.bookings.append(date)
+                    
                     return True
         return False
 
@@ -342,10 +343,16 @@ class VehicleRental:
         If multiple clients have rented the same number of vehicles, return the client who spent the most money.
         :return: The best client object.
         """
-        if not self.clients:
+        checked_clients = []
+
+        for client in self.clients:
+            if client.bookings:
+                checked_clients.append(client)
+        
+        if not checked_clients:
             return None
 
-        return max(self.clients, key=lambda client: (len(client.bookings), client.total_spent()))
+        return max(checked_clients, key=lambda client: (len(client.bookings), client.total_spent()))
 
     def get_sorted_vehicles_list(self) -> list[Car | Motorcycle]:
         """

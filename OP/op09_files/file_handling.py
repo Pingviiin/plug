@@ -69,7 +69,14 @@ def read_csv_file_into_list_of_dicts(input_filename: str) -> list[dict[str, str]
     [{'city': 'New York', 'country': 'USA', 'population': '8419000'},
     {'city': 'Tokyo', 'country': 'Japan', 'population': '13929000'}]
     """ 
-    pass
+    try:
+        with open(input_filename, mode='r') as file:
+            csv_reader = csv.DictReader(file)
+            return [row for row in csv_reader]
+    except FileNotFoundError:
+        return []
+    except Exception:
+        return []
 
 
 def merge_dates_and_towns_into_csv(dates_filename: str, towns_filename: str, csv_output_filename: str) -> None:
@@ -112,7 +119,30 @@ def merge_dates_and_towns_into_csv(dates_filename: str, towns_filename: str, csv
     :param csv_output_filename: The name of the CSV file to write to names, towns, and dates.
     :return: None
     """
-    pass
+    def read_name_value_file(filename: str) -> dict:
+        with open(filename, mode='r', encoding='utf-8') as file:
+            reader = csv.reader(file, delimiter=':')
+            return {row[0]: row[1] for row in reader}
+    
+    dates = read_name_value_file(dates_filename)
+    towns = read_name_value_file(towns_filename)
+
+    merged_data = {}
+
+    for name, date in dates.items():
+        merged_data[name] = {'town': '-', 'date': date}
+
+    for name, town in towns.items():
+        if name in merged_data:
+            merged_data[name]['town'] = town
+        else:
+            merged_data[name] = {'town': town, 'date': '-'}
+
+    with open(csv_output_filename, mode='w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(['name', 'town', 'date'])
+        for name in merged_data:
+            writer.writerow([name, merged_data[name]['town'], merged_data[name]['date']])
 
 
 if __name__ == "__main__":

@@ -10,17 +10,17 @@ def mesh_dictionaries_to_csv(dict1: dict, dict2: dict):
     This function takes two dictionaries, combines their keys and values into
     a single CSV file with the keys on the first row and the values on the
     second row. The new CSV file name should be "combined_file.csv".
-    
+
     ({'a': 1, 'b': 2}, {'x': 10, 'y': 20})
-    
+
     ->
-    
+
     a,b,x,y
     1,2,10,20
     """
     keys = list(dict1.keys()) + list(dict2.keys())
     values = list(dict1.values()) + list(dict2.values())
-    
+
     with open("combined_file.csv", "w", newline="") as file:
         writer = csv.writer(file)
         writer.writerow(keys)
@@ -45,13 +45,15 @@ def process_csv(input_filename: str, output_filename: str):
 
     columns = list(zip(*rows))
 
-    non_empty_columns = [col for col in columns if any(cell.strip() for cell in col[1:])]
+    non_empty_columns = [col for col in columns if any(
+        cell.strip() for cell in col[1:])]
 
     cleaned_rows = list(zip(*non_empty_columns))
 
     with open(output_filename, mode='w', encoding='utf-8', newline='') as outfile:
         writer = csv.writer(outfile)
         writer.writerows(cleaned_rows)
+
 
 def read_csv_file_into_list_of_dicts(input_filename: str) -> list[dict[str, str]]:
     """
@@ -72,7 +74,7 @@ def read_csv_file_into_list_of_dicts(input_filename: str) -> list[dict[str, str]
 
     [{'city': 'New York', 'country': 'USA', 'population': '8419000'},
     {'city': 'Tokyo', 'country': 'Japan', 'population': '13929000'}]
-    """ 
+    """
     try:
         with open(input_filename, mode='r') as file:
             csv_reader = csv.DictReader(file)
@@ -127,7 +129,7 @@ def merge_dates_and_towns_into_csv(dates_filename: str, towns_filename: str, csv
         with open(filename, mode='r', encoding='utf-8') as file:
             reader = csv.reader(file, delimiter=':')
             return {row[0]: row[1] for row in reader}
-    
+
     dates = read_name_value_file(dates_filename)
     towns = read_name_value_file(towns_filename)
 
@@ -146,7 +148,8 @@ def merge_dates_and_towns_into_csv(dates_filename: str, towns_filename: str, csv
         writer = csv.writer(file)
         writer.writerow(['name', 'town', 'date'])
         for name in merged_data:
-            writer.writerow([name, merged_data[name]['town'], merged_data[name]['date']])
+            writer.writerow([name, merged_data[name]['town'],
+                            merged_data[name]['date']])
 
 
 if __name__ == "__main__":

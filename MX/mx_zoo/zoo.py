@@ -76,7 +76,7 @@ def find_how_many_pumpkins_are_needed_to_feed_animals(animal_data: list) -> int:
     :param animal_data: List of structured animal data.
     :return: Total number of pumpkins needed, rounded up to the nearest whole number.
     """
-    return math.ceil(sum(map(lambda animal: (0.06 * (float(animal[3][0]) + float(animal[3][1])) / 2 * 2 * 90) / 3, filter(lambda animal: animal[5] in ["herbivorous", "omnivorous"], animal_data))))
+    return math.ceil(reduce(lambda total, animal: total + (2 * 0.06 * ((animal[3][0] + animal[3][1]) / 2) * 90 / 3 ) if animal[5] in ["herbivorous", "omnivorous"] else total,animal_data, 0))
 
 
 def total_noise_level(animal_data: list) -> float:
@@ -177,7 +177,7 @@ def find_animals_whose_height_is_less_than(animal_data: list, height_limit: floa
     :param height_limit: Maximum height (in meters) as a float.
     :return: List of common names of animals that are shorter than the specified height limit, sorted from shortest to tallest.
     """
-    return sorted(map(lambda animal: animal[0], filter(lambda animal: float(animal[4][1]) < height_limit, animal_data)))
+    return sorted(map(lambda animal: animal[0], filter(lambda animal: float(animal[4][1]) < height_limit, animal_data)), key=lambda animal: animal[4][1])
 
 
 def filter_animals_based_on_diet(animal_data: list, diet: str) -> list:
@@ -249,8 +249,20 @@ def calculate_ecological_impact_score(animal_data: list) -> float:
     :param animal_data: List of structured animal data.
     :return: The total ecological impact score.
     """
-    return reduce(lambda total, animal: total + 10 + 0.001 * ((animal[3][0] + animal[3][1]) / 2) * {"herbivorous": 1.2, "carnivorous": 1.5, "omnivorous": 1.3}.get(animal[5].lower(), 1) + {"savannah": 5, "tropics": 4, "temperate forest": 3}.get(animal[6].lower(), 0), animal_data, 0)
-
+    return reduce(
+        lambda total, animal: total + (
+            10 + 
+            0.001 * ((animal[3][0] + animal[3][1]) / 2) +
+            (1.2 if animal[5] == "herbivorous" else 
+             1.5 if animal[5] == "carnivorous" else 
+             1.3) +
+            (5 if animal[6] == "savannah" else 
+             4 if animal[6] == "tropics" else 
+             3 if animal[6] == "temperate forest" else 
+             0)
+        ), 
+        animal_data, 0
+    )
 
 if __name__ == '__main__':
     test_data = [

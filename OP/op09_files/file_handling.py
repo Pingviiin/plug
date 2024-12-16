@@ -10,17 +10,17 @@ def mesh_dictionaries_to_csv(dict1: dict, dict2: dict):
     This function takes two dictionaries, combines their keys and values into
     a single CSV file with the keys on the first row and the values on the
     second row. The new CSV file name should be "combined_file.csv".
-    
+
     ({'a': 1, 'b': 2}, {'x': 10, 'y': 20})
-    
+
     ->
-    
+
     a,b,x,y
     1,2,10,20
     """
     keys = list(dict1.keys()) + list(dict2.keys())
     values = list(dict1.values()) + list(dict2.values())
-    
+
     with open("combined_file.csv", "w", newline="") as file:
         writer = csv.writer(file)
         writer.writerow(keys)
@@ -34,19 +34,25 @@ def process_csv(input_filename: str, output_filename: str):
     This function reads a CSV file, removes columns where all cells are empty,
     and writes the result to a new CSV file.
     """
-    with open(input_filename, "r", newline="") as input_file:
-        reader = csv.reader(input_file)
+    with open(input_filename, mode='r', encoding='utf-8') as infile:
+        reader = csv.reader(infile)
         rows = list(reader)
-        
-        columns = list(zip(*rows))
-        
-        filled_columns = [column for column in columns if all(cell != "" for cell in column)]
-        
-        filtered_rows = list(zip(*filled_columns)) if filled_columns else []
-    
-    with open(output_filename, "w", newline="") as output_file:
-        writer = csv.writer(output_file)
-        writer.writerows(filtered_rows)
+
+    if not rows:
+        with open(output_filename, mode='w', encoding='utf-8', newline='') as outfile:
+            pass
+        return
+
+    columns = list(zip(*rows))
+
+    non_empty_columns = [col for col in columns if any(
+        cell.strip() for cell in col[1:])]
+
+    cleaned_rows = list(zip(*non_empty_columns))
+
+    with open(output_filename, mode='w', encoding='utf-8', newline='') as outfile:
+        writer = csv.writer(outfile)
+        writer.writerows(cleaned_rows)
 
 
 def read_csv_file_into_list_of_dicts(input_filename: str) -> list[dict[str, str]]:
@@ -68,8 +74,15 @@ def read_csv_file_into_list_of_dicts(input_filename: str) -> list[dict[str, str]
 
     [{'city': 'New York', 'country': 'USA', 'population': '8419000'},
     {'city': 'Tokyo', 'country': 'Japan', 'population': '13929000'}]
-    """ 
-    pass
+    """
+    try:
+        with open(input_filename, mode='r') as file:
+            csv_reader = csv.DictReader(file)
+            return [row for row in csv_reader]
+    except FileNotFoundError:
+        return []
+    except Exception:
+        return []
 
 
 def merge_dates_and_towns_into_csv(dates_filename: str, towns_filename: str, csv_output_filename: str) -> None:
@@ -112,7 +125,31 @@ def merge_dates_and_towns_into_csv(dates_filename: str, towns_filename: str, csv
     :param csv_output_filename: The name of the CSV file to write to names, towns, and dates.
     :return: None
     """
-    pass
+    def read_name_value_file(filename: str) -> dict:
+        with open(filename, mode='r', encoding='utf-8') as file:
+            reader = csv.reader(file, delimiter=':')
+            return {row[0]: row[1] for row in reader}
+
+    dates = read_name_value_file(dates_filename)
+    towns = read_name_value_file(towns_filename)
+
+    merged_data = {}
+
+    for name, date in dates.items():
+        merged_data[name] = {'town': '-', 'date': date}
+
+    for name, town in towns.items():
+        if name in merged_data:
+            merged_data[name]['town'] = town
+        else:
+            merged_data[name] = {'town': town, 'date': '-'}
+
+    with open(csv_output_filename, mode='w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(['name', 'town', 'date'])
+        for name in merged_data:
+            writer.writerow([name, merged_data[name]['town'],
+                            merged_data[name]['date']])
 
 
 if __name__ == "__main__":

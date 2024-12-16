@@ -339,3 +339,43 @@ def test_get_best_client_multiple_clients_with_different_booking_counts():
 
     best_client = rental.get_best_client()
     assert best_client == client1, "Alice should be the best client as she rented more vehicles."
+
+def test_book_vehicle_edge_cases():
+    rental = VehicleRental()
+    car = Car(make="Toyota", model="Corolla", year=2020, type_of_car=Type.VAN)
+    motorcycle = Motorcycle(make="Yamaha", model="R1", year=2019)
+
+    client = Client(name="Alice", budget=150)
+
+    # Add vehicles to the rental system
+    rental.add_vehicle(car)
+    rental.add_vehicle(motorcycle)
+
+    # 1. Client has insufficient funds
+    client_insufficient = Client(name="Bob", budget=50)
+    assert not client_insufficient.book_vehicle(car, "01.01.2024", rental), "Should fail due to insufficient funds"
+
+    # 2. Vehicle already booked on the specified date
+    rental.rent_vehicle(car, "01.01.2024", client)
+    assert not client.book_vehicle(car, "01.01.2024", rental), "Should fail as vehicle is already booked"
+
+    # 3. Invalid date format
+    assert not client.book_vehicle(car, "2024-01-01", rental), "Should fail due to invalid date format"
+
+    # 4. Vehicle does not exist in the rental system
+    new_car = Car(make="Honda", model="Civic", year=2022, type_of_car=Type.CONVERTIBLE)
+    assert not client.book_vehicle(new_car, "01.01.2024", rental), "Should fail as vehicle is not in the rental system"
+
+    # 6. Vehicle is not added to the system before booking
+    car_not_added = Car(make="Ford", model="Focus", year=2018, type_of_car=Type.OTHER)
+    assert not client.book_vehicle(car_not_added, "01.01.2024", rental), "Should fail as vehicle is not added to the system"
+
+    # 7. VehicleRental system has no vehicles
+    empty_rental = VehicleRental()
+    assert not client.book_vehicle(car, "03.01.2024", empty_rental), "Should fail as rental system is empty"
+
+    # 8. Client double booking the same vehicle
+    rental.rent_vehicle(car, "05.01.2024", client)
+    assert not client.book_vehicle(car, "05.01.2024", rental), "Should fail as client has already booked the vehicle"
+
+    print("All edge case tests passed.")

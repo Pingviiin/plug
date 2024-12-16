@@ -249,7 +249,7 @@ def calculate_ecological_impact_score(animal_data: list) -> float:
     :param animal_data: List of structured animal data.
     :return: The total ecological impact score.
     """
-    return reduce(lambda total, animal: total + 10 + 0.001 * ((animal[3][0] + animal[3][1]) / 2) * {"herbivorous": 1.2, "carnivorous": 1.5, "omnivorous": 1.3}.get(animal[5].lower(), 1) + {"savannah": 5, "tropics": 4, "temperate forest": 3}.get(animal[6].lower(), 0), animal_data, 0)
+    return reduce(lambda total, animal: total + (10 + 0.001 * ((animal[3][0] + animal[3][1]) / 2)) * {"herbivorous": 1.2, "carnivorous": 1.5, "omnivorous": 1.3}.get(animal[5].lower(), 1) + {"savannah": 5, "tropics": 4, "temperate forest": 3}.get(animal[6].lower(), 0), animal_data, 0)
 
 
 if __name__ == '__main__':

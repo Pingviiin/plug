@@ -18,22 +18,22 @@ def tree(length: int, origin=(0, 0)) -> None:
     :param length: height of the trunk or leaf
     :param origin: starting point.
     """
-    t = Turtle()
-    t.getscreen().bgcolor("#B8E2F2")
-    t.color("#FFEE8C")
-    t.speed(1)
+    if length < 5:
+        return
 
-    t.pensize(2)
-    t.left(90)
     t.forward(length)
-    trunk = length
-    while trunk >= 5:
-        trunk *= 0.6
-        t.left(60)
-        t.forward(trunk)
-    
-    
-    
+
+    t.left(60)
+    tree(length * 3 / 5)
+
+    t.right(120)
+
+    tree(length * 3 / 5)
+
+    t.left(60)
+    t.backward(length)
+
+
 def apply_dragon_rules(string: str) -> str:
     """
     Write a recursive function that replaces characters in string.
@@ -48,7 +48,16 @@ def apply_dragon_rules(string: str) -> str:
     :param string: sentence with "a" and "b" characters that need to be replaced
     :return: new sentence with "a" and "b" characters replaced
     """
-    pass
+    if not string:
+        return string
+
+    first_char = string[0]
+    if first_char == 'a':
+        return "aRbFR" + apply_dragon_rules(string[1:])
+    elif first_char == 'b':
+        return "LFaLb" + apply_dragon_rules(string[1:])
+    else:
+        return first_char + apply_dragon_rules(string[1:])
 
 
 def curve(string: str, depth: int) -> None | str:
@@ -62,8 +71,11 @@ def curve(string: str, depth: int) -> None | str:
     :param depth: how many times the rules are applied
     :return: instructionset for drawing the dragon at iteration 'depth'
     """
-    pass
-    
+    if depth == 0:
+        return string
+
+    return curve(apply_dragon_rules(string), depth - 1)
+
 
 def format_curve(string: str) -> str:
     """
@@ -75,8 +87,16 @@ def format_curve(string: str) -> str:
     :param string: instruction string
     :return: clean instructions with only "F", "R", and "L" characters
     """
-    pass
-    
+    if not string:
+        return ""
+
+    first_char = string[0]
+    if first_char in "FRL":
+        return first_char + format_curve(string[1:])
+
+    else:
+        return format_curve(string[1:])
+
 
 def draw_dragon(string: str, length: float) -> None:
     """Draws the dragon by reading the string recursively.
@@ -89,8 +109,24 @@ def draw_dragon(string: str, length: float) -> None:
     :param string: instructions left to process
     :param length: how many pixels to move forward, left or right
     """
-    pass
-    
+    if not string:
+        return
+
+    movement = string[0]
+
+    if movement == "L":
+        t.left(90)
+        t.forward(length)
+
+    if movement == "R":
+        t.right(90)
+        t.forward(length)
+
+    if movement == "F":
+        t.forward(length)
+
+    draw_dragon(string[1:], length)
+
 
 def get_line_length(dragon_width: int, depth: int) -> float:
     """Return one Turtle step length if the width and depth are known."""
@@ -100,7 +136,8 @@ def get_line_length(dragon_width: int, depth: int) -> float:
 def save(turtle: Turtle) -> None:
     """Save the turtle graphic to file which can be opened with a image editor like GIMP."""
     turtle.ht()  # hide him
-    turtle.getscreen().getcanvas().postscript(file='../../OP/op08_turtles/turtles.ps')
+    turtle.getscreen().getcanvas().postscript(
+        file='../../OP/op08_turtles/turtles.ps')
 
 
 if __name__ == '__main__':

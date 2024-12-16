@@ -76,7 +76,7 @@ def find_how_many_pumpkins_are_needed_to_feed_animals(animal_data: list) -> int:
     :param animal_data: List of structured animal data.
     :return: Total number of pumpkins needed, rounded up to the nearest whole number.
     """
-    return math.ceil(reduce(lambda total, animal: total + (2 * 0.06 * ((animal[3][0] + animal[3][1]) / 2) * 90 / 3 ) if animal[5] in ["herbivorous", "omnivorous"] else total,animal_data, 0))
+    return math.ceil(reduce(lambda total, animal: total + (2 * 0.06 * ((animal[3][0] + animal[3][1]) / 2) * 90 / 3) if animal[5] in ["herbivorous", "omnivorous"] else total, animal_data, 0))
 
 
 def total_noise_level(animal_data: list) -> float:
@@ -249,21 +249,31 @@ def calculate_ecological_impact_score(animal_data: list) -> float:
     :param animal_data: List of structured animal data.
     :return: The total ecological impact score.
     """
-    return reduce(
-        lambda total, animal: total + (
-            10.0 +  # Base score
-            0.001 * ((animal[3][0] + animal[3][1]) / 2.0) +  # Average weight factor
-            (1.2 if animal[5] == "herbivorous" else 
-             1.5 if animal[5] == "carnivorous" else 
-             1.3) +  # Diet factor
-            (5.0 if animal[6] == "savannah" else 
-             4.0 if animal[6] == "tropics" else 
-             3.0 if animal[6] == "temperate forest" else 
-             0.0)  # Habitat factor
-        ), 
-        animal_data, 
-        0
-    )
+    def animal_score(total, animal):
+        base_score = 10
+        min_weight, max_weight = animal[3]
+        diet = animal[5]
+        habitat = animal[6]
+
+        average_weight = (min_weight + max_weight) / 2
+
+        weight_factor = 0.001 * average_weight
+
+        diet_factors = {'Herbivorous': 1.2,
+                        'Carnivorous': 1.5, 'Omnivorous': 1.3}
+        diet_factor = diet_factors.get(diet, 1)
+
+        habitat_factors = {'Savannah': 5, 'Tropics': 4, 'Temperate Forest': 3}
+        habitat_factor = habitat_factors.get(habitat, 0)
+
+        animal_final_score = base_score + weight_factor
+        animal_final_score *= diet_factor
+        animal_final_score += habitat_factor
+
+        return total + animal_final_score
+
+    return reduce(animal_score, animal_data, 0.0)
+
 
 if __name__ == '__main__':
     test_data = [

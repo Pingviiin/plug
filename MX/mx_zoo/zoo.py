@@ -1,7 +1,6 @@
+"""A small exercise in zookeeping."""
 from functools import reduce
 import math
-
-"""A small exercise in zookeeping."""
 
 
 def parse_animal(animal_str: str) -> list:
@@ -268,8 +267,7 @@ if __name__ == '__main__':
     print(animals_starting_with(animal_data, 'L'))
     # Expected Output: ["Little red flying-fox"]
 
-    print("Pumpkins: " +
-          str(find_how_many_pumpkins_are_needed_to_feed_animals(animal_data)))
+    print("Pumpkins: " + str(find_how_many_pumpkins_are_needed_to_feed_animals(animal_data)))
     # Pumpkins: 22227
 
     print("Noise: " + str(total_noise_level(animal_data)))

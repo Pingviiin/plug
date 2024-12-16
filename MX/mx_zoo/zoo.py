@@ -21,10 +21,12 @@ def parse_animal(animal_str: str) -> list:
     :param animal_str: The input string containing animal data.
     :return: A list containing structured animal data.
     """
-    parsed = list(animal_str.split(","))
-    parsed[3] = parsed[3].split("-")
-    parsed[4] = parsed[4].split("-")
-    return parsed
+    parts = animal_str.split(',')
+    min_weight, max_weight = map(float, parts[3].split('-'))
+    min_height, max_height = map(float, parts[4].split('-'))
+    age_up_to = int(parts[2])
+
+    return [parts[0], parts[1], age_up_to, [min_weight, max_weight], [min_height, max_height], parts[5], parts[6]]
 
 
 def list_species_and_scientific_names(animal_data: list) -> list:
@@ -56,7 +58,7 @@ def animals_starting_with(animal_data: list, letter: str) -> list:
     :return: An alphabetically sorted list of common names of animals that start with the given letter.
     """
     #  Ma praegu saan enamvähem aru kuidas see töötab. Kui tulevikus keegi tahab minult selle tööpõhimõtet relvaähvardusega välja, ma ausalt ei mäleta.
-    return list(map(lambda x: animal_data[animal_data.index(x)][0] ,(filter(lambda x: letter == animal_data[animal_data.index(x)][0][0], animal_data))))
+    return list(map(lambda x: animal_data[animal_data.index(x)][0], (filter(lambda x: letter == animal_data[animal_data.index(x)][0][0], animal_data))))
 
 
 def find_how_many_pumpkins_are_needed_to_feed_animals(animal_data: list) -> int:
@@ -104,6 +106,7 @@ def zoo_parade_length(animal_data: list) -> float:
     """
     return reduce(lambda total, animal: total + (float(animal[4][0]) + float(animal[4][1])) / 2, animal_data, 0)
 
+
 def animal_olympics_winner(animal_data: list) -> str:
     """
     Determine the winner of the Animal Olympics based on speed.
@@ -118,6 +121,7 @@ def animal_olympics_winner(animal_data: list) -> str:
     """
     return min(animal_data, key=lambda animal: (float(animal[3][0]) + float(animal[3][1])) / 2)[0]
 
+
 def total_feather_count(animal_data: list) -> float:
     """
     Calculate the total feather count for all animals. There is just one animal of each species.
@@ -131,6 +135,7 @@ def total_feather_count(animal_data: list) -> float:
     :return: The total feather count of all animals in the list.
     """
     return reduce(lambda total, animal: total + (float(animal[3][0]) + float(animal[3][1])) / 2 * 1000, animal_data, 0)
+
 
 def zoo_weight_on_other_planet(animal_data: list) -> float:
     """
@@ -186,6 +191,7 @@ def filter_animals_based_on_diet(animal_data: list, diet: str) -> list:
     :return: Alphabetically sorted list of common names of animals that match the specified diet.
     """
     return sorted(map(lambda animal: animal[0], filter(lambda animal: animal[5].lower() == diet.lower(), animal_data)))
+
 
 def find_animal_with_longest_lifespan(animal_data: list) -> str:
     """
@@ -243,7 +249,7 @@ def calculate_ecological_impact_score(animal_data: list) -> float:
     :param animal_data: List of structured animal data.
     :return: The total ecological impact score.
     """
-    return sum(map(lambda animal: (10 + 0.001 * ((float(animal[3][0]) + float(animal[3][1])) / 2)) * (1.2 if animal[5] == "herbivorous" else 1.5 if animal[5] == "carnivorous" else 1.3 if animal[5] == "omnivorous" else 1) + {"savannah": 5, "tropics": 4, "temperate forest": 3}.get(animal[6], 0),animal_data))
+    return reduce(lambda total, animal: total + 10 + 0.001 * ((animal[3][0] + animal[3][1]) / 2) * {"herbivorous": 1.2, "carnivorous": 1.5, "omnivorous": 1.3}.get(animal[5].lower(), 1) + {"savannah": 5, "tropics": 4, "temperate forest": 3}.get(animal[6].lower(), 0), animal_data, 0)
 
 
 if __name__ == '__main__':
@@ -262,7 +268,8 @@ if __name__ == '__main__':
     print(animals_starting_with(animal_data, 'L'))
     # Expected Output: ["Little red flying-fox"]
 
-    print("Pumpkins: " + str(find_how_many_pumpkins_are_needed_to_feed_animals(animal_data)))
+    print("Pumpkins: " +
+          str(find_how_many_pumpkins_are_needed_to_feed_animals(animal_data)))
     # Pumpkins: 22227
 
     print("Noise: " + str(total_noise_level(animal_data)))
@@ -300,5 +307,6 @@ if __name__ == '__main__':
     #     "Eurasian lynx (Lynx lynx) lives in temperate forest and its diet is carnivorous. These animals can live up to 7 years, and they weigh between 60 kg and 75 kg as adults.",
     #     "Brown bear (Ursus arctos) lives in temperate forest and its diet is omnivorous. These animals can live up to 33 years, and they weigh between 130 kg and 217 kg as adults."]
 
-    print("Ecological Impact Score: {:.2f}".format(calculate_ecological_impact_score(animal_data)))
+    print("Ecological Impact Score: {:.2f}".format(
+        calculate_ecological_impact_score(animal_data)))
     # Expected output: Ecological Impact Score: 91.53

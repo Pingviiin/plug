@@ -251,15 +251,15 @@ def calculate_ecological_impact_score(animal_data: list) -> float:
     """
     return reduce(
         lambda total, animal: total + (
-            10 +  # Base score
-            0.001 * ((animal[3][0] + animal[3][1]) / 2) +  # Average weight factor
+            10.0 +  # Base score
+            0.001 * ((animal[3][0] + animal[3][1]) / 2.0) +  # Average weight factor
             (1.2 if animal[5] == "herbivorous" else 
              1.5 if animal[5] == "carnivorous" else 
              1.3) +  # Diet factor
-            (5 if animal[6] == "savannah" else 
-             4 if animal[6] == "tropics" else 
-             3 if animal[6] == "temperate forest" else 
-             0)  # Habitat factor
+            (5.0 if animal[6] == "savannah" else 
+             4.0 if animal[6] == "tropics" else 
+             3.0 if animal[6] == "temperate forest" else 
+             0.0)  # Habitat factor
         ), 
         animal_data, 
         0

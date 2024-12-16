@@ -177,7 +177,7 @@ def find_animals_whose_height_is_less_than(animal_data: list, height_limit: floa
     :param height_limit: Maximum height (in meters) as a float.
     :return: List of common names of animals that are shorter than the specified height limit, sorted from shortest to tallest.
     """
-    return sorted(map(lambda animal: animal[0], filter(lambda animal: float(animal[4][1]) < height_limit, animal_data)), key=lambda animal: animal[4][1])
+    return sorted(reduce(lambda result, animal: result + [animal[0]] if animal[4][1] < height_limit else result, animal_data, []))
 
 
 def filter_animals_based_on_diet(animal_data: list, diet: str) -> list:

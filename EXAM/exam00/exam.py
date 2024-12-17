@@ -18,7 +18,7 @@ def find_capital_letters(s: str) -> str:
     """
     output = ""
     for letter in s:
-        if s.isupper():
+        if letter.isupper():
             output += letter
     return output
 
@@ -36,10 +36,13 @@ def close_far(a: int, b: int, c: int) -> bool:
     close_far(1, 2, 3) => False
     close_far(4, 1, 3) => True
     """
-    if (abs(a - b) > 1) or (abs(a - c) > 1):
-        return True
-    else:
-        return False
+    def close(x, y):
+        return abs(x - y) <= 1
+    
+    def far(x, y, z):
+        return abs(x - y) >= 2 and abs(x - z) >= 2
+    
+    return (close(a, b) or close(a, c) and far(c, a, b) and far(b, a, c))
 
 def get_names_from_results(results_string: str, min_result: int) -> list:
     """

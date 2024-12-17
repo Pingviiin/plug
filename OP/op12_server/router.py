@@ -134,9 +134,6 @@ class Router:
         available_addresses = [
             ip for ip in possible_addresses if ip not in self.used_addresses]
 
-        if available_addresses == []:
-            raise IPv4AddressSpaceExhaustedException()
-
         random_address = random.choice(available_addresses)
         self.used_addresses.add(random_address)
 

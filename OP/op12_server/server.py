@@ -2,6 +2,7 @@
 
 from router import Packet, EndDevice, Router
 import re
+import pytest
 
 
 class EndDevicePlus(EndDevice):
@@ -240,9 +241,12 @@ class Server:
         Sending to every end device should be handled by the router.
         """
         # Write your code here
+        parts = self.split_message(message)
         for router in self.get_routers():
-            for device in router.get_devices():
-                self.send_message_to_ip(message, device.get_ip_address(), id)
+            broadcast_ip = router.get_ip_address().rsplit('.', 1)[0] + '.255'
+            for sequence, part in enumerate(parts, start=1):
+                packet = Packet(part, self.get_ip_address(), broadcast_ip, id, sequence)
+                self.send_packet_to_ip(packet)
 
 
 if __name__ == "__main__":
@@ -335,3 +339,49 @@ if __name__ == "__main__":
     print(device1.get_message(1337))    # All your files have been encrypted!
     print(device4.get_message(1337))    # All your files have been encrypted!
     print()
+
+def test_server_send_message_to_all_creates_packets_with_correct_values():
+    server = Server()
+    router1 = RouterPlus("192.168.0.1")
+    router2 = RouterPlus("1.1.1.1")
+    router3 = RouterPlus("192.168.1.1")
+    device11 = EndDevicePlus()
+    device12 = EndDevicePlus()
+    device21 = EndDevicePlus()
+    device22 = EndDevicePlus()
+    device31 = EndDevicePlus()
+    device32 = EndDevicePlus()
+
+    server.set_ip_address("172.32.16.254")
+
+    router1.add_device(device11)
+    router1.add_device(device12)
+
+    router2.add_device(device21)
+    router2.add_device(device22)
+
+    router3.add_device(device31)
+    router3.add_device(device32)
+
+    server.add_router(router1)
+    server.add_router(router2)
+    server.add_router(router3)
+
+    message = "test"
+
+    server.send_message_to_all(message, 100)
+
+    total_packets = device11.get_all_packets() + device12.get_all_packets() + device21.get_all_packets() \
+                    + device22.get_all_packets() + device31.get_all_packets() + device32.get_all_packets()
+
+    if len(total_packets) != 6:
+        pytest.fail("Server did not send out correct amount of packets!\n" +
+                    f"expected: 6\nactual: {len(total_packets)}")
+
+    starts_with = "test from 172.32.16.254 to "
+    ends_with = ".255 (100:1)"
+    for packet in total_packets:
+        if not (packet.__repr__().startswith(starts_with) and packet.__repr__().endswith(ends_with)):
+            pytest.fail("Packets were not correctly created.")
+
+test_server_send_message_to_all_creates_packets_with_correct_values()

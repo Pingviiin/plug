@@ -138,7 +138,7 @@ class Server:
         # Write your code here
         if message == "":
             return [""]
-        return [message[i:i + 5] for i in range(0, len(message), 5)]
+        return [message[i : i + 5] for i in range(0, len(message), 5)]
 
     def set_ip_address(self, ip_address: str) -> None:
         """

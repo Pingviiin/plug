@@ -3,6 +3,7 @@
 from router import Packet, EndDevice, Router
 import re
 
+
 class EndDevicePlus(EndDevice):
     """
     End Device Plus class.
@@ -33,7 +34,7 @@ class EndDevicePlus(EndDevice):
 
         if not packets:
             return ""
-        
+
         packets = sorted(packets, key=lambda packet: packet.sequence_number)
 
         message = []
@@ -75,7 +76,7 @@ class RouterPlus(Router):
 
         if router_subnet != packet_subnet:
             return
-        
+
         if packet.destination_ip.endswith(".255"):
             for device in self.devices:
                 device.add_packet(packet)
@@ -97,17 +98,18 @@ class RouterPlus(Router):
         self.used_addresses.clear()
 
         for device in self.devices:
-            old_ip = device.ip_address
+            old_ip = device.get_ip_address()
             new_ip = self.generate_ip_address()
 
             while new_ip == old_ip:
                 new_ip = self.generate_ip_address()
-            
+
             device.set_ip_address(new_ip)
 
 
 class Server:
     """Server class."""
+
     def __validate_ipv4(self, ip_address: str) -> bool:
         """Validate IPv4."""
         # Write your code here
@@ -134,6 +136,8 @@ class Server:
             "Hello World" -> ["Hello", " Worl", "d"]
         """
         # Write your code here
+        if message == "":
+            return [""]
         return [message[i:i+5] for i in range(0, len(message), 5)]
 
     def set_ip_address(self, ip_address: str) -> None:
@@ -203,7 +207,7 @@ class Server:
         # Write your code here
         if len(packet.content) > 5:
             return
-        
+
         dest_subnet = packet.destination_ip.rsplit(".", 1)[0]
         for router in self.get_routers():
             if router.get_ip_address().startswith(dest_subnet):
@@ -263,15 +267,20 @@ if __name__ == "__main__":
     print()
 
     # Check generated IP addresses
-    print(device1.get_ip_address().startswith("192.168.1."))                # True (correct subnet)
-    print(1 < int(device1.get_ip_address().split(".")[-1]) < 255)           # True (correct ending)
-    print(device1.get_ip_address() == device2.get_ip_address())             # False (different IP addresses generated)
+    print(device1.get_ip_address().startswith("192.168.1.")
+          )                # True (correct subnet)
+    # True (correct ending)
+    print(1 < int(device1.get_ip_address().split(".")[-1]) < 255)
+    # False (different IP addresses generated)
+    print(device1.get_ip_address() == device2.get_ip_address())
     print(router.get_device_by_ip(device1.get_ip_address()) == device1)     # True
     print()
 
     # Get message
-    router.receive_packet(Packet("Te", "192.168.1.1", device1.get_ip_address(), 2, 1))
-    router.receive_packet(Packet("re!", "192.168.1.1", device1.get_ip_address(), 2, 3))
+    router.receive_packet(
+        Packet("Te", "192.168.1.1", device1.get_ip_address(), 2, 1))
+    router.receive_packet(
+        Packet("re!", "192.168.1.1", device1.get_ip_address(), 2, 3))
     print(device1.get_message(2))           # Te_re!
     print(len(device1.get_all_packets()))   # 2
     print(len(device2.get_all_packets()))   # 0
@@ -309,7 +318,8 @@ if __name__ == "__main__":
     print()
 
     # Server send message
-    server.send_message_to_ip("pretty long message", device2.get_ip_address(), 4)
+    server.send_message_to_ip("pretty long message",
+                              device2.get_ip_address(), 4)
     print(f"{device2.get_message(4)!a}")        # 'pretty long message'
     print(f"{device1.get_message(4)!a}")        # ''
     print()

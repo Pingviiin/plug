@@ -72,11 +72,13 @@ def get_names_from_results(results_string: str, min_result: int) -> list:
             name, score_str = parts
         else:
             name, score_str = "", parts[0]
+        
+        if not name:
+            continue
 
         score = int(score_str)
         if score >= min_result:
-            if name.strip():
-                valid_names.append(name.strip())
+            valid_names.append(name.strip())
 
     return valid_names
 
@@ -444,9 +446,4 @@ if __name__ == '__main__':
 
     # TODO: try to add a room so that two or more features have the same profit
 
-    print(longest_substring("aaa")) # -> a
-    print(longest_substring("abc")) # -> abc
-    print(longest_substring("abccba")) # -> abc
-    print(longest_substring("babcdEFghij")) # -> abcdEFghij
-    print(longest_substring("abBcd")) # => Bcd
-    print(longest_substring('')) # -> ''
+    print(get_names_from_results("", 0))

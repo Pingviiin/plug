@@ -42,7 +42,7 @@ def close_far(a: int, b: int, c: int) -> bool:
     def far(x, y, z):
         return abs(x - y) >= 2 and abs(x - z) >= 2
     
-    return (close(a, b) or close(a, c) and far(c, a, b) and far(b, a, c))
+    return not (close(a, b) or close(a, c) and far(c, a, b) and far(b, a, c))
 
 def get_names_from_results(results_string: str, min_result: int) -> list:
     """
@@ -67,6 +67,9 @@ def get_names_from_results(results_string: str, min_result: int) -> list:
     valid_names = []
 
     for result in results:
+        if not result:
+            continue
+
         parts = result.rsplit(' ', 1)
         if len(parts) == 2:
             name, score_str = parts

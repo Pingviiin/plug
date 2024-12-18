@@ -67,21 +67,16 @@ def get_names_from_results(results_string: str, min_result: int) -> list:
     valid_names = []
 
     for result in results:
-        if not result:
-            continue
-
         parts = result.rsplit(' ', 1)
         if len(parts) == 2:
             name, score_str = parts
         else:
             name, score_str = "", parts[0]
 
-        try:
-            score = int(score_str)
-            if score >= min_result:
+        score = int(score_str)
+        if score >= min_result:
+            if name.strip():
                 valid_names.append(name.strip())
-        except ValueError:
-            continue
 
     return valid_names
 

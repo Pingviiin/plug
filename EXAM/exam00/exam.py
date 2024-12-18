@@ -62,8 +62,25 @@ def get_names_from_results(results_string: str, min_result: int) -> list:
     get_names_from_results("ago 123,peeter 11,kitty11!! 33", 11) => ["ago", "peeter",  "kitty11!!"]
     get_names_from_results("ago 123,peeter 11,kusti riin 14", 12) => ["ago", "kusti riin"]
     """
-    tinkywinky = results_string.split(",")
-    return [i.split(" ")[0] for i in tinkywinky if int(i.split(" ")[1]) >= min_result]
+
+    results = results_string.split(',')
+    valid_names = []
+
+    for result in results:
+        parts = result.rsplit(' ', 1)
+        if len(parts) == 2:
+            name, score_str = parts
+        else:
+            name, score_str = "", parts[0]
+
+        try:
+            score = int(score_str)
+            if score >= min_result:
+                valid_names.append(name.strip())
+        except ValueError:
+            continue
+
+    return valid_names
 
 
 def tic_tac_toe(game: list) -> int:
@@ -146,13 +163,23 @@ def longest_substring(text: str) -> str:
     abBcd => Bcd
     '' -> ''
     """
-    output = ""
+    start = 0
+    max_len = 0
     window = ""
-    for letter in text:
-        if letter.lower() not in output and letter.upper() not in output:
-            window += letter
+    seen_text = {}
+    for i, letter in enumerate(text):
+        letter = letter.lower()
+        if letter in seen_text and seen_text[letter] >= start:
+            start = seen_text[letter] + 1
 
-    a = text.split(window)
+        seen_text[letter] = i
+        current_length = i - start + 1
+
+        if current_length > max_len:
+            max_len = current_length
+            window = text[start:i + 1]
+    
+    return window
 
 class Student:
     """Student class."""
@@ -418,3 +445,10 @@ if __name__ == '__main__':
     assert hotel.get_most_profitable_feature() == 'tv'
 
     # TODO: try to add a room so that two or more features have the same profit
+
+    print(longest_substring("aaa")) # -> a
+    print(longest_substring("abc")) # -> abc
+    print(longest_substring("abccba")) # -> abc
+    print(longest_substring("babcdEFghij")) # -> abcdEFghij
+    print(longest_substring("abBcd")) # => Bcd
+    print(longest_substring('')) # -> ''

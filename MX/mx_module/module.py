@@ -107,8 +107,7 @@ class MovieData:
 
         merged_df['tag'] = merged_df['tag'].fillna(nan_placeholder)
 
-        self.movie_data = merged_df[['movieId',
-                                     'title', 'genres', 'rating', 'tag']]
+        self.movie_data = merged_df[['movieId', 'title', 'genres', 'rating', 'tag']]
 
     def get_movies_dataframe(self) -> pd.DataFrame | None:
         """
@@ -134,7 +133,7 @@ class MovieData:
         """
         return self.tags
 
-    def get_movie_data(self) -> pd.DataFrame | None:
+    def get_aggregate_movie_data(self) -> pd.DataFrame | None:
         """
         Return movie_data variable created with function create_movie_data.
 
@@ -336,7 +335,7 @@ if __name__ == '__main__':
         # [3683 rows x 4 columns]
 
         my_movie_data.create_aggregate_movie_dataframe('--empty--')
-        print(my_movie_data.get_movie_data())  # ->
+        print(my_movie_data.get_aggregate_movie_data())  # ->
         #         movieId                                      title                                       genres  rating              tag
         # 0             1                           Toy Story (1995)  Adventure|Animation|Children|Comedy|Fantasy     4.0  pixar pixar fun
         # 1             1                           Toy Story (1995)  Adventure|Animation|Children|Comedy|Fantasy     4.0  pixar pixar fun
@@ -354,7 +353,7 @@ if __name__ == '__main__':
         # it is the nan_placeholder value given to the function.
 
         my_movie_filter = MovieFilter()
-        my_movie_filter.set_movie_data(my_movie_data.get_movie_data())
+        my_movie_filter.set_movie_data(my_movie_data.get_aggregate_movie_data())
         print(my_movie_filter.filter_movies_by_rating_value(2.1, 'less_than'))  # ->
         #   movieId             title                                       genres  rating               tag
         # 26      1  Toy Story (1995)  Adventure|Animation|Children|Comedy|Fantasy     0.5   pixar pixar fun

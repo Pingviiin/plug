@@ -70,8 +70,7 @@ class MovieData:
             raise ValueError("Input dataframe is None or empty.")
 
         if key not in df.columns or col not in df.columns:
-            raise ValueError(f"Specified columns '{key}' or '{
-                             col}' are not in the dataframe.")
+            raise ValueError(f"Specified columns '{key}' or '{col}' are not in the dataframe.")
 
         grouped = df.groupby(key).agg(
             {col: lambda x: ' '.join(set(str(val) for val in x if pd.notna(val)))})

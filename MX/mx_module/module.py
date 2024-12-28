@@ -72,13 +72,9 @@ class MovieData:
         if key not in df.columns or col not in df.columns:
             raise ValueError(f"Specified columns '{key}' or '{col}' are not in the dataframe.")
 
-        grouped = df.groupby(key).agg({col: lambda x: ' '.join(set(str(val) for val in x if pd.notna(val)))})
+        grouped = df.groupby(key).agg({col: lambda x: ' '.join(sorted(set(val.strip() for val in x if pd.notna(val))))})
         
         result = grouped.reset_index()
-
-        other_columns = [c for c in df.columns if c not in {key, col}]
-        for column in other_columns:
-            result[column] = df.groupby(key)[column].first().values
 
         return result
 

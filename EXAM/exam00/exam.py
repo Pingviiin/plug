@@ -44,12 +44,13 @@ def close_far(a: int, b: int, c: int) -> bool:
 
     if close(a, b):
         return far(a, c) and far(b, c)
-    
+
     elif close(a, c):
         return far(a, b) and far(b, c)
-    
+
     else:
         return False
+
 
 def get_names_from_results(results_string: str, min_result: int) -> list:
     """
@@ -228,6 +229,9 @@ def get_top_student_with_credit_points(students: list, min_credit_points: int):
         if student.credit_points > min_credit_points:
             passed_students.append(student)
 
+    if not passed_students:
+        return None
+
     return max(passed_students, key=lambda student: student.average_grade)
 
 
@@ -361,7 +365,8 @@ class Hotel:
             else:
                 room_feature_count[room] = 0
 
-        best_matching_room = max(room_feature_count, key=lambda room: (room_feature_count[room], -room.number))
+        best_matching_room = max(room_feature_count, key=lambda room: (
+            room_feature_count[room], -room.number))
 
         if best_matching_room:
             self.available_rooms.remove(best_matching_room)
@@ -424,8 +429,10 @@ class Hotel:
         feature_profits = self.get_feature_profits()
         if not feature_profits:
             return None
-        max_profit = feature_profits[max(feature_profits, key=lambda feature: (feature_profits[feature]))]
-        max_features = [feature for feature in feature_profits.keys() if feature_profits[feature] == max_profit]
+        max_profit = feature_profits[max(
+            feature_profits, key=lambda feature: (feature_profits[feature]))]
+        max_features = [feature for feature in feature_profits.keys(
+        ) if feature_profits[feature] == max_profit]
         return sorted(max_features)[0]
 
 

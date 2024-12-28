@@ -36,13 +36,20 @@ def close_far(a: int, b: int, c: int) -> bool:
     close_far(1, 2, 3) => False
     close_far(4, 1, 3) => True
     """
-    def close(x, y):
-        return abs(x - y) <= 1
+    def close(value1, value2):
+        return abs(value1 - value2) <= 1
+
+    def far(value1, value2):
+        return abs(value1 - value2) >= 2
+
+    if close(a, b):
+        return far(a, c) and far(b, c)
     
-    def far(x, y, z):
-        return abs(x - y) >= 2 and abs(x - z) >= 2
+    elif close(a, c):
+        return far(a, b) and far(b, c)
     
-    return not (close(a, b) or close(a, c) and far(c, a, b) and far(b, a, c))
+    else:
+        return False
 
 def get_names_from_results(results_string: str, min_result: int) -> list:
     """
@@ -72,7 +79,7 @@ def get_names_from_results(results_string: str, min_result: int) -> list:
             name, score_str = parts
         else:
             name, score_str = "", parts[0]
-        
+
         if not name:
             continue
 
@@ -106,18 +113,19 @@ def tic_tac_toe(game: list) -> int:
     for row in game:
         if row[0] == row[1] == row[2] and row[0] != 0:
             return row[0]
-        
+
     for col in range(3):
         if game[0][col] == game[1][col] == game[2][col] and game[0][col] != 0:
             return game[0][col]
-    
+
     if game[0][0] == game[1][1] == game[2][2] and game[0][0] != 0:
         return game[0][0]
-    
+
     if game[0][2] == game[1][1] == game[2][0] and game[2][0] != 0:
         return game[0][2]
-    
+
     return 0
+
 
 def rainbows(field: str, lower=False) -> int:
     """
@@ -136,14 +144,15 @@ def rainbows(field: str, lower=False) -> int:
     """
     if not lower:
         field = field.lower()
-    
+
     if len(field) < len("rainbow"):
         return 0
-    
+
     if field.startswith("rainbow") or field.startswith("rainbow"[::-1]):
         return 1 + rainbows(field[len("rainbow"):], lower=True)
-    
+
     return rainbows(field[1:], lower=True)
+
 
 def longest_substring(text: str) -> str:
     """
@@ -178,8 +187,9 @@ def longest_substring(text: str) -> str:
         if current_length > max_len:
             max_len = current_length
             window = text[start:i + 1]
-    
+
     return window
+
 
 class Student:
     """Student class."""
@@ -217,8 +227,9 @@ def get_top_student_with_credit_points(students: list, min_credit_points: int):
     for student in students:
         if student.credit_score > min_credit_points:
             passed_students.append(student)
-    
+
     return max(passed_students, key=lambda student: student.average_grade)
+
 
 def add_result_to_student(student: Student, grades_count: int, new_grade: int, credit_points) -> Student:
     """
@@ -337,7 +348,7 @@ class Hotel:
         """
         if not self.available_rooms:
             return None
-        
+
         room_feature_count = {}
 
         for room in self.available_rooms:
@@ -349,9 +360,9 @@ class Hotel:
                         room_feature_count[room] += 1
             else:
                 room_feature_count[room] = 0
-      
+
         best_matching_room = max(room_feature_count, key=lambda room: (room_feature_count[room], -room.number))
-        
+
         if best_matching_room:
             self.available_rooms.remove(best_matching_room)
             self.booked_rooms.append(best_matching_room)
@@ -401,7 +412,6 @@ class Hotel:
 
         return feature_profits
 
-
     def get_most_profitable_feature(self) -> Optional[str]:
         """
         Return the feature which profits the most.
@@ -415,6 +425,7 @@ class Hotel:
         max_profit = feature_profits[max(feature_profits, key=lambda feature: (feature_profits[feature]))]
         max_features = [feature for feature in feature_profits.keys() if feature_profits[feature] == max_profit]
         return sorted(max_features, reverse=True)[0]
+
 
 if __name__ == '__main__':
     hotel = Hotel()

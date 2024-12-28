@@ -225,7 +225,7 @@ def get_top_student_with_credit_points(students: list, min_credit_points: int):
     passed_students = []
 
     for student in students:
-        if student.credit_score > min_credit_points:
+        if student.credit_points > min_credit_points:
             passed_students.append(student)
 
     return max(passed_students, key=lambda student: student.average_grade)
@@ -264,7 +264,7 @@ def add_result_to_student(student: Student, grades_count: int, new_grade: int, c
     Return the modified student object.
     """
     sum_of_grades = student.average_grade * grades_count
-    new_average = round((sum_of_grades + new_grade) / grades_count, 3)
+    new_average = round((sum_of_grades + new_grade) / grades_count + 1, 3)
 
     student.average_grade = new_average
     student.credit_points += credit_points
@@ -422,9 +422,11 @@ class Hotel:
         If there are no features booked, return None.
         """
         feature_profits = self.get_feature_profits()
+        if not feature_profits:
+            return None
         max_profit = feature_profits[max(feature_profits, key=lambda feature: (feature_profits[feature]))]
         max_features = [feature for feature in feature_profits.keys() if feature_profits[feature] == max_profit]
-        return sorted(max_features, reverse=True)[0]
+        return sorted(max_features)[0]
 
 
 if __name__ == '__main__':

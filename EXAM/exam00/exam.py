@@ -70,7 +70,6 @@ def get_names_from_results(results_string: str, min_result: int) -> list:
     get_names_from_results("ago 123,peeter 11,kitty11!! 33", 11) => ["ago", "peeter",  "kitty11!!"]
     get_names_from_results("ago 123,peeter 11,kusti riin 14", 12) => ["ago", "kusti riin"]
     """
-
     results = results_string.split(',')
     valid_names = []
 
@@ -223,16 +222,16 @@ def get_top_student_with_credit_points(students: list, min_credit_points: int):
     If there are no students with enough credit points, return None.
     If several students have the same average score, return the first.
     """
-    passed_students = []
+    students_with_enough_points = []
 
     for student in students:
-        if student.credit_points > min_credit_points:
-            passed_students.append(student)
+        if student.credit_points >= min_credit_points:
+            student.append(students_with_enough_points)
 
-    if not passed_students:
+    if not students_with_enough_points:
         return None
 
-    return max(passed_students, key=lambda student: student.average_grade)
+    return max(students_with_enough_points, key=lambda student: student.average_grade)
 
 
 def add_result_to_student(student: Student, grades_count: int, new_grade: int, credit_points) -> Student:

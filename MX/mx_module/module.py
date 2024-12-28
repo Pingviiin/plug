@@ -91,17 +91,26 @@ class MovieData:
         :param nan_placeholder: Value to replace all nan-valued elements in column 'tag'.
         :return: None
         """
+        # Step 1: Remove unnecessary columns from ratings
         self.ratings = self.remove_cols(self.ratings, ['userId', 'timestamp'])
 
+        # Step 2: Aggregate ratings by movieId
+        ratings_aggregated = self.ratings.groupby('movieId').agg({'rating': 'mean'}).reset_index()
+
+        # Step 3: Aggregate tags by movieId (joining tags with a space)
         tags_aggregated = self.merge_col_string_on_key(self.tags, key='movieId', col='tag')
 
-        merged_df = self.movies.merge(self.ratings, on='movieId', how='left')
+        # Step 4: Merge movies with aggregated ratings
+        merged_df = self.movies.merge(ratings_aggregated, on='movieId', how='left')
 
+        # Step 5: Merge the result with aggregated tags
         merged_df = merged_df.merge(tags_aggregated, on='movieId', how='left')
 
+        # Step 6: Replace NaN values in the 'tag' column with the placeholder
         merged_df['tag'] = merged_df['tag'].fillna(nan_placeholder)
 
-        self.movie_data = merged_df[['movieId', 'title', 'genres', 'rating', 'tag']]
+        # Step 7: Reorder columns explicitly
+        self.aggregate_movie_dataframe = merged_df[['movieId', 'title', 'genres', 'rating', 'tag']]
 
     def get_movies_dataframe(self) -> pd.DataFrame | None:
         """

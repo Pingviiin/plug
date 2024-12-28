@@ -226,7 +226,7 @@ def get_top_student_with_credit_points(students: list, min_credit_points: int):
 
     for student in students:
         if student.credit_points >= min_credit_points:
-            student.append(students_with_enough_points)
+            students_with_enough_points.append(student)
 
     if not students_with_enough_points:
         return None

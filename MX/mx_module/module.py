@@ -55,7 +55,7 @@ class MovieData:
         if not columns:
             return df
         
-        return df.drop(columns=columns, errors="ignore")
+        return df.drop(columns=columns, axis=1)
     
     def merge_col_string_on_key(self, df: pd.DataFrame, key: str, col: str) -> pd.DataFrame:
         """
@@ -66,27 +66,15 @@ class MovieData:
         :param col: column that needs to contain joined values separated by ' '
         :return: dataframe with reduced number of rows
         """
-        # Validate input DataFrame
         if df is None or df.empty:
             raise ValueError("Input DataFrame is None or empty.")
-
-        # Validate columns
-        if key not in df.columns:
-            raise ValueError(f"Key column '{key}' is not in the DataFrame.")
-        if col not in df.columns:
-            raise ValueError(f"Column '{col}' is not in the DataFrame.")
         
-        # Ensure values in `col` are strings; fill NaN with empty string for grouping
-        df[col] = df[col].fillna('').astype(str)
-
-        # Group by `key` and concatenate unique, sorted values from `col`
-        grouped = (
-            df.groupby(key)
-            .agg({col: lambda x: ' '.join(sorted(set(val.strip() for val in x if val.strip())))})
-            .reset_index()
-        )
-
-        return grouped
+        if key not in df.columns or col not in df.columns:
+            raise ValueError(f"Key '{key}' or column '{col}' not found in DataFrame.")
+        
+        new_df = df.groupby(key).agg({col: lambda x: ' '.join(x)})
+        
+        return new_df
 
     def create_aggregate_movie_dataframe(self, nan_placeholder: str = '') -> None:
         """
@@ -101,17 +89,26 @@ class MovieData:
         :param nan_placeholder: Value to replace all nan-valued elements in column 'tag'.
         :return: None
         """
-        self.ratings = self.remove_cols(self.ratings, ['userId', 'timestamp'])
+        # 1. Eemaldame mittevajalikud tulbad
+        ratings_cleaned = self.remove_cols(self.ratings, ['timestamp', 'userId'])
+        tags_cleaned = self.remove_cols(self.tags, ['timestamp', 'userId'])
 
-        tags_aggregated = self.merge_col_string_on_key(self.tags, key='movieId', col='tag')
+        # 2. Kombineerime tags tulba väärtused filmi põhjal
+        tags_combined = self.merge_col_string_on_key(tags_cleaned, key='movieId', col='tag')
 
-        merged_df = self.movies.merge(self.ratings, on='movieId', how='left')
+        # 3. Liidame tabelid
+        merged_ratings = self.movies.merge(ratings_cleaned, on='movieId', how='left')
+        aggregate_df = merged_ratings.merge(tags_combined, on='movieId', how='left')
 
-        merged_df = merged_df.merge(tags_aggregated, on='movieId', how='left')
+        # 4. Järjesta tulbad
+        aggregate_df = aggregate_df[['movieId', 'title', 'genres', 'rating', 'tag']]
 
-        merged_df['tag'] = merged_df['tag'].fillna(nan_placeholder)
+        # 5. Asenda NaN väärtused
+        aggregate_df['tag'] = aggregate_df['tag'].fillna(nan_placeholder)
 
-        self.movie_data = merged_df[['movieId', 'title', 'genres', 'rating', 'tag']]
+        # 6. Määra self.aggregate_movie_dataframe väärtuseks
+        self.movie_data = aggregate_df
+
 
     def get_movies_dataframe(self) -> pd.DataFrame | None:
         """
@@ -181,6 +178,9 @@ class MovieFilter:
         :param comp: string representation of the comparison operation
         :return: pandas DataFrame object of the filtration result
         """
+        if self.movie_data is None or not isinstance(self.movie_data, pd.DataFrame):
+            raise ValueError("movie_data is not properly set. Please set a valid DataFrame using set_movie_data.")
+        
         if rating is None or rating < 0:
             raise ValueError("Rating must be a non-negative value.")
         if comp not in ['greater_than', 'equals', 'less_than']:
@@ -304,7 +304,7 @@ if __name__ == '__main__':
 
         # give correct path names here. These names are only good if you
         # installed the 3 data files in 'EX/ex15_movie_data/ml-latest-small/'
-        my_movie_data.load_data("MX\mx_module\movies.csv", "MX\mx_module\\ratings.csv", "MX\mx_module\\tags.csv")
+        my_movie_data.load_data("iti0102-2024\\MX\\mx_module\\movies.csv", "iti0102-2024\\MX\\mx_module\\ratings.csv", "iti0102-2024\\MX\\mx_module\\tags.csv")
         print(my_movie_data.get_movies_dataframe())  # ->
         #       movieId                    title                                       genres
         # 0           1         Toy Story (1995)  Adventure|Animation|Children|Comedy|Fantasy

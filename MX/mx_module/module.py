@@ -9,7 +9,7 @@ class MovieData:
 
     Here we keep the initial data and the cleaned-up aggregate dataframe.
     """
-    
+
     def __init__(self):
         """
         Class initialization.
@@ -25,7 +25,7 @@ class MovieData:
     def load_data(self, movies_filename: str, ratings_filename: str, tags_filename: str) -> None:
         """
         Load Data from files into dataframes.
-        
+
         Raise the built-in ValueError exception if either movies_filename, ratings_filename or
         tags_filename is None.
 
@@ -36,7 +36,7 @@ class MovieData:
         """
         if not movies_filename or not ratings_filename or not tags_filename:
             raise ValueError
-        
+
         self.movies = pd.read_csv(movies_filename)
         self.ratings = pd.read_csv(ratings_filename)
         self.tags = pd.read_csv(tags_filename)
@@ -54,9 +54,9 @@ class MovieData:
 
         if not columns:
             return df
-        
+
         return df.drop(columns=columns, axis=1)
-    
+
     def merge_col_string_on_key(self, df: pd.DataFrame, key: str, col: str) -> pd.DataFrame:
         """
         Merge columns.
@@ -68,12 +68,13 @@ class MovieData:
         """
         if df is None or df.empty:
             raise ValueError("Input DataFrame is None or empty.")
-        
+
         if key not in df.columns or col not in df.columns:
-            raise ValueError(f"Key '{key}' or column '{col}' not found in DataFrame.")
-        
+            raise ValueError(
+                f"Key '{key}' or column '{col}' not found in DataFrame.")
+
         new_df = df.groupby(key).agg({col: lambda x: ' '.join(x)})
-        
+
         return new_df
 
     def create_aggregate_movie_dataframe(self, nan_placeholder: str = '') -> None:
@@ -90,25 +91,29 @@ class MovieData:
         :return: None
         """
         # 1. Eemaldame mittevajalikud tulbad
-        ratings_cleaned = self.remove_cols(self.ratings, ['timestamp', 'userId'])
+        ratings_cleaned = self.remove_cols(
+            self.ratings, ['timestamp', 'userId'])
         tags_cleaned = self.remove_cols(self.tags, ['timestamp', 'userId'])
 
         # 2. Kombineerime tags tulba väärtused filmi põhjal
-        tags_combined = self.merge_col_string_on_key(tags_cleaned, key='movieId', col='tag')
+        tags_combined = self.merge_col_string_on_key(
+            tags_cleaned, key='movieId', col='tag')
 
         # 3. Liidame tabelid
-        merged_ratings = self.movies.merge(ratings_cleaned, on='movieId', how='left')
-        aggregate_df = merged_ratings.merge(tags_combined, on='movieId', how='left')
+        merged_ratings = self.movies.merge(
+            ratings_cleaned, on='movieId', how='left')
+        aggregate_df = merged_ratings.merge(
+            tags_combined, on='movieId', how='left')
 
         # 4. Järjesta tulbad
-        aggregate_df = aggregate_df[['movieId', 'title', 'genres', 'rating', 'tag']]
+        aggregate_df = aggregate_df[['movieId',
+                                     'title', 'genres', 'rating', 'tag']]
 
         # 5. Asenda NaN väärtused
         aggregate_df['tag'] = aggregate_df['tag'].fillna(nan_placeholder)
 
         # 6. Määra self.aggregate_movie_dataframe väärtuseks
         self.movie_data = aggregate_df
-
 
     def get_movies_dataframe(self) -> pd.DataFrame | None:
         """
@@ -133,7 +138,7 @@ class MovieData:
         :return: pandas DataFrame
         """
         return self.tags
-    
+
     def get_aggregate_movie_dataframe(self) -> pd.DataFrame | None:
         """
         Return movie_data variable created with function create_movie_data.
@@ -149,7 +154,7 @@ class MovieFilter:
 
     Here we keep the aggregate dataframe from MovieData class and operate on that data.
     """
-    
+
     def __init__(self):
         """
         Class initialization.
@@ -179,12 +184,14 @@ class MovieFilter:
         :return: pandas DataFrame object of the filtration result
         """
         if self.movie_data is None or not isinstance(self.movie_data, pd.DataFrame):
-            raise ValueError("movie_data is not properly set. Please set a valid DataFrame using set_movie_data.")
-        
+            raise ValueError(
+                "movie_data is not properly set. Please set a valid DataFrame using set_movie_data.")
+
         if rating is None or rating < 0:
             raise ValueError("Rating must be a non-negative value.")
         if comp not in ['greater_than', 'equals', 'less_than']:
-            raise ValueError("Invalid comparison operator. Must be 'greater_than', 'equals', or 'less_than'.")
+            raise ValueError(
+                "Invalid comparison operator. Must be 'greater_than', 'equals', or 'less_than'.")
 
         if comp == 'greater_than':
             return self.movie_data[self.movie_data['rating'] > rating]
@@ -212,7 +219,8 @@ class MovieFilter:
 
         genre_lower = genre.lower()
         filtered_df = self.movie_data[
-            self.movie_data['genres'].str.contains(genre_lower, case=False, na=False)
+            self.movie_data['genres'].str.contains(
+                genre_lower, case=False, na=False)
         ]
 
         return filtered_df
@@ -234,7 +242,8 @@ class MovieFilter:
 
         tag_lower = tag.lower()
         filtered_df = self.movie_data[
-            self.movie_data['tag'].str.contains(tag_lower, case=False, na=False)
+            self.movie_data['tag'].str.contains(
+                tag_lower, case=False, na=False)
         ]
 
         return filtered_df
@@ -253,8 +262,10 @@ class MovieFilter:
         if not isinstance(year, int) or year < 0:
             raise ValueError("Year must be a positive integer.")
 
-        filtered_df = self.movie_data[self.movie_data["title"].str.contains(str(year), case=False, na=False)]
-        
+        pattern = rf"\({year}\)$"
+        filtered_df = self.movie_data[self.movie_data["title"].str.contains(
+            pattern, case=False, na=False, regex=True)]
+
         return filtered_df
 
     def get_decent_movies(self) -> pd.DataFrame:
@@ -264,7 +275,7 @@ class MovieFilter:
         :return: pandas DataFrame object of the search result
         """
         decent_movies_df = self.movie_data[self.movie_data["rating"] >= 3.0]
-        
+
         return decent_movies_df
 
     def get_decent_comedy_movies(self) -> pd.DataFrame | None:
@@ -274,8 +285,8 @@ class MovieFilter:
         :return: pandas DataFrame object of the search result
         """
         decent_movies_df = self.movie_data[
-        (self.movie_data['rating'] >= 3.0) &
-        (self.movie_data['genres'].str.contains('Comedy', case=False))
+            (self.movie_data['rating'] >= 3.0) &
+            (self.movie_data['genres'].str.contains('Comedy', case=False))
         ]
         return decent_movies_df
 
@@ -286,10 +297,10 @@ class MovieFilter:
         :return: pandas DataFrame object of the search result
         """
         decent_children_movies_df = self.movie_data[
-        (self.movie_data['rating'] >= 3.0) &
-        (self.movie_data['genres'].str.contains('Children', case=False))
+            (self.movie_data['rating'] >= 3.0) &
+            (self.movie_data['genres'].str.contains('Children', case=False))
         ]
-    
+
         return decent_children_movies_df
 
 
@@ -304,7 +315,8 @@ if __name__ == '__main__':
 
         # give correct path names here. These names are only good if you
         # installed the 3 data files in 'EX/ex15_movie_data/ml-latest-small/'
-        my_movie_data.load_data("iti0102-2024\\MX\\mx_module\\movies.csv", "iti0102-2024\\MX\\mx_module\\ratings.csv", "iti0102-2024\\MX\\mx_module\\tags.csv")
+        my_movie_data.load_data("iti0102-2024\\MX\\mx_module\\movies.csv",
+                                "iti0102-2024\\MX\\mx_module\\ratings.csv", "iti0102-2024\\MX\\mx_module\\tags.csv")
         print(my_movie_data.get_movies_dataframe())  # ->
         #       movieId                    title                                       genres
         # 0           1         Toy Story (1995)  Adventure|Animation|Children|Comedy|Fantasy
@@ -352,7 +364,8 @@ if __name__ == '__main__':
         # it is the nan_placeholder value given to the function.
 
         my_movie_filter = MovieFilter()
-        my_movie_filter.set_movie_data(my_movie_data.get_aggregate_movie_dataframe())
+        my_movie_filter.set_movie_data(
+            my_movie_data.get_aggregate_movie_dataframe())
         print(my_movie_filter.filter_movies_by_rating_value(2.1, 'less_than'))  # ->
         #   movieId             title                                       genres  rating               tag
         # 26      1  Toy Story (1995)  Adventure|Animation|Children|Comedy|Fantasy     0.5   pixar pixar fun
@@ -379,7 +392,7 @@ if __name__ == '__main__':
         # 4       1   Toy Story (1995)  Adventure|Animation|Children|Comedy|Fantasy     4.5   pixar pixar fun
         # 5       1   Toy Story (1995)  Adventure|Animation|Children|Comedy|Fantasy     3.5   pixar pixar fun
         # [81763 rows x 5 columns]
-        
+
         print(my_movie_filter.get_decent_comedy_movies())
         #   movieId              title                                       genres  rating               tag
         # 0       1   Toy Story (1995)  Adventure|Animation|Children|Comedy|Fantasy     4.0   pixar pixar fun
@@ -388,7 +401,7 @@ if __name__ == '__main__':
         # 4       1   Toy Story (1995)  Adventure|Animation|Children|Comedy|Fantasy     4.5   pixar pixar fun
         # 5       1   Toy Story (1995)  Adventure|Animation|Children|Comedy|Fantasy     3.5   pixar pixar fun
         # [30274 rows x 5 columns]
-        
+
         print(my_movie_filter.get_decent_children_movies())
         #   movieId               title                                       genres  rating                      tag
         # 0       1    Toy Story (1995)  Adventure|Animation|Children|Comedy|Fantasy     4.0          pixar pixar fun
@@ -396,5 +409,7 @@ if __name__ == '__main__':
         # 2       1    Toy Story (1995)  Adventure|Animation|Children|Comedy|Fantasy     4.5          pixar pixar fun
         # 4       1    Toy Story (1995)  Adventure|Animation|Children|Comedy|Fantasy     4.5          pixar pixar fun
         # 5       1    Toy Story (1995)  Adventure|Animation|Children|Comedy|Fantasy     3.5          pixar pixar fun
-        # ...    
+        # ...
         # [7326 rows x 5 columns]
+
+        print(my_movie_filter.filter_movies_by_year(1972))

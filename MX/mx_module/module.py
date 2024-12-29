@@ -82,7 +82,7 @@ class MovieData:
         Create an aggregate dataframe from frames self.movies, self.ratings and self.tags.
 
         No columns with name 'userId' or 'timestamp' allowed. Use function remove_cols.
-        Columns should be in order: 'movieId', 'title', 'genres', 'rating', 'tag'. 
+        Columns should be in order: 'movieId', 'title', 'genres', 'rating', 'tag'.
         Several lines in the tags.csv file with the same movieId should be joined together under the tag column. Use function merge_col_string_on_key.
 
         :param nan_placeholder: Value to replace all nan-valued elements in column 'tag'.
@@ -282,10 +282,7 @@ class MovieFilter:
 
         :return: pandas DataFrame object of the search result
         """
-        decent_movies_df = self.movie_data[
-            (self.movie_data['rating'] >= 3.0) &
-            (self.movie_data['genres'].str.contains('Comedy', case=False))
-        ]
+        decent_movies_df = self.movie_data[(self.movie_data['rating'] >= 3.0) &(self.movie_data['genres'].str.contains('Comedy', case=False))]
         return decent_movies_df
 
     def get_decent_children_movies(self) -> pd.DataFrame | None:
@@ -294,10 +291,7 @@ class MovieFilter:
 
         :return: pandas DataFrame object of the search result
         """
-        decent_children_movies_df = self.movie_data[
-            (self.movie_data['rating'] >= 3.0) &
-            (self.movie_data['genres'].str.contains('Children', case=False))
-        ]
+        decent_children_movies_df = self.movie_data[(self.movie_data['rating'] >= 3.0) & (self.movie_data['genres'].str.contains('Children', case=False))]
 
         return decent_children_movies_df
 

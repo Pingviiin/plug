@@ -365,9 +365,9 @@ class Hotel:
                 room_feature_count[room] = 0
                 
         highest_features_count = max(room_feature_count.values())
-        highest_feature_rooms = [room for room, count in room_feature_count if count == highest_features_count]
+        highest_feature_rooms = {room: count for room, count in room_feature_count if count == highest_features_count}
 
-        best_matching_room = min(highest_feature_rooms, key=lambda room: room.number)
+        best_matching_room = max(highest_feature_rooms.keys(), key=lambda room: room.number)
 
         if best_matching_room:
             self.available_rooms.remove(best_matching_room)

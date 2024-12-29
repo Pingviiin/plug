@@ -360,14 +360,10 @@ class Hotel:
         room_feature_count = {}
 
         for room in self.available_rooms:
+            match_count = 0
             for feature in room.features:
                 if feature in required_features:
-                    if room not in room_feature_count.keys():
-                        room_feature_count[room] = 1
-                    else:
-                        room_feature_count[room] += 1
-            else:
-                room_feature_count[room] = 0
+                    room_feature_count[room] = match_count
                 
         highest_features_count = max(room_feature_count.values())
         highest_feature_rooms = {room: count for room, count in room_feature_count.items() if count == highest_features_count}

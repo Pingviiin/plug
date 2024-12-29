@@ -357,19 +357,19 @@ class Hotel:
         if not self.available_rooms:
             return None
 
-        room_feature_count = {}
+        max_feature_count = 0
+        best_matching_room = None
 
         for room in self.available_rooms:
             match_count = 0
             for feature in room.features:
                 if feature in required_features:
-                    room_feature_count[room] = match_count
-                
-        highest_features_count = max(room_feature_count.values())
-        highest_feature_rooms = {room: count for room, count in room_feature_count.items() if count == highest_features_count}
-
-        best_matching_room = min(highest_feature_rooms, key=lambda room: room.number)
-
+                    match_count += 1
+                    
+            if (match_count > max_feature_count) or (match_count == max_feature_count) and (best_matching_room is None or room.number < best_matching_room.number):
+                best_matching_room = room
+                max_feature_count = match_count
+    
         if best_matching_room:
             self.available_rooms.remove(best_matching_room)
             self.booked_rooms.append(best_matching_room)

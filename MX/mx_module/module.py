@@ -20,7 +20,7 @@ class MovieData:
         self.movies = None or pd.DataFrame
         self.ratings = None or pd.DataFrame
         self.tags = None or pd.DataFrame
-        self.aggregate_movie_dataframe = None or pd.DataFrame
+        self.movie_data = None or pd.DataFrame
 
     def load_data(self, movies_filename: str, ratings_filename: str, tags_filename: str) -> None:
         """
@@ -35,13 +35,12 @@ class MovieData:
         :return: None or raise ValueError
         """
         if not movies_filename or not ratings_filename or not tags_filename:
-            raise(ValueError)
-
+            raise ValueError
+        
         self.movies = pd.read_csv(movies_filename)
         self.ratings = pd.read_csv(ratings_filename)
         self.tags = pd.read_csv(tags_filename)
 
-    
     def remove_cols(self, df: pd.DataFrame, columns: list) -> pd.DataFrame | None:
         """
         Drop columns from dataframe.
@@ -53,7 +52,10 @@ class MovieData:
         if df is None or df.empty:
             return None
 
-        return df.drop(labels=columns, axis=1)
+        if not columns:
+            return df
+        
+        return df.drop(columns=columns, errors="ignore")
     
     def merge_col_string_on_key(self, df: pd.DataFrame, key: str, col: str) -> pd.DataFrame:
         """
@@ -64,16 +66,27 @@ class MovieData:
         :param col: column that needs to contain joined values separated by ' '
         :return: dataframe with reduced number of rows
         """
+        # Validate input DataFrame
         if df is None or df.empty:
-            return pd.DataFrame()
+            raise ValueError("Input DataFrame is None or empty.")
 
-        merged_df = df.groupby(key).agg({col: lambda x: ' '.join(map(str, x))})
+        # Validate columns
+        if key not in df.columns:
+            raise ValueError(f"Key column '{key}' is not in the DataFrame.")
+        if col not in df.columns:
+            raise ValueError(f"Column '{col}' is not in the DataFrame.")
+        
+        # Ensure values in `col` are strings; fill NaN with empty string for grouping
+        df[col] = df[col].fillna('').astype(str)
 
-        for other_col in df.columns:
-            if other_col not in [key, col]:
-                merged_df[other_col] = df.groupby(key).first()[other_col]
+        # Group by `key` and concatenate unique, sorted values from `col`
+        grouped = (
+            df.groupby(key)
+            .agg({col: lambda x: ' '.join(sorted(set(val.strip() for val in x if val.strip())))})
+            .reset_index()
+        )
 
-        return merged_df
+        return grouped
 
     def create_aggregate_movie_dataframe(self, nan_placeholder: str = '') -> None:
         """
@@ -88,7 +101,17 @@ class MovieData:
         :param nan_placeholder: Value to replace all nan-valued elements in column 'tag'.
         :return: None
         """
-        pass
+        self.ratings = self.remove_cols(self.ratings, ['userId', 'timestamp'])
+
+        tags_aggregated = self.merge_col_string_on_key(self.tags, key='movieId', col='tag')
+
+        merged_df = self.movies.merge(self.ratings, on='movieId', how='left')
+
+        merged_df = merged_df.merge(tags_aggregated, on='movieId', how='left')
+
+        merged_df['tag'] = merged_df['tag'].fillna(nan_placeholder)
+
+        self.movie_data = merged_df[['movieId', 'title', 'genres', 'rating', 'tag']]
 
     def get_movies_dataframe(self) -> pd.DataFrame | None:
         """
@@ -96,7 +119,7 @@ class MovieData:
 
         :return: pandas DataFrame
         """
-        pass
+        return self.movies
 
     def get_ratings_dataframe(self) -> pd.DataFrame | None:
         """
@@ -104,7 +127,7 @@ class MovieData:
 
         :return: pandas DataFrame
         """
-        pass
+        return self.ratings
 
     def get_tags_dataframe(self) -> pd.DataFrame | None:
         """
@@ -112,15 +135,15 @@ class MovieData:
 
         :return: pandas DataFrame
         """
-        pass
+        return self.tags
     
     def get_aggregate_movie_dataframe(self) -> pd.DataFrame | None:
         """
-        Return aggregate_movie_dataframe variable created with function create_aggregate_movie_dataframe.
+        Return movie_data variable created with function create_movie_data.
 
         :return: pandas DataFrame
         """
-        pass
+        return self.movie_data
 
 
 class MovieFilter:
@@ -145,7 +168,7 @@ class MovieFilter:
         :param movie_data: pandas DataFrame object
         :return: None
         """
-        pass
+        self.movie_data = movie_data
 
     def filter_movies_by_rating_value(self, rating: float, comp: str) -> pd.DataFrame | None:
         """
@@ -158,7 +181,19 @@ class MovieFilter:
         :param comp: string representation of the comparison operation
         :return: pandas DataFrame object of the filtration result
         """
-        pass
+        if rating is None or rating < 0:
+            raise ValueError("Rating must be a non-negative value.")
+        if comp not in ['greater_than', 'equals', 'less_than']:
+            raise ValueError("Invalid comparison operator. Must be 'greater_than', 'equals', or 'less_than'.")
+
+        if comp == 'greater_than':
+            return self.movie_data[self.movie_data['rating'] > rating]
+        elif comp == 'equals':
+            return self.movie_data[self.movie_data['rating'] == rating]
+        elif comp == 'less_than':
+            return self.movie_data[self.movie_data['rating'] < rating]
+
+        return None
 
     def filter_movies_by_genre(self, genre: str) -> pd.DataFrame:
         """
@@ -172,7 +207,15 @@ class MovieFilter:
         :param genre: string value to filter by
         :return: pandas DataFrame object of the filtration result
         """
-        pass
+        if not genre or genre.strip() == "":
+            raise ValueError("Genre must be a non-empty string.")
+
+        genre_lower = genre.lower()
+        filtered_df = self.movie_data[
+            self.movie_data['genres'].str.contains(genre_lower, case=False, na=False)
+        ]
+
+        return filtered_df
 
     def filter_movies_by_tag(self, tag: str) -> pd.DataFrame:
         """
@@ -186,7 +229,15 @@ class MovieFilter:
         :param tag: string value tu filter by
         :return: pandas DataFrame object of the filtration result
         """
-        pass
+        if not tag or tag.strip() == "":
+            raise ValueError("Tag must be a non-empty string.")
+
+        tag_lower = tag.lower()
+        filtered_df = self.movie_data[
+            self.movie_data['tag'].str.contains(tag_lower, case=False, na=False)
+        ]
+
+        return filtered_df
 
     def filter_movies_by_year(self, year: int) -> pd.DataFrame:
         """
@@ -199,7 +250,12 @@ class MovieFilter:
         :param year: integer value of the year to filter by
         :return: pandas DataFrame object of the filtration result
         """
-        pass
+        if not isinstance(year, int) or year < 0:
+            raise ValueError("Year must be a positive integer.")
+
+        filtered_df = self.movie_data[self.movie_data["title"].str.contains(str(year), case=False, na=False)]
+        
+        return filtered_df
 
     def get_decent_movies(self) -> pd.DataFrame:
         """
@@ -207,7 +263,9 @@ class MovieFilter:
 
         :return: pandas DataFrame object of the search result
         """
-        pass
+        decent_movies_df = self.movie_data[self.movie_data["rating"] >= 3.0]
+        
+        return decent_movies_df
 
     def get_decent_comedy_movies(self) -> pd.DataFrame | None:
         """
@@ -215,7 +273,11 @@ class MovieFilter:
 
         :return: pandas DataFrame object of the search result
         """
-        pass
+        decent_movies_df = self.movie_data[
+        (self.movie_data['rating'] >= 3.0) &
+        (self.movie_data['genres'].str.contains('Comedy', case=False))
+        ]
+        return decent_movies_df
 
     def get_decent_children_movies(self) -> pd.DataFrame | None:
         """
@@ -223,7 +285,12 @@ class MovieFilter:
 
         :return: pandas DataFrame object of the search result
         """
-        pass
+        decent_children_movies_df = self.movie_data[
+        (self.movie_data['rating'] >= 3.0) &
+        (self.movie_data['genres'].str.contains('Children', case=False))
+        ]
+    
+        return decent_children_movies_df
 
 
 if __name__ == '__main__':
@@ -237,7 +304,7 @@ if __name__ == '__main__':
 
         # give correct path names here. These names are only good if you
         # installed the 3 data files in 'EX/ex15_movie_data/ml-latest-small/'
-        my_movie_data.load_data("ml-latest-small/movies.csv", "ml-latest-small/ratings.csv", "ml-latest-small/tags.csv")
+        my_movie_data.load_data("MX\mx_module\movies.csv", "MX\mx_module\\ratings.csv", "MX\mx_module\\tags.csv")
         print(my_movie_data.get_movies_dataframe())  # ->
         #       movieId                    title                                       genres
         # 0           1         Toy Story (1995)  Adventure|Animation|Children|Comedy|Fantasy

@@ -267,11 +267,11 @@ def add_result_to_student(student: Student, grades_count: int, new_grade: int, c
     Return the modified student object.
     """
     sum_of_grades = student.average_grade * grades_count
-    
+
     new_sum = sum_of_grades + new_grade
-    
+
     new_count = grades_count + 1
-    
+
     new_average = round(new_sum / new_count, 3)
 
     student.average_grade = new_average
@@ -365,11 +365,11 @@ class Hotel:
             for feature in room.features:
                 if feature in required_features:
                     match_count += 1
-                    
+
             if (match_count > max_feature_count) or (match_count == max_feature_count) and (best_matching_room is None or room.number < best_matching_room.number):
                 best_matching_room = room
                 max_feature_count = match_count
-    
+
         if best_matching_room:
             self.available_rooms.remove(best_matching_room)
             self.booked_rooms.append(best_matching_room)

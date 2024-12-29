@@ -82,10 +82,8 @@ class MovieData:
         Create an aggregate dataframe from frames self.movies, self.ratings and self.tags.
 
         No columns with name 'userId' or 'timestamp' allowed. Use function remove_cols.
-        Columns should be in order:
-        'movieId', 'title', 'genres', 'rating', 'tag'. 
-        Several lines in the tags.csv file with the same movieId 
-        should be joined together under the tag column. Use function merge_col_string_on_key.
+        Columns should be in order: 'movieId', 'title', 'genres', 'rating', 'tag'. 
+        Several lines in the tags.csv file with the same movieId should be joined together under the tag column. Use function merge_col_string_on_key.
 
         :param nan_placeholder: Value to replace all nan-valued elements in column 'tag'.
         :return: None

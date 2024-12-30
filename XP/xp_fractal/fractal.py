@@ -1,101 +1,72 @@
-"""Create beautiful fractal images."""
 from PIL import Image
-
 
 class Fractal:
     """Fractal class."""
 
-    def __init__(self, size, scale, computation, max_iter=1000, escape_radius=2):
-        """
-        Initialize fractal.
-
-        Arguments:
-        size -- the size of the image as a tuple (x, y)
-        scale -- the scale of x and y as a list of 2-tuple
-                 [(minimum_x, minimum_y), (maximum_x, maximum_y)]
-                 these are mathematical coordinates
-        computation -- the function used for computing pixel values
-        max_iter -- maximum number of iterations (default: 1000)
-        escape_radius -- escape radius for the fractal (default: 2)
-        """
+    def __init__(self, size, scale, computation):
         self.size = size
         self.scale = scale
         self.computation = computation
-        self.max_iter = max_iter
-        self.escape_radius = escape_radius
+        self.image = Image.new("RGB", size)
 
     def compute(self):
-        """Create the fractal by computing every pixel value."""
         width, height = self.size
-        image = Image.new("L", self.size)
-        pixels = image.load()
+        pixels = self.image.load()
 
         for px in range(width):
             for py in range(height):
-                # Map pixel to mathematical coordinates
-                x_min, y_min = self.scale[0]
-                x_max, y_max = self.scale[1]
-                x = x_min + (px / width) * (x_max - x_min)
-                y = y_min + (py / height) * (y_max - y_min)
+                # Map pixel coordinates to mathematical coordinates
+                x_math = self.scale[0][0] + px / width * (self.scale[1][0] - self.scale[0][0])
+                y_math = self.scale[0][1] + py / height * (self.scale[1][1] - self.scale[0][1])
+                iterations = self.pixel_value((x_math, y_math))
 
-                # Compute pixel value
-                iterations = self.pixel_value((x, y))
-                # Map iterations to grayscale (0 to 255)
-                color = int(255 * iterations / self.max_iter)
+                # Map iterations to RGB color
+                color = (iterations % 256, iterations % 256, iterations % 256) if iterations < 255 else (0, 0, 0)
                 pixels[px, py] = color
 
-        return image
-
     def pixel_value(self, pixel):
-        """
-        Return the number of iterations it took for the pixel to go out of bounds.
-
-        Arguments:
-        pixel -- the pixel coordinate (x, y)
-
-        Returns:
-        the number of iterations of computation it took to go out of bounds as integer.
-        """
         x, y = pixel
         x0, y0 = x, y
-        for i in range(self.max_iter):
+        max_iterations = 255
+
+        for i in range(max_iterations):
             x, y = self.computation(x, y, x0, y0)
-            if x**2 + y**2 > self.escape_radius**2:
+            if x * x + y * y > 4:  # Escape condition
                 return i
-        return self.max_iter
+        return max_iterations
 
     def save_image(self, filename):
-        """
-        Save the image to hard drive.
+        self.image.save(filename)
 
-        Arguments:
-        filename -- the file name to save the file to as a string.
-        """
-        image = self.compute()
-        image.save(filename)
 
 def mandelbrot_computation(x, y, x_original, y_original):
-    """
-    Mandelbrot computation: z = z^2 + c.
-    """
-    return x**2 - y**2 + x_original, 2 * x * y + y_original
+    z_real, z_imag = x, y
+    c_real, c_imag = x_original, y_original
+
+    z_real_new = z_real * z_real - z_imag * z_imag + c_real
+    z_imag_new = 2 * z_real * z_imag + c_imag
+
+    return z_real_new, z_imag_new
+
 
 def julia_computation(x, y, x_original, y_original):
-    """
-    Julia computation: z = z^n + c (n=3, c fixed).
-    """
-    c = -0.7869 + 0.1889j  # Constant for Julia set
-    n = 3
-    z = complex(x, y)
-    z = z**n + c
-    return z.real, z.imag
+    c_real, c_imag = -0.7869, 0.1889
+
+    z_real_new = x * x - y * y + c_real
+    z_imag_new = 2 * x * y + c_imag
+
+    return z_real_new, z_imag_new
+
 
 def ship_computation(x, y, x_original, y_original):
-    """
-    Burning Ship computation: z = (|Re(z)| + i|Im(z)|)^2 + c.
-    """
-    x, y = abs(x), -abs(y)
-    return x**2 - y**2 + x_original, 2 * x * y + y_original
+    z_real, z_imag = abs(x), -abs(y)  # Invert y-axis
+    c_real, c_imag = x_original, y_original
+
+    z_real_new = z_real * z_real - z_imag * z_imag + c_real
+    z_imag_new = 2 * z_real * z_imag + c_imag
+
+    return z_real_new, z_imag_new
+
 
 
 if __name__ == "__main__":
